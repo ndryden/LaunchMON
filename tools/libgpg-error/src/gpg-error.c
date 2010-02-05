@@ -259,7 +259,9 @@ i18n_init(void)
   setlocale (LC_TIME, "");
   setlocale (LC_MESSAGES, "");
 #  else
+/* jeg - had to comment this out when on yellowrail previously, leaving in until we test again
   setlocale (LC_ALL, "" );
+*/
 #  endif
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

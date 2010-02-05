@@ -165,7 +165,24 @@ main (int argc, char *argv[])
   if ( argc > 6 )
     daemon_opts = argv+6;
 
-#if RM_BG_MPIRUN
+#if RM_ORTERUN
+  numprocs_opt     = string("-n") + string(argv[2]);
+  numnodes_opt     = string("-np") + string(argv[3]);
+  /* JEG - Not sure what to put for parttion_opt with orterun */
+  partition_opt    = string("-H") + string(argv[4]);
+  launcher_argv    = (char**) malloc(8*sizeof(char*));
+  launcher_argv[0] = strdup(mylauncher);
+//  launcher_argv[1] = strdup("-verbose");
+//  launcher_argv[2] = strdup("1");
+  launcher_argv[1] = strdup("-gmca");
+  launcher_argv[2] = strdup("orte_enable_debug_cospawn_while_running");
+  launcher_argv[3] = strdup("1");
+  launcher_argv[4] = strdup("-np");
+  launcher_argv[5] = strdup(argv[2]);
+  launcher_argv[6] = strdup(argv[1]);
+  launcher_argv[7] = NULL;
+  fprintf (stdout, "[LMON_FE] launching the job/daemons via %s\n", mylauncher);
+#elif RM_BG_MPIRUN
   //
   // This will exercise CO or SMP on BlueGene
   //

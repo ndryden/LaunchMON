@@ -372,7 +372,7 @@ LMON_be_init ( int ver, int *argc, char ***argv )
       return LMON_ESUBCOM;
     }
 
-#if RM_BG_MPIRUN && VERBOSE && USE_VERBOSE_LOGDIR
+#if RM_BG_MPIRUN || RM_ORTERUN && VERBOSE && USE_VERBOSE_LOGDIR
   //
   // DHA 3/4/3009, reviewed. Looks fine for BGP as well.
   //

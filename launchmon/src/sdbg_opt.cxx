@@ -501,6 +501,7 @@ opts_args_t::construct_launch_string ()
       }	  
     }
   else if ( (dt == string ("mpirun")) 
+            || (dt == string ("orterun"))
             || (dt == string ("mpirun32"))
             || (dt == string("mpirun64")))
     {

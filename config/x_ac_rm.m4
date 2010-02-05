@@ -54,7 +54,7 @@ AC_DEFUN([X_AC_RM], [
   AC_MSG_CHECKING([resource manager type])
 
   AC_ARG_WITH([rm], 
-    AS_HELP_STRING(--with-rm@<:@=RMTYPE@:>@,specify a system Resource Manager @<:@slurm bgrm@:>@ @<:@default=slurm@:>@),
+    AS_HELP_STRING(--with-rm@<:@=RMTYPE@:>@,specify a system Resource Manager @<:@slurm bgrm orterun@:>@ @<:@default=slurm@:>@),
     [with_rm_name=$withval],
     [with_rm_name="check"]
   )
@@ -219,6 +219,78 @@ AC_DEFUN([X_AC_RM], [
       fi # test $bits = "32-bit"
       AC_MSG_RESULT($ac_job_launcher_bits)
     fi # test "x$rm_found" = "xyes"; 	
+
+  elif test "x$with_rm_name" = "xorterun" ; then
+    #
+    # Configure for ORTERUN
+    #
+    if test "x$with_launcher" != "xcheck" -a "x$with_launcher" != "xyes"; then
+      #
+      # The ORTERUN path is given
+      #
+      pth=""
+      if test -f $with_launcher; then
+        pth=`config/ap $with_launcher`
+        if test -f $pth ; then
+          ac_job_launcher_path=$pth
+          rm_found="yes"
+        fi
+      fi
+    else
+      #
+      # Try the default ORTERUN path
+      #
+      for rm_dir in $rm_default_dirs; do
+        if test ! -z "$rm_dir" -a ! -d "$rm_dir" ; then
+          continue;
+        fi
+
+        if test ! -z "$rm_dir/orterun" -a -f "$rm_dir/orterun"; then
+          pth=`config/ap $rm_dir/orterun`
+          ac_job_launcher_path=$pth
+          rm_found="yes"
+          break
+        fi
+      done
+    fi
+
+    AC_MSG_RESULT($with_rm_name:$rm_found)
+
+    if test "x$rm_found" = "xyes"; then
+
+      AC_SUBST(CIODLOC,[tools/ciod])
+      AC_SUBST(LIBCIOD, [-lciod_db])
+
+
+      #
+      #TODO: I need another m4 to check where the tls libraries are picked up
+      #
+      AC_DEFINE(NPTL_UNDER_TLS, 1, [Define 1 if TLS libraries are installed under /lib/tls])
+      #
+      #TODO: in this case, CN-IO ratio
+      #
+      SMPFACTOR=8
+      AC_SUBST(SMPFACTOR)
+      AC_DEFINE(RM_ORTERUN,1,[Define 1 for RM_ORTERUN])
+      AC_SUBST(RM_TYPE, orterun)
+      AC_MSG_CHECKING([whether mpirun is 32 bit 64 bit])
+      #check if job launcher is 32 bit or 64 bit.
+      #TODO: the use of file | gawk isn't portable
+      bits=`file $ac_job_launcher_path | gawk '{print @S|@3}'`
+      if test $bits = "32-bit"; then
+        ac_job_launcher_bits="32"
+        AC_SUBST(LNCHR_BIT_FLAGS, -m32)
+        AC_DEFINE(GLUESYM,[""], [Define dot for GLUESYM])
+      elif test $bits = "64-bit"; then
+        ac_job_launcher_bits="64"
+        AC_SUBST(LNCHR_BIT_FLAGS, -m64)
+        AC_DEFINE(BIT64,1,[Define 1 for BIT64])
+        AC_DEFINE(GLUESYM,["."], [Define dot for GLUESYM])
+      else
+        ac_job_launcher_bits="unknown"
+      fi # test $bits = "32-bit"
+      AC_MSG_RESULT($ac_job_launcher_bits)
+    fi # test "x$rm_found" = "xyes";
   else
     AC_MSG_ERROR([--with-rm is a required option])
   fi

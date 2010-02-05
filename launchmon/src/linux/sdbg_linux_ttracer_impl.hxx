@@ -196,6 +196,9 @@ linux_thread_tracer_t<VA,WT,IT,GRS,FRS>::ttracer_init (
 	thrlib_im->get_a_symbol (p.get_thread_creation_sym());
 
       bp->set_address_at (thread_create_bp_sym.get_relocated_address());
+
+// jeg - Seems like a PPC system difference - not sure what to do for RM_ORTERUN - leaving off now
+//
 #if RM_BG_MPIRUN
       bp->set_use_indirection();
 #endif

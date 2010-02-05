@@ -760,7 +760,7 @@ linux_launchmon_t::acquire_proctable (
       const symbol_base_t<T_VA>& rid 
 	= main_im->get_a_symbol (p.get_resource_handler_sym());
 
-#if !RM_BG_MPIRUN
+#if !(RM_BG_MPIRUN || RM_ORTERUN)
       //
       // DHA 3/4/3009, reviewed. Looks fine for BGP
       // Changed RM_BGL_MPIRUN to RM_BG_MPIRUN to genericize BlueGene Support
@@ -825,7 +825,7 @@ linux_launchmon_t::launch_tool_daemons (
 
   assert ( !get_proctable_copy().empty() );
 
-#if !RM_BG_MPIRUN
+#if !(RM_BG_MPIRUN || RM_ORTERUN)
   //
   // DHA 3/4/3009, reviewed. Looks fine for BGP. BG mpirun
   // doesn't implement totalview_jobid
@@ -920,7 +920,7 @@ linux_launchmon_t::launch_tool_daemons (
       setenv(envListPos->first.c_str(), envListPos->second.c_str(), 1);	
     }
 
-#if RM_BG_MPIRUN
+#if (RM_BG_MPIRUN || RM_ORTERUN)
   //
   // there isn't much you want to do here,
   // because BGLRM does co-spawning of daemons as part of
@@ -1679,7 +1679,7 @@ linux_launchmon_t::handle_trap_after_attach_event (
 				   sizeof(bdbg), 
 				   use_cxt );
 
-#if RM_BG_MPIRUN
+#if (RM_BG_MPIRUN || RM_ORTERUN)
       //
       // Always check correctness of BG_SERVERARG_LENGTH 
       // and BG_EXECPATH_LENGTH
@@ -1779,7 +1779,7 @@ linux_launchmon_t::handle_trap_after_attach_event (
       chk_pthread_libc_and_init(p);
       p.set_never_trapped(false); 
 
-#if !RM_BG_MPIRUN
+#if !(RM_BG_MPIRUN || RM_ORTERUN)
       acquire_proctable ( p, use_cxt );
       ship_proctab_msg ( lmonp_proctable_avail );
       ship_resourcehandle_msg ( lmonp_resourcehandle_avail, get_resid() );
@@ -1884,6 +1884,8 @@ linux_launchmon_t::handle_trap_after_exec_event (
       la_bp = new linux_breakpoint_t();
       la_bp->set_address_at(launch_bp_sym.get_relocated_address());
       
+// jeg - Looks more like PPC specific - not adding RM_ORTERUN
+//
 #if RM_BG_MPIRUN
       //
       // DHA Mar 05 2009
@@ -1920,7 +1922,7 @@ linux_launchmon_t::handle_trap_after_exec_event (
 				   sizeof(bdbg), 
 				   use_cxt );
  
-#if RM_BG_MPIRUN
+#if (RM_BG_MPIRUN || RM_ORTERUN)
       // DHA 3/4/2009, reviewed and this looks fine for BGP
       // BGP's mpirun implements: char MPIR_executable_path[256]
       // and char MPIR_server_arguments[1024] as well.

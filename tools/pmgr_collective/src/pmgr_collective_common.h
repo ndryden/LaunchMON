@@ -20,12 +20,16 @@
 #ifndef PMGR_COLLECTIVE_COMMON_H
 #define PMGR_COLLECTIVE_COMMON_H
 
+/*
 #if FOR_LAUNCHMON_BUILD
 # include "config.h"
 # include "lmon-config.h"
 #else
 # include "lmon-config.h"
 #endif
+*/
+
+#include "config.h"
 
 #if defined(_IA64_)
 #undef htons
