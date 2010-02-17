@@ -122,10 +122,13 @@ opts_args_t::opts_args_t ( const opts_args_t& o )
     my_opt->pmgr_info = o.my_opt->pmgr_info;
 #endif
     my_opt->lmon_sec_info = o.my_opt->lmon_sec_info;
+/*    fprintf(stderr, "opts_args_t::opts_args_t, o.my_opt->lmon_sec_info=%s\n", o.my_opt->lmon_sec_info.c_str()); */
     my_opt->debugtarget = o.my_opt->debugtarget;
     my_opt->launchstring = o.my_opt->launchstring;
+/*    fprintf(stderr, "opts_args_t::opts_args_t, o.my_opt->launchstring=%s\n", o.my_opt->launchstring.c_str()); */
     my_opt->copyright = o.my_opt->copyright;
     my_opt->launcher_pid = o.my_opt->launcher_pid;
+/*    fprintf(stderr, "opts_args_t::opts_args_t, o.my_opt->launcher_pid=%d\n", o.my_opt->launcher_pid); */
 
     MODULENAME = o.MODULENAME;
   }  
@@ -524,7 +527,7 @@ opts_args_t::construct_launch_string ()
 #if PMGR_BASED
         + string (" --pmgrip=%s --pmgrport=%s --pmgrlazyrank=1 --pmgrlazysize=1")
 #endif
-        + string (" --lmonsharedsec=%s --lmonsecchk=%s" );
+      ;
 
       my_opt->modelchecker = true;
 
