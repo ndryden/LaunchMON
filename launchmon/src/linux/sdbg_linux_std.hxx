@@ -40,6 +40,8 @@
 #ifndef SDBG_LINUX_STD_HXX
 #define SDBG_LINUX_STD_HXX 1
 
+#include "sdbg_std.hxx"
+
 extern "C" {
 #if HAVE_EXECINFO_H
 # include <execinfo.h>

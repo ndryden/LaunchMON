@@ -34,6 +34,8 @@
 #ifndef SDBG_LINUX_DRIVER_HXX
 #define SDBG_LINUX_DRIVER_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_STRING
 # include <string>
 #else

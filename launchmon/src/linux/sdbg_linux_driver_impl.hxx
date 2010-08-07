@@ -37,6 +37,8 @@
 #ifndef SDBG_LINUX_DRIVER_IMPL_HXX
 #define SDBG_LINUX_DRIVER_IMPL_HXX 1
 
+#include "sdbg_std.hxx"
+
 #include "sdbg_base_driver.hxx"
 #include "sdbg_base_driver_impl.hxx"
 

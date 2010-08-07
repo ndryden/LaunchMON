@@ -53,6 +53,8 @@
 #ifndef SDBG_LINUX_TTRACER_HXX
 #define SDBG_LINUX_TTRACER_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_STRING
 # include <string>
 #else

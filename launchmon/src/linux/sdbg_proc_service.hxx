@@ -22,6 +22,8 @@
 #ifndef SDBG_PROC_SERVICE_HXX
 #define SDBG_PROC_SERVICE_HXX 1
 
+#include "sdbg_std.hxx"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

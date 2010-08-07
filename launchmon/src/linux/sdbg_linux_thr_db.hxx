@@ -32,6 +32,8 @@
 #ifndef SDBG_LINUX_THR_DB_HXX
 #define SDBG_LINUX_THR_DB_HXX 1
 
+#include "sdbg_std.hxx"
+
 extern "C" {
 #if HAVE_THREAD_DB_H
 # include <thread_db.h>

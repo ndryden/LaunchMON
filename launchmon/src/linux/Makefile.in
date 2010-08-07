@@ -157,6 +157,7 @@ LIBTOOL = @LIBTOOL@
 LMONAPILOC = @LMONAPILOC@
 LMONENABSLOC = @LMONENABSLOC@
 LMONENLOC = @LMONENLOC@
+LMONHL = @LMONHL@
 LMON_AGE = @LMON_AGE@
 LMON_CURRENT = @LMON_CURRENT@
 LMON_REVISION = @LMON_REVISION@
@@ -176,6 +177,7 @@ PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 RANLIB = @RANLIB@
 RM_TYPE = @RM_TYPE@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SMPFACTOR = @SMPFACTOR@
@@ -231,6 +233,7 @@ mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
+rshcmd = @rshcmd@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sshcmd = @sshcmd@
@@ -250,7 +253,7 @@ launchmon_SOURCES = main.cxx \
                           ../sdbg_self_trace.cxx \
                           ../sdbg_opt.cxx \
                           ../sdbg_base_bp.hxx \
-                          ../sdbg_base_launchmon_impl.hxx  \
+                          ../sdbg_base_launchmon_impl.hxx \
                           ../sdbg_base_tracer.hxx \
                           ../sdbg_self_trace.hxx \
                           ../sdbg_base_driver.hxx \
@@ -269,6 +272,7 @@ launchmon_SOURCES = main.cxx \
                           ../sdbg_base_symtab_impl.hxx \
                           ../sdbg_opt.hxx \
 			  ../sdbg_rm_map.hxx \
+			  ../sdbg_base_spawner.hxx \
                           sdbg_linux_bp.hxx \
                           sdbg_linux_launchmon.hxx  \
                           sdbg_linux_ptracer_impl.hxx  \

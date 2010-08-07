@@ -38,6 +38,8 @@
 #ifndef SDBG_LINUX_LAUNCHMON_HXX
 #define SDBG_LINUX_LAUNCHMON_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_VECTOR
 # include <vector>
 #else

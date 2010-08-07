@@ -36,6 +36,8 @@
 #ifndef SDBG_LINUX_MACH_HXX
 #define SDBG_LINUX_MACH_HXX 1
 
+#include "sdbg_std.hxx"
+
 extern "C" {
 #include <sys/user.h>
 #include <thread_db.h>

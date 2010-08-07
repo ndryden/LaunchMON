@@ -36,6 +36,8 @@
 #ifndef SDBG_LINUX_BP_HXX
 #define SDBG_LINUX_BP_HXX 1
 
+#include "sdbg_std.hxx"
+
 #include "sdbg_base_bp.hxx"
 #include "sdbg_linux_mach.hxx"
 

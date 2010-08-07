@@ -39,6 +39,8 @@
 #ifndef SDBG_LINUX_PTRACER_HXX
 #define SDBG_LINUX_PTRACER_HXX 1
 
+#include "sdbg_std.hxx"
+
 extern "C" {
 #if HAVE_SYS_PTRACE_H
 # include <sys/ptrace.h>

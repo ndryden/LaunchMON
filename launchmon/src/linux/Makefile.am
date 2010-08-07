@@ -4,7 +4,7 @@
 ##
 ##
 ##--------------------------------------------------------------------------------
-## Copyright (c) 2008, Lawrence Livermore National Security, LLC. Produced at
+## Copyright (c) 2008 ~ 2010, Lawrence Livermore National Security, LLC. Produced at
 ## the Lawrence Livermore National Laboratory. Written by Dong H. Ahn <ahn1@llnl.gov>.
 ## LLNL-CODE-409469. All rights reserved.
 ##
@@ -29,6 +29,7 @@
 ##--------------------------------------------------------------------------------
 ##
 ##  Update Log:
+##        Jun 24 2010 DHA: Added sdbg_rm_map.hxx
 ##        Mar 09 2009 DHA: Added -rdynamic to export process control 
 ##                         primities to the dynamic symbol table for
 ##                         dlopen to pick up.
@@ -59,7 +60,7 @@ launchmon_SOURCES       = main.cxx \
                           ../sdbg_self_trace.cxx \
                           ../sdbg_opt.cxx \
                           ../sdbg_base_bp.hxx \
-                          ../sdbg_base_launchmon_impl.hxx  \
+                          ../sdbg_base_launchmon_impl.hxx \
                           ../sdbg_base_tracer.hxx \
                           ../sdbg_self_trace.hxx \
                           ../sdbg_base_driver.hxx \
@@ -78,6 +79,7 @@ launchmon_SOURCES       = main.cxx \
                           ../sdbg_base_symtab_impl.hxx \
                           ../sdbg_opt.hxx \
 			  ../sdbg_rm_map.hxx \
+			  ../sdbg_base_spawner.hxx \
                           sdbg_linux_bp.hxx \
                           sdbg_linux_launchmon.hxx  \
                           sdbg_linux_ptracer_impl.hxx  \
