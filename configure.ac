@@ -28,26 +28,40 @@ dnl  Place, Suite 330, Boston, MA 02111-1307 USA
 dnl --------------------------------------------------------------------------------
 dnl 
 dnl   Update Log:
+dnl         Aug 03 2010 DHA: Added X_AC_MW_HOSTLIST support
 dnl         Dec 28 2009 DHA: Deprecated X_AC_PREFIX_CONFIG_H to better support
 dnl                          binary distribution
-dnl         Mar 20 2009 DHA: Increase LMON_CURRENT by one as we've added 
+dnl         Mar 20 2009 DHA: Increased LMON_CURRENT by one as we've added
 dnl                          a few more API calls. Similarly, increase
-dnl                          LMON_AGE as this still supports 0th interface. 
+dnl                          LMON_AGE as this still supports 0th interface.
 dnl         Mar 11 2009 DHA: Added check for env, ssh|rsh, and totalview
-dnl         Mar 06 2009 DHA: Deprecate X_AC_THREAD_DB,
+dnl         Mar 06 2009 DHA: Deprecated X_AC_THREAD_DB,
 dnl                          Added dlfcn.h presence check
 dnl         Jun 06 2008 DHA: File created.
 dnl
 
 AC_PREREQ(2.59)
-AC_INIT(LaunchMON, 0.7.2, ahn1@llnl.gov)
-AC_SUBST(LMON_CURRENT, 1)
+AC_INIT(LaunchMON, 0.8.0, ahn1@llnl.gov)
+
+dnl
+dnl This implements 2nd LMON interface 
+dnl 
+AC_SUBST(LMON_CURRENT, 2)
+
+dnl
+dnl This is the 1st revision 
+dnl 
 AC_SUBST(LMON_REVISION, 0)
+
+dnl
+dnl This implements 1st (2-1) interface as well
+dnl
 AC_SUBST(LMON_AGE, 1)
+
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE(launchmon, 0.7.2)
+AM_INIT_AUTOMAKE(launchmon, 0.8.0)
 AC_CANONICAL_HOST
 
 
@@ -102,7 +116,7 @@ dnl Checks for the Resource Manager type
 dnl -----------------------------------------------
 X_AC_RM
 
-AC_MSG_CHECKING(whether a supported MPI job launcher has been found)  
+AC_MSG_CHECKING(whether a supported MPI job launcher has been found)
 if test -z "$ac_job_launcher_path" ; then
   AC_MSG_ERROR([No supported MPI job launcher has been found])
 else
@@ -113,10 +127,11 @@ fi
 
 
 dnl -----------------------------------------------
-dnl Checks for NNODES and Ncores per node for test cases 
+dnl Checks for NNODES, Ncores per node and MW hostlist for test cases configuring 
 dnl -----------------------------------------------
 X_AC_TESTNNODES
 X_AC_NCORE_SMP
+X_AC_MW_HOSTLIST
 
 
 dnl -----------------------------------------------
@@ -128,9 +143,11 @@ AC_PROG_LIBTOOL
 AC_PROG_CC_C_O
 AC_PATH_PROGS(envcmd,env,[/bin/env], /usr/local/bin:/usr/bin:/bin)
 AC_PATH_PROGS(sshcmd,ssh rsh,[/usr/bin/ssh],/usr/local/bin:/usr/bin:/bin)
+AC_PATH_PROGS(rshcmd,rsh ssh,[/usr/bin/rsh],/usr/local/bin:/usr/bin:/bin)
 AC_PATH_PROGS(tvcmd,totalview,[/usr/local/bin/totalview],/usr/local/bin:/usr/bin:/bin:/bgsys/tmp/totalview/release/bin)
 AC_DEFINE_UNQUOTED(ENVCMD,["$envcmd"],[env command found])
 AC_DEFINE_UNQUOTED(SSHCMD,["$sshcmd"],[ssh or its equivalent found])
+AC_DEFINE_UNQUOTED(RSHCMD,["$rshcmd"],[rsh or its equivalent found])
 AC_DEFINE_UNQUOTED(TVCMD,["$tvcmd"],[totalview found])
 
 
@@ -236,5 +253,5 @@ AC_CONFIG_FILES([Makefile
 		 launchmon/src/linux/lmon_api/Makefile
                  launchmon/man/Makefile
 		 test/Makefile
-		 test/src/Makefile]) 
+		 test/src/Makefile])
 AC_OUTPUT
