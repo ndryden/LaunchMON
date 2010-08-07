@@ -35,9 +35,7 @@
  *        Dec 19 2006 DHA: Created file.
  */
 
-#ifndef HAVE_LAUNCHMON_CONFIG_H
-#include "config.h"
-#endif
+#include "sdbg_std.hxx"
 
 #include <lmon_api/lmon_api_std.h>
 
@@ -307,7 +305,7 @@ lmon_accept ( int s, struct sockaddr *addr, socklen_t *addrlen )
 /*!
     -1: other errors
     -2: timed out
-                                                                                                        
+
 */
 int
 lmon_timedaccept ( int s, struct sockaddr *addr,
@@ -348,8 +346,8 @@ lmon_timedaccept ( int s, struct sockaddr *addr,
 /*!
     Which spatial component is using this lmonp message? 
 */
-void 
-set_client_name(const char* cn)
+void
+set_client_name(const char *cn)
 {
   iamusedby = cn;
 }
@@ -457,7 +455,8 @@ init_msg_header ( lmonp_t* msg )
 int 
 write_lmonp_long_msg ( int fd, lmonp_t* msg, int msglength )
 {
-  using namespace std;
+  using std::cerr;
+  using std::endl;
 
   int write_byte;
   int msgsize = sizeof ( (*msg) )
@@ -635,57 +634,82 @@ char *
 get_strtab_begin ( lmonp_t *msg )
 {
   char *ret = NULL;
-  if ( msg->msgclass == lmonp_fetobe )
-  {
-    if ( msg->type.fetobe_type == lmonp_febe_proctab )
+  switch (msg->msgclass)
     {
-      ret = get_lmonpayload_begin ( msg ); 
-      if (ret)
+    case lmonp_fetofe:
       {
-        if (msg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
-	{
-	  ret += msg->sec_or_jobsizeinfo.num_tasks*sizeof(int)*4;
-	}
-	else
-	{
-	  ret += msg->long_num_tasks*sizeof(int)*4;
-	}
+        if ( msg->type.fetofe_type == lmonp_proctable_avail )
+        ret = get_lmonpayload_begin ( msg );
+        if (ret)
+          {
+            if (msg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
+              {
+                ret += msg->sec_or_jobsizeinfo.num_tasks*sizeof(uint32_t)*4;
+              }
+            else
+              {
+                ret += msg->long_num_tasks*sizeof(uint32_t)*4;
+              }
+            }
+         break;
       }
-    } 
-    else if ( msg->type.fetobe_type == lmonp_befe_hostname )
-    {
-      ret = get_lmonpayload_begin ( msg );
-      if (ret)
+    case lmonp_fetobe:
       {
-        if (msg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
-	{
-	  ret += msg->sec_or_jobsizeinfo.num_tasks*sizeof(int);
-	}
-	else
-	{
-	  ret += msg->long_num_tasks*sizeof(int);
-	}
-      } 
-    }
-  }
-  else if ( msg->msgclass == lmonp_fetofe )
-  {
-    if ( msg->type.fetofe_type == lmonp_proctable_avail )
-    {
-      ret = get_lmonpayload_begin ( msg );
-      if (ret)
-      {
-        if (msg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
-	{
-	  ret += msg->sec_or_jobsizeinfo.num_tasks*sizeof(int)*4;
-	}
-	else
-	{
-	  ret += msg->long_num_tasks*sizeof(int)*4;
-	}
+        if ( msg->type.fetobe_type == lmonp_febe_proctab )
+          {
+            ret = get_lmonpayload_begin ( msg );
+            if (ret)
+             {
+               if (msg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
+                 {
+                   ret += msg->sec_or_jobsizeinfo.num_tasks*sizeof(uint32_t)*4;
+                 }
+               else
+                 {
+                   ret += msg->long_num_tasks*sizeof(uint32_t)*4;
+                 }
+              }
+           }
+         else if ( msg->type.fetobe_type == lmonp_befe_hostname )
+           {
+             ret = get_lmonpayload_begin ( msg );
+             if (ret)
+               {
+                 if (msg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
+                   {
+                     ret += msg->sec_or_jobsizeinfo.num_tasks*sizeof(uint32_t);
+                   }
+                 else
+                   {
+                     ret += msg->long_num_tasks*sizeof(uint32_t);
+                   }
+                }
+            }
+          break;
       }
+    case lmonp_fetomw:
+      {
+        if ( msg->type.fetomw_type == lmonp_mwfe_hostname )
+          {
+            ret = get_lmonpayload_begin ( msg );
+            if (ret)
+              {
+                if (msg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
+                  {
+                    ret += (msg->sec_or_jobsizeinfo.num_tasks*sizeof(uint32_t));
+                  }
+                else
+                  {
+                    ret += (msg->long_num_tasks*sizeof(uint32_t));
+                  }
+              }
+           }
+         break;
+      }
+
+    default:
+      break;
     }
-  }
  
   return ret;
 }
@@ -702,7 +726,7 @@ parse_raw_RPDTAB_msg (lmonp_t *proctabMsg, void *pMap)
 
   char *mpirent;
   char *strtab;
-  int i;
+  unsigned int i;
   unsigned int ntasks;
 
   //
@@ -722,10 +746,10 @@ parse_raw_RPDTAB_msg (lmonp_t *proctabMsg, void *pMap)
   if ( !strtab )
     return -3;
 
-    if (proctabMsg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
-        ntasks = proctabMsg->sec_or_jobsizeinfo.num_tasks;
-    else
-        ntasks = proctabMsg->long_num_tasks;
+  if (proctabMsg->sec_or_jobsizeinfo.num_tasks < LMON_NTASKS_THRE)
+    ntasks = proctabMsg->sec_or_jobsizeinfo.num_tasks;
+  else
+    ntasks = proctabMsg->long_num_tasks;
 
   for ( i=0; i < ntasks; i++ )
     {
@@ -737,12 +761,18 @@ parse_raw_RPDTAB_msg (lmonp_t *proctabMsg, void *pMap)
       string hntmpstr( strtab + (*hn_ix_ptr) );
       char *exeptr = ( strtab + (*exec_ix_ptr) );
 
+      //
+      // This memory should be freed when (*pTab) is finalized
+      //
       MPIR_PROCDESC_EXT *anentry = (MPIR_PROCDESC_EXT *)
 	malloc (sizeof (MPIR_PROCDESC_EXT) );
 
       if ( anentry == NULL )
         return -4;
 
+      //
+      // strdup memory should be when (*pTab) is finalized
+      //
       anentry->pd.executable_name = strdup ( exeptr );
       anentry->pd.host_name = strdup ( hntmpstr.c_str () );
       anentry->pd.pid = ( *pid_ptr );
