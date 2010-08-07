@@ -39,9 +39,7 @@
 #ifndef SDBG_BASE_DRIVER_IMPL_HXX
 #define SDBG_BASE_DRIVER_IMPL_HXX 1
 
-#ifndef HAVE_LAUNCHMON_CONFIG_H
-#include "config.h"
-#endif
+#include "sdbg_std.hxx"
 
 #include "sdbg_opt.hxx"
 #include "sdbg_base_tracer.hxx"

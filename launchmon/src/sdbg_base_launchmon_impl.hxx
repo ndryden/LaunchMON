@@ -44,9 +44,7 @@
 #ifndef SDBG_BASE_LAUNCHMON_IMPL_HXX
 #define SDBG_BASE_LAUNCHMON_IMPL_HXX 1
 
-#ifndef HAVE_LAUNCHMON_CONFIG_H
-#include "config.h"
-#endif
+#include "sdbg_std.hxx"
 
 #include <lmon_api/lmon_api_std.h>
 

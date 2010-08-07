@@ -38,6 +38,8 @@
 #ifndef SDBG_BASE_DRIVER_HXX
 #define SDBG_BASE_DRIVER_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_STRING
 # include <string>
 #else

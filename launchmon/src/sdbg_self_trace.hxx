@@ -35,6 +35,8 @@
 #ifndef SDBG_SELF_TRACE_HXX
 #define SDBG_SELF_TRACE_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_STRING
 # include <string>
 #else

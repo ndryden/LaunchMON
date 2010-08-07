@@ -42,14 +42,16 @@
 
     Since most of the archtecture employ a trap instruction
     to implement the breakpoint, this class carries the trap 
-    instruction itself around. 
+    instruction itself around.
 
     Note that one should only put platform independent logics
-    into this file. 
+    into this file.
 */
 
 #ifndef SDBG_BASE_BP_HXX
 #define SDBG_BASE_BP_HXX 1
+
+#include "sdbg_std.hxx"
 
 //! breakpoint_base_t:
 /*!

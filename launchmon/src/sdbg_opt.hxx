@@ -45,9 +45,9 @@
 
 #ifndef SDBG_OPT_HXX
 #define SDBG_OPT_HXX 1
- 
-#include <lmon_api/common.h>
- 
+
+#include "sdbg_std.hxx"
+
 extern "C" {
 #if HAVE_SYS_TYPES_H
 # include <sys/types.h>

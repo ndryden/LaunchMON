@@ -189,11 +189,11 @@ typedef enum _lmonp_fe_to_fe_msg_e {
 } lmonp_fe_to_fe_msg_e;
 
 
-/* 
+/*
  * msg types defined here for FE-BE comm 
- */ 
+ */
 typedef enum _lmonp_fe_to_be_msg_e {
-  
+
   /*
    * FE->BE: security check message
    */
@@ -202,67 +202,90 @@ typedef enum _lmonp_fe_to_be_msg_e {
   /*
    * FE->BE: proctab message
    */
-  lmonp_febe_proctab                   = 1,
+  lmonp_febe_proctab,
 
   /*
    * FE->BE: usrdata message
    */
-  lmonp_febe_usrdata                   = 2,
+  lmonp_febe_usrdata,
 
   /*
    * FE->BE: launch
    */
-  lmonp_febe_launch                    = 3,
+  lmonp_febe_launch,
 
   /*
-   * FE->BE: launch
+   * FE->BE: launch with dontstop
    */
-  lmonp_febe_launch_dontstop           = 4,
-
-  /*
-   * FE->BE: attach 
-   */
-  lmonp_febe_attach                    = 5,
+  lmonp_febe_launch_dontstop,
 
   /*
    * FE->BE: attach 
    */
-  lmonp_febe_attach_stop               = 6,
+  lmonp_febe_attach,
+
+  /*
+   * FE->BE: attach with stop
+   */
+  lmonp_febe_attach_stop,
+
+  /*
+   * FE->BE: assist MW coloc
+   */
+  lmonp_febe_assist_mw_coloc,
 
   /*
    * BE->FE: BE hostnames message
    */
-  lmonp_befe_hostname                  = 7,
+  lmonp_befe_hostname,
 
   /*
    * BE->FE: usrdata message
    */
-  lmonp_befe_usrdata                   = 8,
+  lmonp_befe_usrdata,
 
   /*
    * BE->FE: BE ready message
    */
-  lmonp_be_ready                       = 9,
+  lmonp_befe_ready,
 
 } lmonp_fe_to_be_msg_e;
 
 
-/* 
- * msg types defined here for FE-MIDDLEWARE comm 
- */ 
+/*
+ * msg types defined here for FE-MIDDLEWARE comm
+ */
 typedef enum _lmonp_fe_to_mw_msg_e {
 
+  /*
+   * FE->MW: security check message
+   */
   lmonp_femw_security_chk            = 0,
 
-  lmonp_femw_proctab                 = 1,
+  /*
+   * FE->MW: proctab message (not used yet)
+   */
+  lmonp_femw_proctab,
 
-  lmonp_femw_usrdata                 = 2,
+  /*
+   * FE->MW: usrdata message
+   */
+  lmonp_femw_usrdata,
 
-  lmonp_femw_hostname                = 3,
+  /*
+   * FE->MW: MW hostnames message
+   */
+  lmonp_mwfe_hostname,
 
-  lmonp_mwfe_usrdata                 = 4,
+  /*
+   * MW->FE: usrdata message
+   */
+  lmonp_mwfe_usrdata,
 
-  lmonp_mw_ready                     = 5,
+  /*
+   * MW->FE: MW ready message
+   */
+  lmonp_mwfe_ready
 
 } lmonp_fe_to_mw_msg_e;
 

@@ -37,6 +37,8 @@
 #ifndef SDBG_BASE_TRACER_HXX
 #define SDBG_BASE_TRACER_HXX
 
+#include "sdbg_std.hxx"
+
 #if HAVE_IOSTREAM
 # include <iostream>
 #else

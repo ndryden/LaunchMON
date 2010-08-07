@@ -33,11 +33,7 @@
  *        Mar 30 2006 DHA: File created      
  */ 
 
-#ifndef HAVE_LAUNCHMON_CONFIG_H
-#include "config.h"
-#endif
-
-#include <lmon_api/common.h>
+#include "sdbg_std.hxx"
 
 #if HAVE_IOSTREAM
 # include <iostream>
@@ -94,12 +90,11 @@ self_trace_entry_t self_trace_t::opt_module_trace
 self_trace_entry_t self_trace_t::sighandler_module_trace
      = { quiet, "SigHandler", "sighandler"};
 
-
 FILE *self_trace_t::tracefptr = stdout;
 
 
 //!  opts_args_t::trace
-/*!        
+/*!
     logs self-tracing event
 */
 bool 

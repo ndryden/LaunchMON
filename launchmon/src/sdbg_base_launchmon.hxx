@@ -1,7 +1,7 @@
 /*
  * $Header: /usr/gapps/asde/cvs-vault/sdb/launchmon/src/sdbg_base_launchmon.hxx,v 1.11.2.2 2008/02/20 17:37:56 dahn Exp $
  *--------------------------------------------------------------------------------
- * Copyright (c) 2008, Lawrence Livermore National Security, LLC. Produced at 
+ * Copyright (c) 2008 ~ 2010, Lawrence Livermore National Security, LLC. Produced at 
  * the Lawrence Livermore National Laboratory. Written by Dong H. Ahn <ahn1@llnl.gov>. 
  * LLNL-CODE-409469. All rights reserved.
  *
@@ -51,6 +51,8 @@
 
 #ifndef SDBG_BASE_LAUNCHMON_HXX
 #define SDBG_BASE_LAUNCHMON_HXX 1
+
+#include "sdbg_std.hxx"
 
 #if HAVE_MAP
 # include <map>

@@ -35,6 +35,8 @@
 #ifndef SDBG_EVENT_MANAGER_HXX
 #define SDBG_EVENT_MANAGER_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_VECTOR
 # include <vector>
 #else

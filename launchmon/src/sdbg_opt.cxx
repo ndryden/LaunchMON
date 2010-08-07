@@ -48,11 +48,7 @@
  *        Jun 06 2006 DHA: File created
  */ 
 
-#ifndef HAVE_LAUNCHMON_CONFIG_H
-#include "config.h"
-#endif
-
-#include <lmon_api/common.h>
+#include "sdbg_std.hxx"
 
 #if HAVE_LIMITS_H
 # include <limits.h>

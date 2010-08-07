@@ -36,11 +36,7 @@
 #ifndef SDBG_SIGNAL_HLR_IMPL_HXX
 #define SDBG_SIGNAL_HLR_IMPL_HXX 1
 
-#ifndef HAVE_LAUNCHMON_CONFIG_H
-#include "config.h"
-#endif
-
-#include <lmon_api/common.h>
+#include "sdbg_std.hxx"
 
 extern "C" {
 #if HAVE_SYS_TYPES_H

@@ -33,13 +33,14 @@
 #ifndef SDBG_SIGNAL_HLR_HXX
 #define SDBG_SIGNAL_HLR_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_VECTOR
 # include <vector>
 #else
 # error vector is required
 #endif
 
-#include "sdbg_std.hxx"
 #include "sdbg_base_tracer.hxx"
 #include "sdbg_base_mach.hxx"
 #include "sdbg_base_tracer.hxx"
@@ -50,7 +51,7 @@ class signal_handler_t
 {
 
 public:
-  
+
   signal_handler_t ( );
   signal_handler_t ( const signal_handler_t& s );
   ~signal_handler_t ( );

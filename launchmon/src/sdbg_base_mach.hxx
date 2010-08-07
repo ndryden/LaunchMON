@@ -37,6 +37,8 @@
 #ifndef SDBG_BASE_MACH_HXX
 #define SDBG_BASE_MACH_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_MAP
 # include <map>
 #else

@@ -43,7 +43,12 @@
 # error signal.h is required
 #endif
 
-#include <string>
+#if HAVE_STRING
+# include <string>
+#else
+# error string is required
+#endif
+
 #include <lmon_api/lmon_api_std.h>
 
 struct coloc_str_param_t
@@ -128,10 +133,10 @@ public:
   	  rm_coloc_cmd = lnchrpath;
 #ifdef TVCMD
           if ( getenv("LMON_DEBUG_BES") != NULL)
-            rm_coloc_cmd = TVCMD + std::string(" ") + rm_coloc_cmd + std::string(" -a");        
+            rm_coloc_cmd = TVCMD + std::string(" ") + rm_coloc_cmd + std::string(" -a");
 #endif
           rm_coloc_str = rm_coloc_cmd;
-	  rm_coloc_str += std::string(" --input=none --jobid=%d --nodes=%d --ntasks=%d ")
+	  rm_coloc_str += std::string(" --input=none --output=none --jobid=%d --nodes=%d --ntasks=%d ")
             + rm_daemon_path + std::string(" ") + tdopts
 #if PMGR_BASED 
             + std::string(" --pmgrsize=%d --pmgrip=%s --pmgrport=%s --pmgrjobid=%d --pmgrlazyrank=1 --pmgrlazysize=1")

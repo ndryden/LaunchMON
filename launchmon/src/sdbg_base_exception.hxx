@@ -35,6 +35,8 @@
 #ifndef SDBG_BASE_EXCEPTION_HXX
 #define SDBG_BASE_EXCEPTION_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_STRING
 # include <string>
 #else

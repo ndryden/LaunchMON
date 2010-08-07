@@ -36,6 +36,8 @@
 #ifndef SDBG_BASE_SYMTAB_HXX
 #define SDBG_BASE_SYMTAB_HXX 1
 
+#include "sdbg_std.hxx"
+
 #if HAVE_IOSTREAM
 # include <iostream>
 #else

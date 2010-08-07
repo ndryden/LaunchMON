@@ -35,8 +35,8 @@
  *                          now contain most up-to-date info.
  *        Feb  09 2008 DHA: Added LLNS Copyright 
  *        Nov  07 2007 DHA: Rewrite API descriptions
- *        Aug  10 2007 DHA: LMON_be_recvUsrData added         
- *        Dec  20 2006 DHA: Created file.          
+ *        Aug  10 2007 DHA: LMON_be_recvUsrData added
+ *        Dec  20 2006 DHA: Created file.
  */
 
 #ifndef LMON_API_LMON_BE_H
@@ -50,57 +50,59 @@
 
 BEGIN_C_DECLS
 
-lmon_rc_e LMON_be_init ( int ver, int* argc, char*** argv );
+lmon_rc_e LMON_be_init(int ver, int *argc, char ***argv);
 
-lmon_rc_e LMON_be_amIMaster ();
+lmon_rc_e LMON_be_amIMaster();
 
-lmon_rc_e LMON_be_getMyRank ( int *rank );
+lmon_rc_e LMON_be_getMyRank(int *rank);
 
-lmon_rc_e LMON_be_getSize ( int* size );
+lmon_rc_e LMON_be_getSize(int *size);
 
-lmon_rc_e LMON_be_barrier ();
+lmon_rc_e LMON_be_barrier();
 
-lmon_rc_e LMON_be_broadcast ( 
-                void* buf, 
-                int numbyte );
+lmon_rc_e LMON_be_broadcast(
+                void* buf,
+                int numbyte);
 
-lmon_rc_e LMON_be_gather ( 
+lmon_rc_e LMON_be_gather(
                 void *sendbuf,
                 int numbyte_per_elem,
-                void* recvbuf );
+                void* recvbuf);
 
-lmon_rc_e LMON_be_scatter ( 
+lmon_rc_e LMON_be_scatter(
                 void *sendbuf,
                 int numbyte_per_element,
-                void* recvbuf );
+                void* recvbuf);
 
-lmon_rc_e LMON_be_finalize ();
+lmon_rc_e LMON_be_finalize();
 
-lmon_rc_e LMON_be_handshake ( void* udata );
+lmon_rc_e LMON_be_handshake(void* udata);
 
-lmon_rc_e LMON_be_ready ( void* udata );
+lmon_rc_e LMON_be_ready(void *udata);
 
-lmon_rc_e LMON_be_getMyProctab ( 
+lmon_rc_e LMON_be_assist_mw_coloc();
+
+lmon_rc_e LMON_be_getMyProctab(
                 MPIR_PROCDESC_EXT *proctabbuf, 
-                int *size, 
-                int proctab_num_elem );
+                int *size,
+                int proctab_num_elem);
 
-lmon_rc_e LMON_be_getMyProctabSize (
-		int *size );
+lmon_rc_e LMON_be_getMyProctabSize(
+                int *size);
 
-lmon_rc_e LMON_be_regPackForBeToFe (
+lmon_rc_e LMON_be_regPackForBeToFe(
                 int (*packBefe) 
-                ( void* udata,void* msgbuf,int msgbufmax,int* msgbuflen ) );
+                (void *udata, void *msgbuf, int msgbufmax, int *msgbuflen));
 
-lmon_rc_e LMON_be_regUnpackForFeToBe (
-                int (*unpackFebe) 
-                ( void* udatabuf,int udatabuflen, void* udata  ) );
+lmon_rc_e LMON_be_regUnpackForFeToBe(
+                int (*unpackFebe)
+                (void *udatabuf, int udatabuflen, void *udata));
 
-lmon_rc_e LMON_be_recvUsrData ( void* udata );
+lmon_rc_e LMON_be_recvUsrData(void *udata);
 
-lmon_rc_e LMON_be_sendUsrData ( void* udata );
+lmon_rc_e LMON_be_sendUsrData(void *udata);
 
-lmon_rc_e LMON_be_regErrorCB ( int (*errorCB) (const char *format, va_list ap) );
+lmon_rc_e LMON_be_regErrorCB(int (*errorCB) (const char *format, va_list ap));
 
 END_C_DECLS
 
