@@ -1,7 +1,7 @@
 /*
  * $Header: $
  *--------------------------------------------------------------------------------
- * Copyright (c) 2008, Lawrence Livermore National Security, LLC. Produced at 
+ * Copyright (c) 2008-2010, Lawrence Livermore National Security, LLC. Produced at 
  * the Lawrence Livermore National Laboratory. Written by Dong H. Ahn <ahn1@llnl.gov>. 
  * LLNL-CODE-409469. All rights reserved.
  *
@@ -39,7 +39,7 @@
  *        Mar 05 2008 DHA: Added invalid daemon path test.
  *        Feb 09 2008 DHA: Added LLNS Copyright.
  *        Jul 30 2007 DHA: Adjust this case for minor API changes  
- *        Dec 27 2006 DHA: Created file.          
+ *        Dec 27 2006 DHA: Created file.
  */
 
 #ifndef HAVE_LAUNCHMON_CONFIG_H
@@ -65,19 +65,18 @@
 #include <lmon_api/lmon_proctab.h>
 #include <lmon_api/lmon_fe.h>
 
-#if MEASURE_TRACING_COST 
+#define MIN_NARGS 6
+
 extern "C" {
   int begin_timer ();
   int time_stamp ( const char* description );
+  void fill_mpirun_args(const char *nP, const char *nN,
+                   const char *part, const char *app,
+                   const char *mylauncher, char ***launcher_argv);
 }
-#endif
 
-/*
- * OUR PARALLEL JOB LAUNCHER  
- */
-const char* mylauncher    = TARGET_JOB_LAUNCHER_PATH;
-
-int statusFunc ( int *status )
+static int
+statusFunc ( int *status )
 {
   int stcp = *status;
   fprintf (stdout, "**** status callback routine is invoked:0x%x ****\n", stcp);
@@ -109,110 +108,80 @@ int statusFunc ( int *status )
   return 0;
 }
 
+/*
+ * OUR PARALLEL JOB LAUNCHER  
+ */
+const char *mylauncher    = TARGET_JOB_LAUNCHER_PATH;
 
-int 
+int
 main (int argc, char *argv[])
 {
   using namespace std;
 
-  int aSession    = 0;
-  unsigned int psize       = 0;
-  unsigned int proctabsize = 0;
-  int jobidsize   = 0;
-  int i           = 0;
+  int aSession                = 0;
+  unsigned int psize          = 0;
+  unsigned int proctabsize    = 0;
+  int jobidsize               = 0;
+  int i                       = 0;
   char jobid[PATH_MAX]        = {0};
   char **launcher_argv        = NULL;
   char **daemon_opts          = NULL;
+  char *application           = NULL;
+  char *nP                    = NULL;
+  char *nN                    = NULL;
+  char *part                  = NULL;
+  char *be_daemon             = NULL;
   MPIR_PROCDESC_EXT *proctab  = NULL;
-
   lmon_rc_e rc;
-  string numprocs_opt;
-  string numnodes_opt;
-  string partition_opt;
+  lmon_rm_info_t rminfo;
 
-  if ( argc < 6 )
+
+  if ( argc < MIN_NARGS )
     {
-      fprintf ( stdout, 
+      fprintf ( stdout,
         "Usage: fe_launch_smoketest appcode numprocs numnodes partition daemonpath [daemonargs]\n" );
-      fprintf ( stdout, 
+      fprintf ( stdout,
         "[LMON FE] FAILED\n" );
       return EXIT_FAILURE;
     }
 
+  application = argv[1];
+  nP = argv[2];
+  nN = argv[3];
+  part = argv[4];
+  be_daemon = argv[5];
+
   if ( access(argv[1], X_OK) < 0 )
     {
-      fprintf ( stdout, 
-        "%s cannot be executed\n", 
+      fprintf ( stdout,
+        "%s cannot be executed\n",
         argv[1] );
-      fprintf ( stdout, 
+      fprintf ( stdout,
         "[LMON FE] FAILED\n" );
-      return EXIT_FAILURE;     
+      return EXIT_FAILURE;
     }
 
   if ( getenv ("LMON_INVALIDDAEMON_TEST") == NULL )
     {
-      if ( access(argv[5], X_OK) < 0 )
+      if ( access(be_daemon, X_OK) < 0 )
         {
-          fprintf(stdout, 
-            "%s cannot be executed\n", 
-            argv[5]);
-          fprintf(stdout, 
+          fprintf(stdout,
+            "%s cannot be executed\n",
+            be_daemon);
+          fprintf(stdout,
             "[LMON FE] FAILED\n");
           return EXIT_FAILURE;
         }
     }
 
-  if ( argc > 6 )
-    daemon_opts = argv+6;
+  if ( argc > MIN_NARGS )
+    {
+      daemon_opts = argv+MIN_NARGS;
+    }
 
-#if RM_BG_MPIRUN
-  //
-  // This will exercise CO or SMP on BlueGene
-  //
-  launcher_argv = (char **) malloc(8*sizeof(char *));
-  launcher_argv[0] = strdup(mylauncher);
-  launcher_argv[1] = strdup("-verbose");
-  launcher_argv[2] = strdup("3");
-  launcher_argv[3] = strdup("-np");
-  launcher_argv[4] = strdup(argv[2]);
-  launcher_argv[5] = strdup("-exe"); 
-  launcher_argv[6] = strdup(argv[1]); 
-  launcher_argv[7] = NULL;
+  fill_mpirun_args (nP, nN, part, application, mylauncher, &launcher_argv);
   fprintf (stdout, "[LMON_FE] launching the job/daemons via %s\n", mylauncher);
-#elif RM_SLURM_SRUN
-  numprocs_opt     = string("-n") + string(argv[2]);
-  numnodes_opt     = string("-N") + string(argv[3]);
-  partition_opt    = string("-p") + string(argv[4]);
-  launcher_argv    = (char **) malloc (7*sizeof(char*));
-  launcher_argv[0] = strdup(mylauncher);
-  launcher_argv[1] = strdup(numprocs_opt.c_str());
-  launcher_argv[2] = strdup(numnodes_opt.c_str());
-  launcher_argv[3] = strdup(partition_opt.c_str());
-  launcher_argv[4] = strdup("-l");
-  launcher_argv[5] = strdup(argv[1]);
-  launcher_argv[6] = NULL;
-#elif RM_ALPS_APRUN
-  numprocs_opt     = string("-n") + string(argv[2]);
-  launcher_argv    = (char**) malloc(4*sizeof(char*));
-  launcher_argv[0] = strdup(mylauncher);
-  launcher_argv[1] = strdup(numprocs_opt.c_str());
-  launcher_argv[2] = strdup(argv[1]);
-  launcher_argv[3] = NULL;
-#elif RM_ORTE_ORTERUN
-  launcher_argv    = (char **) malloc(5*sizeof(char*));
-  launcher_argv[0] = strdup(mylauncher);
-  /* launcher_argv[1] = strdup("-gmca");
-  launcher_argv[2] = strdup("orte_enable_debug_cospawn_while_running");
-  launcher_argv[3] = strdup("1");*/
-  launcher_argv[1] = strdup("-np");
-  launcher_argv[2] = strdup(argv[2]);
-  launcher_argv[3] = strdup(argv[1]);
-  launcher_argv[4] = NULL;
-  fprintf (stdout, "[LMON_FE] launching the job/daemons via %s\n", mylauncher);
-#else
-# error add support for the RM of your interest here
-#endif
- 
+
   if ( ( rc = LMON_fe_init ( LMON_VERSION ) ) 
               != LMON_OK )
     {
@@ -220,25 +189,24 @@ main (int argc, char *argv[])
       return EXIT_FAILURE;
     }
 
-  if ( ( rc = LMON_fe_createSession (&aSession)) 
+  if ( ( rc = LMON_fe_createSession (&aSession))
               != LMON_OK)
     {
       fprintf ( stdout, "[LMON FE] FAILED\n");
       return EXIT_FAILURE;
     }
 
-  lmon_rm_info_t rminfo;
-  rc = LMON_fe_getRMInfo ( aSession, &rminfo);
-  if (rc != LMON_EDUNAV)
+  if ( (rc = LMON_fe_getRMInfo ( aSession, &rminfo)) 
+           != LMON_EDUNAV)
     {
       fprintf ( stdout, "[LMON FE] FAILED, rc: %d\n", rc);
       return EXIT_FAILURE;
     }
   else
-   {
-      fprintf ( stdout, 
+    {
+      fprintf ( stdout,
          "\n[LMON FE] RM type is %d\n", rminfo.rm_type);
-   }
+    }
 
   if ( getenv ("LMON_STATUS_CB_TEST"))
     {
@@ -251,7 +219,7 @@ main (int argc, char *argv[])
 
 #if MEASURE_TRACING_COST
   begin_timer ();
-#endif 
+#endif
 
   if ( getenv ("FEN_RM_DISTRIBUTED") )
     {
@@ -266,7 +234,7 @@ main (int argc, char *argv[])
    	            hn,
 	    	    launcher_argv[0],
 		    launcher_argv,
-		    argv[5],
+		    be_daemon,
 		    daemon_opts,
 		    NULL,
 		    NULL)) 
@@ -293,7 +261,7 @@ main (int argc, char *argv[])
    	            NULL,
 		    launcher_argv[0],
 		    launcher_argv,
-		    argv[5],
+		    be_daemon,
 		    daemon_opts,
 		    NULL,
 		    NULL)) 
@@ -318,7 +286,7 @@ main (int argc, char *argv[])
   time_stamp ( "LMON_fe_launchAndSpawnDaemons perf" );
 #endif
  
-  if ( ( rc = LMON_fe_getProctableSize ( 
+  if ( ( rc = LMON_fe_getProctableSize (
                 aSession, 
                 &proctabsize ))
               !=  LMON_OK )
@@ -338,7 +306,7 @@ main (int argc, char *argv[])
 
   proctab = (MPIR_PROCDESC_EXT*) malloc (
                 proctabsize*sizeof (MPIR_PROCDESC_EXT) );
-  
+
   if ( !proctab )
     {
        fprintf ( stdout, "[LMON FE] malloc returned null\n");

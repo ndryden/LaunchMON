@@ -26,14 +26,7 @@
  *--------------------------------------------------------------------------------			
  *
  *  Update Log:
- *        Mar 04 2008 DHA: Added generic BlueGene support
- *        Jun 12 2008 DHA: Added GNU build support.
- *        Mar 20 2008 DHA: Added BlueGene support.
- *        Feb 09 2008 DHA: Dynamic RPDTAB buff size support with the
- *                         addition of LMON_be_getMyProctabSize.
- *        Feb 09 2008 DHA: Added LLNS Copyright.
- *        Jul 30 2007 DHA: Adjust this case for minor API changes.
- *        Dec 20 2006 DHA: Created file.
+ *        Aug 04 2010 DHA: Copied most from be_kicker.cxx.
  */
 
 #ifndef HAVE_LAUNCHMON_CONFIG_H
@@ -91,7 +84,7 @@ main( int argc, char* argv[] )
   MPIR_PROCDESC_EXT* proctab;
   int proctab_size;
   int signum;
-  int kill_detach_shutdown_test; 
+  int mw_coloc_test; 
   int i, rank,size;
   lmon_rc_e lrc;
 
@@ -99,9 +92,9 @@ main( int argc, char* argv[] )
   signum = 0;
 #else
   signum = SIGCONT;
-#endif 
+#endif
 
-  kill_detach_shutdown_test = 0;
+  mw_coloc_test = 0;
 
   if ( (lrc = LMON_be_init(LMON_VERSION, &argc, &argv)) 
               != LMON_OK )
@@ -111,7 +104,7 @@ main( int argc, char* argv[] )
       return EXIT_FAILURE;
     }
 
-  if (argc > 1) 
+  if (argc > 1)
     {
       signum = atoi(argv[1]);
       fprintf (stderr, "[LMON BE] signum: %d, argv[1]: %s\n", signum, argv[1]);
@@ -119,7 +112,7 @@ main( int argc, char* argv[] )
 
   if ( argc > 2 )
     {
-      kill_detach_shutdown_test = atoi(argv[2]);
+      mw_coloc_test = atoi(argv[2]);
     }
 
   LMON_be_getMyRank(&rank);
@@ -263,7 +256,6 @@ main( int argc, char* argv[] )
           	  "[LMON BE(%d)] FAILED: the CONTINUE_ACK msg contains a wrong nodeNumber.\n", rank);
               return EXIT_FAILURE;
             }
-
           if (proctab[i].pd.executable_name)
             {
               free(proctab[i].pd.executable_name);
@@ -275,6 +267,7 @@ main( int argc, char* argv[] )
               proctab[i].pd.host_name = NULL;
             }
       }
+
 #else
   for(i=0; i < proctab_size; i++)
     {
@@ -293,12 +286,35 @@ main( int argc, char* argv[] )
 #endif
 
   free (proctab);
-  sleep(1);
 
-  if ( kill_detach_shutdown_test != 0)
-    sleep (kill_detach_shutdown_test);
+  if ( mw_coloc_test != 0)
+    {
+      //
+      // MW daemon co-location support
+      //
+      if (LMON_be_assist_mw_coloc() != LMON_OK)
+        {
+          fprintf(stdout,
+            "[LMON BE(%d)] FAILED: LMON_be_assist_mw_coloc failed \n", rank);
+          LMON_be_finalize();
+          return EXIT_FAILURE;
+        }
+    }
 
-
+  //
+  // Blocks until FE MWs are done; otherwise, COLOC will kill 
+  // MW daemons prematurely
+  //
+  if ( (( lrc = LMON_be_recvUsrData ( NULL )) == LMON_EBDARG)
+       || ( lrc == LMON_EINVAL ) 
+       || ( lrc == LMON_ENOMEM )
+       || ( lrc == LMON_ENEGCB )) 
+     {
+       fprintf(stdout, "[LMON BE(%d)] FAILED(%d): LMON_be_recvUsrData\n",
+               rank, lrc );
+       LMON_be_finalize();
+       return EXIT_FAILURE;
+     }
 
   // sending this to mark the end of the BE session 
   // This should be used to determine PASS/FAIL criteria 

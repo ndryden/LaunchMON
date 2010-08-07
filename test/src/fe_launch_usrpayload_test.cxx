@@ -168,7 +168,7 @@ unpackbefe_cb  ( void* udatabuf,
       trav += strlen(trav)+1+sizeof(int);
     }
   
-  return 0;    
+  return 0;
 }
 
 

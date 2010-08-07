@@ -38,13 +38,15 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @WITH_CIOD_TRUE@am__append_1 = -I@ARCHHEADER@ -I$(top_srcdir)/@CIODLOC@
-bin_PROGRAMS = fe_jobsnap$(EXEEXT) be_jobsnap$(EXEEXT) \
-	LE_model_checker$(EXEEXT) fe_launch_smoketest$(EXEEXT) \
+bin_PROGRAMS = LE_model_checker$(EXEEXT) fe_jobsnap$(EXEEXT) \
+	fe_launch_smoketest$(EXEEXT) \
 	fe_launch_usrpayload_test$(EXEEXT) \
-	fe_attach_smoketest$(EXEEXT) be_kicker$(EXEEXT) \
+	fe_launch_middleware$(EXEEXT) fe_attach_smoketest$(EXEEXT) \
+	be_jobsnap$(EXEEXT) be_kicker$(EXEEXT) be_kicker_mw$(EXEEXT) \
 	be_kicker_usrpayload_test$(EXEEXT) \
-	be_standalone_kicker$(EXEEXT) run_3mins$(EXEEXT) \
-	hang_on_SIGUSR1$(EXEEXT) simple_MPI$(EXEEXT)
+	be_standalone_kicker$(EXEEXT) mw_comm_helper$(EXEEXT) \
+	run_3mins$(EXEEXT) hang_on_SIGUSR1$(EXEEXT) \
+	simple_MPI$(EXEEXT)
 subdir = test/src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -78,6 +80,10 @@ am_be_kicker_OBJECTS = be_kicker-be_kicker.$(OBJEXT) \
 	be_kicker-util.$(OBJEXT)
 be_kicker_OBJECTS = $(am_be_kicker_OBJECTS)
 be_kicker_DEPENDENCIES =
+am_be_kicker_mw_OBJECTS = be_kicker_mw-be_kicker_mw.$(OBJEXT) \
+	be_kicker_mw-util.$(OBJEXT)
+be_kicker_mw_OBJECTS = $(am_be_kicker_mw_OBJECTS)
+be_kicker_mw_DEPENDENCIES =
 am_be_kicker_usrpayload_test_OBJECTS =  \
 	be_kicker_usrpayload_test-be_kicker_usrpayload_test.$(OBJEXT)
 be_kicker_usrpayload_test_OBJECTS =  \
@@ -96,6 +102,11 @@ am_fe_jobsnap_OBJECTS = fe_jobsnap-fe_jobsnap.$(OBJEXT) \
 	fe_jobsnap-util.$(OBJEXT)
 fe_jobsnap_OBJECTS = $(am_fe_jobsnap_OBJECTS)
 fe_jobsnap_DEPENDENCIES =
+am_fe_launch_middleware_OBJECTS =  \
+	fe_launch_middleware-fe_launch_middleware.$(OBJEXT) \
+	fe_launch_middleware-util.$(OBJEXT)
+fe_launch_middleware_OBJECTS = $(am_fe_launch_middleware_OBJECTS)
+fe_launch_middleware_DEPENDENCIES =
 am_fe_launch_smoketest_OBJECTS =  \
 	fe_launch_smoketest-fe_launch_smoketest.$(OBJEXT) \
 	fe_launch_smoketest-util.$(OBJEXT)
@@ -110,6 +121,10 @@ fe_launch_usrpayload_test_DEPENDENCIES =
 hang_on_SIGUSR1_SOURCES = hang_on_SIGUSR1.c
 hang_on_SIGUSR1_OBJECTS = hang_on_SIGUSR1.$(OBJEXT)
 hang_on_SIGUSR1_LDADD = $(LDADD)
+am_mw_comm_helper_OBJECTS = mw_comm_helper-mw_comm_helper.$(OBJEXT) \
+	mw_comm_helper-util.$(OBJEXT)
+mw_comm_helper_OBJECTS = $(am_mw_comm_helper_OBJECTS)
+mw_comm_helper_DEPENDENCIES =
 run_3mins_SOURCES = run_3mins.c
 run_3mins_OBJECTS = run_3mins.$(OBJEXT)
 run_3mins_LDADD = $(LDADD)
@@ -138,17 +153,21 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(LE_model_checker_SOURCES) $(be_jobsnap_SOURCES) \
-	$(be_kicker_SOURCES) $(be_kicker_usrpayload_test_SOURCES) \
+	$(be_kicker_SOURCES) $(be_kicker_mw_SOURCES) \
+	$(be_kicker_usrpayload_test_SOURCES) \
 	$(be_standalone_kicker_SOURCES) $(fe_attach_smoketest_SOURCES) \
-	$(fe_jobsnap_SOURCES) $(fe_launch_smoketest_SOURCES) \
+	$(fe_jobsnap_SOURCES) $(fe_launch_middleware_SOURCES) \
+	$(fe_launch_smoketest_SOURCES) \
 	$(fe_launch_usrpayload_test_SOURCES) hang_on_SIGUSR1.c \
-	run_3mins.c simple_MPI.c
+	$(mw_comm_helper_SOURCES) run_3mins.c simple_MPI.c
 DIST_SOURCES = $(LE_model_checker_SOURCES) $(be_jobsnap_SOURCES) \
-	$(be_kicker_SOURCES) $(be_kicker_usrpayload_test_SOURCES) \
+	$(be_kicker_SOURCES) $(be_kicker_mw_SOURCES) \
+	$(be_kicker_usrpayload_test_SOURCES) \
 	$(be_standalone_kicker_SOURCES) $(fe_attach_smoketest_SOURCES) \
-	$(fe_jobsnap_SOURCES) $(fe_launch_smoketest_SOURCES) \
+	$(fe_jobsnap_SOURCES) $(fe_launch_middleware_SOURCES) \
+	$(fe_launch_smoketest_SOURCES) \
 	$(fe_launch_usrpayload_test_SOURCES) hang_on_SIGUSR1.c \
-	run_3mins.c simple_MPI.c
+	$(mw_comm_helper_SOURCES) run_3mins.c simple_MPI.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -209,6 +228,7 @@ LIBTOOL = @LIBTOOL@
 LMONAPILOC = @LMONAPILOC@
 LMONENABSLOC = @LMONENABSLOC@
 LMONENLOC = @LMONENLOC@
+LMONHL = @LMONHL@
 LMON_AGE = @LMON_AGE@
 LMON_CURRENT = @LMON_CURRENT@
 LMON_REVISION = @LMON_REVISION@
@@ -228,6 +248,7 @@ PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 RANLIB = @RANLIB@
 RM_TYPE = @RM_TYPE@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SMPFACTOR = @SMPFACTOR@
@@ -283,6 +304,7 @@ mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
+rshcmd = @rshcmd@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sshcmd = @sshcmd@
@@ -290,81 +312,36 @@ subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 tvcmd = @tvcmd@
+LMONHOSTLIST = @LMONHL@
 INCLUDES = -I$(top_srcdir)/launchmon/src -I$(top_srcdir)/@LMONAPILOC@ \
 	-I$(top_srcdir)/@GCRYPTLOC@ -I$(top_srcdir)/@GPGERRLOC@ \
 	$(am__append_1)
-LE_model_checker_SOURCES = LE_model_checker.c
-LE_model_checker_CFLAGS = @LNCHR_BIT_FLAGS@ $(AM_CFLAGS)
-LE_model_checker_CXXFLAGS = @LNCHR_BIT_FLAGS@ $(AM_CXXFLAGS)
-LE_model_checker_LDADD = @LIBPTHREAD@
-LE_model_checker_LDFLAGS = @LNCHR_BIT_FLAGS@ @LIBPTHREAD@ $(AM_LDFLAGS)
-fe_launch_smoketest_SOURCES = fe_launch_smoketest.cxx util.c
-fe_launch_smoketest_CFLAGS = $(AM_CFLAGS)
-fe_launch_smoketest_CXXFLAGS = $(AM_CXXFLAGS)
-fe_launch_smoketest_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
-fe_launch_smoketest_LDADD = -lmonfeapi 
-fe_launch_usrpayload_test_SOURCES = fe_launch_usrpayload_test.cxx util.c
-fe_launch_usrpayload_test_CFLAGS = $(AM_CFLAGS)
-fe_launch_usrpayload_test_CXXFLAGS = $(AM_CXXFLAGS)
-fe_launch_usrpayload_test_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
-fe_launch_usrpayload_test_LDADD = -lmonfeapi 
-
-#fe_multisession_launch_SOURCES    = fe_multisession_launch.cxx util.c
-#fe_multisession_launch_LDFLAGS    = -L$(top_srcdir)/@LMONAPILOC@ 
-#fe_multisession_launch_LDADD      = -lmonfeapi 
-fe_attach_smoketest_SOURCES = fe_attach_smoketest.cxx util.c
-fe_attach_smoketest_CFLAGS = $(AM_CFLAGS)
-fe_attach_smoketest_CXXFLAGS = $(AM_CXXFLAGS)
-fe_attach_smoketest_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@
-fe_attach_smoketest_LDADD = -lmonfeapi
-be_kicker_SOURCES = be_kicker.cxx util.c
-be_kicker_CFLAGS = $(AM_CFLAGS)
-be_kicker_CXXFLAGS = $(AM_CXXFLAGS)
-be_kicker_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
-be_kicker_LDADD = -lmonbeapi 
-be_kicker_usrpayload_test_SOURCES = be_kicker_usrpayload_test.cxx
-be_kicker_usrpayload_test_CFLAGS = $(AM_CFLAGS)
-be_kicker_usrpayload_test_CXXFLAGS = $(AM_CXXFLAGS)
-be_kicker_usrpayload_test_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
-be_kicker_usrpayload_test_LDADD = -lmonbeapi
-be_standalone_kicker_SOURCES = be_standalone_kicker.cxx
-be_standalone_kicker_CFLAGS = $(AM_CFLAGS)
-be_standalone_kicker_CXXFLAGS = $(AM_CXXFLAGS)
-be_standalone_kicker_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
-be_standalone_kicker_LDADD = -lmonbeapi
-fe_jobsnap_SOURCES = fe_jobsnap.cxx util.c
-fe_jobsnap_CFLAGS = $(AM_CFLAGS)
-fe_jobsnap_CXXFLAGS = $(AM_CXXFLAGS)
-fe_jobsnap_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@
-fe_jobsnap_LDADD = -lmonfeapi 
-be_jobsnap_SOURCES = be_jobsnap.cxx util.c
-be_jobsnap_CFLAGS = $(AM_CFLAGS)
-be_jobsnap_CXXFLAGS = $(AM_CXXFLAGS)
-be_jobsnap_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@
-be_jobsnap_LDADD = -lmonbeapi
 bin_SCRIPTS = test.LE_model_checker_mainthread \
-				    test.LE_model_checker_pthread \
-			            test.LE_model_checker_large \
-				    test.LE_model_checker_extreme \
-				    test.launch_1 \
-				    test.launch_1_remote \
-			   	    test.launch_2_half \
-				    test.launch_2_uneven \
-				    test.launch_3_invalid_dmonpath \
-				    test.launch_5_usrpayload \
-				    test.attach_1 \
-				    test.attach_1_remote \
-				    test.attach_1_pdebugmax \
-				    test.attach_2_uneven \
-				    test.attach_3_invalidpid \
-				    test.attach_3_invalidpid_remote \
-				    test.attach_3_callsafterfail \
-				    test.attach_4_kill \
-				    test.attach_4_shutdownbe \
-				    test.jobsnap_1 \
-				    test.launch_6_engine_failure \
-				    test.fe_regErrorCB \
-				    test.fe_regStatusCB
+                                    test.LE_model_checker_pthread \
+                                    test.LE_model_checker_large \
+                                    test.LE_model_checker_extreme \
+                                    test.launch_1 \
+                                    test.launch_1_remote \
+                                    test.launch_2_half \
+                                    test.launch_2_uneven \
+                                    test.launch_3_invalid_dmonpath \
+                                    test.launch_5_usrpayload \
+                                    test.launch_mw_1_hostlist \
+                                    test.launch_mw_2_coloc \
+                                    test.launch_mw_5_mixall \
+                                    test.attach_1 \
+                                    test.attach_1_remote \
+                                    test.attach_1_pdebugmax \
+                                    test.attach_2_uneven \
+                                    test.attach_3_invalidpid \
+                                    test.attach_3_invalidpid_remote \
+                                    test.attach_3_callsafterfail \
+                                    test.attach_4_kill \
+                                    test.attach_4_shutdownbe \
+                                    test.jobsnap_1 \
+                                    test.launch_6_engine_failure \
+                                    test.fe_regErrorCB \
+                                    test.fe_regStatusCB
 
 CLEANFILES = $(bin_SCRIPTS)
 EXTRA_DIST = test.LE_model_checker_mainthread.in \
@@ -377,6 +354,9 @@ EXTRA_DIST = test.LE_model_checker_mainthread.in \
                                     test.launch_2_uneven.in \
                                     test.launch_3_invalid_dmonpath.in \
                                     test.launch_5_usrpayload.in \
+                                    test.launch_mw_1_hostlist.in \
+                                    test.launch_mw_2_coloc.in \
+                                    test.launch_mw_5_mixall.in \
                                     test.attach_1.in \
                                     test.attach_1_remote.in \
                                     test.attach_1_pdebugmax.in \
@@ -387,18 +367,79 @@ EXTRA_DIST = test.LE_model_checker_mainthread.in \
                                     test.attach_4_kill.in \
                                     test.attach_4_shutdownbe.in \
                                     test.jobsnap_1.in \
-				    test.launch_6_engine_failure.in \
-				    test.fe_regErrorCB.in \
-				    test.fe_regStatusCB.in
+                                    test.launch_6_engine_failure.in \
+                                    test.fe_regErrorCB.in \
+                                    test.fe_regStatusCB.in
 
 do_subst = sed -e 's,@LMON@,$(prefix)/bin/launchmon$(EXEEXT),g' \
+               -e 's,@LMONMWHL@,$(LMONHOSTLIST),g' \
 	       -e 's,@LMONPREFIX@,$(prefix),g' \
                -e 's,@TJLPATH@,$(TARGET_JOB_LAUNCHER_PATH),g' \
                -e 's,@RMTP@,$(RM_TYPE),g' \
 	       -e 's,@SMP@,$(SMPFACTOR),g' \
 	       -e 's,@NNODES@,$(TESTNNODES),g' \
-               -e 's,@EXE@,$(EXEEXT),g' 
+               -e 's,@EXE@,$(EXEEXT),g'
 
+LE_model_checker_SOURCES = LE_model_checker.c
+LE_model_checker_CFLAGS = @LNCHR_BIT_FLAGS@ $(AM_CFLAGS)
+LE_model_checker_CXXFLAGS = @LNCHR_BIT_FLAGS@ $(AM_CXXFLAGS)
+LE_model_checker_LDADD = @LIBPTHREAD@
+LE_model_checker_LDFLAGS = @LNCHR_BIT_FLAGS@ @LIBPTHREAD@ $(AM_LDFLAGS)
+fe_jobsnap_SOURCES = fe_jobsnap.cxx util.c
+fe_jobsnap_CFLAGS = $(AM_CFLAGS)
+fe_jobsnap_CXXFLAGS = $(AM_CXXFLAGS)
+fe_jobsnap_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@
+fe_jobsnap_LDADD = -lmonfeapi
+fe_launch_smoketest_SOURCES = fe_launch_smoketest.cxx util.c
+fe_launch_smoketest_CFLAGS = $(AM_CFLAGS)
+fe_launch_smoketest_CXXFLAGS = $(AM_CXXFLAGS)
+fe_launch_smoketest_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+fe_launch_smoketest_LDADD = -lmonfeapi
+fe_launch_usrpayload_test_SOURCES = fe_launch_usrpayload_test.cxx util.c
+fe_launch_usrpayload_test_CFLAGS = $(AM_CFLAGS)
+fe_launch_usrpayload_test_CXXFLAGS = $(AM_CXXFLAGS)
+fe_launch_usrpayload_test_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+fe_launch_usrpayload_test_LDADD = -lmonfeapi 
+fe_launch_middleware_SOURCES = fe_launch_middleware.cxx util.c
+fe_launch_middleware_CFLAGS = $(AM_CFLAGS)
+fe_launch_middleware_CXXFLAGS = $(AM_CXXFLAGS)
+fe_launch_middleware_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+fe_launch_middleware_LDADD = -lmonfeapi 
+fe_attach_smoketest_SOURCES = fe_attach_smoketest.cxx util.c
+fe_attach_smoketest_CFLAGS = $(AM_CFLAGS)
+fe_attach_smoketest_CXXFLAGS = $(AM_CXXFLAGS)
+fe_attach_smoketest_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@
+fe_attach_smoketest_LDADD = -lmonfeapi
+be_jobsnap_SOURCES = be_jobsnap.cxx util.c
+be_jobsnap_CFLAGS = $(AM_CFLAGS)
+be_jobsnap_CXXFLAGS = $(AM_CXXFLAGS)
+be_jobsnap_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@
+be_jobsnap_LDADD = -lmonbeapi
+be_kicker_SOURCES = be_kicker.cxx util.c
+be_kicker_CFLAGS = $(AM_CFLAGS)
+be_kicker_CXXFLAGS = $(AM_CXXFLAGS)
+be_kicker_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+be_kicker_LDADD = -lmonbeapi
+be_kicker_usrpayload_test_SOURCES = be_kicker_usrpayload_test.cxx
+be_kicker_usrpayload_test_CFLAGS = $(AM_CFLAGS)
+be_kicker_usrpayload_test_CXXFLAGS = $(AM_CXXFLAGS)
+be_kicker_usrpayload_test_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+be_kicker_usrpayload_test_LDADD = -lmonbeapi
+be_kicker_mw_SOURCES = be_kicker_mw.cxx util.c
+be_kicker_mw_CFLAGS = $(AM_CFLAGS)
+be_kicker_mw_CXXFLAGS = $(AM_CXXFLAGS)
+be_kicker_mw_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+be_kicker_mw_LDADD = -lmonbeapi
+be_standalone_kicker_SOURCES = be_standalone_kicker.cxx
+be_standalone_kicker_CFLAGS = $(AM_CFLAGS)
+be_standalone_kicker_CXXFLAGS = $(AM_CXXFLAGS)
+be_standalone_kicker_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+be_standalone_kicker_LDADD = -lmonbeapi
+mw_comm_helper_SOURCES = mw_comm_helper.cxx util.c
+mw_comm_helper_CFLAGS = $(AM_CFLAGS)
+mw_comm_helper_CXXFLAGS = $(AM_CXXFLAGS)
+mw_comm_helper_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@
+mw_comm_helper_LDADD = -lmonmwapi
 all: all-am
 
 .SUFFIXES:
@@ -469,6 +510,9 @@ be_jobsnap$(EXEEXT): $(be_jobsnap_OBJECTS) $(be_jobsnap_DEPENDENCIES)
 be_kicker$(EXEEXT): $(be_kicker_OBJECTS) $(be_kicker_DEPENDENCIES) 
 	@rm -f be_kicker$(EXEEXT)
 	$(CXXLINK) $(be_kicker_LDFLAGS) $(be_kicker_OBJECTS) $(be_kicker_LDADD) $(LIBS)
+be_kicker_mw$(EXEEXT): $(be_kicker_mw_OBJECTS) $(be_kicker_mw_DEPENDENCIES) 
+	@rm -f be_kicker_mw$(EXEEXT)
+	$(CXXLINK) $(be_kicker_mw_LDFLAGS) $(be_kicker_mw_OBJECTS) $(be_kicker_mw_LDADD) $(LIBS)
 be_kicker_usrpayload_test$(EXEEXT): $(be_kicker_usrpayload_test_OBJECTS) $(be_kicker_usrpayload_test_DEPENDENCIES) 
 	@rm -f be_kicker_usrpayload_test$(EXEEXT)
 	$(CXXLINK) $(be_kicker_usrpayload_test_LDFLAGS) $(be_kicker_usrpayload_test_OBJECTS) $(be_kicker_usrpayload_test_LDADD) $(LIBS)
@@ -481,12 +525,18 @@ fe_attach_smoketest$(EXEEXT): $(fe_attach_smoketest_OBJECTS) $(fe_attach_smokete
 fe_jobsnap$(EXEEXT): $(fe_jobsnap_OBJECTS) $(fe_jobsnap_DEPENDENCIES) 
 	@rm -f fe_jobsnap$(EXEEXT)
 	$(CXXLINK) $(fe_jobsnap_LDFLAGS) $(fe_jobsnap_OBJECTS) $(fe_jobsnap_LDADD) $(LIBS)
+fe_launch_middleware$(EXEEXT): $(fe_launch_middleware_OBJECTS) $(fe_launch_middleware_DEPENDENCIES) 
+	@rm -f fe_launch_middleware$(EXEEXT)
+	$(CXXLINK) $(fe_launch_middleware_LDFLAGS) $(fe_launch_middleware_OBJECTS) $(fe_launch_middleware_LDADD) $(LIBS)
 fe_launch_smoketest$(EXEEXT): $(fe_launch_smoketest_OBJECTS) $(fe_launch_smoketest_DEPENDENCIES) 
 	@rm -f fe_launch_smoketest$(EXEEXT)
 	$(CXXLINK) $(fe_launch_smoketest_LDFLAGS) $(fe_launch_smoketest_OBJECTS) $(fe_launch_smoketest_LDADD) $(LIBS)
 fe_launch_usrpayload_test$(EXEEXT): $(fe_launch_usrpayload_test_OBJECTS) $(fe_launch_usrpayload_test_DEPENDENCIES) 
 	@rm -f fe_launch_usrpayload_test$(EXEEXT)
 	$(CXXLINK) $(fe_launch_usrpayload_test_LDFLAGS) $(fe_launch_usrpayload_test_OBJECTS) $(fe_launch_usrpayload_test_LDADD) $(LIBS)
+mw_comm_helper$(EXEEXT): $(mw_comm_helper_OBJECTS) $(mw_comm_helper_DEPENDENCIES) 
+	@rm -f mw_comm_helper$(EXEEXT)
+	$(CXXLINK) $(mw_comm_helper_LDFLAGS) $(mw_comm_helper_OBJECTS) $(mw_comm_helper_LDADD) $(LIBS)
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(mkdir_p) "$(DESTDIR)$(bindir)"
@@ -518,17 +568,23 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/be_jobsnap-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/be_kicker-be_kicker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/be_kicker-util.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/be_kicker_mw-be_kicker_mw.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/be_kicker_mw-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/be_kicker_usrpayload_test-be_kicker_usrpayload_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/be_standalone_kicker-be_standalone_kicker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_attach_smoketest-fe_attach_smoketest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_attach_smoketest-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_jobsnap-fe_jobsnap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_jobsnap-util.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_launch_middleware-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_launch_smoketest-fe_launch_smoketest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_launch_smoketest-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_launch_usrpayload_test-fe_launch_usrpayload_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fe_launch_usrpayload_test-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hang_on_SIGUSR1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mw_comm_helper-mw_comm_helper.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mw_comm_helper-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/run_3mins.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple_MPI.Po@am__quote@
 
@@ -595,6 +651,20 @@ be_kicker-util.obj: util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_CFLAGS) $(CFLAGS) -c -o be_kicker-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
 
+be_kicker_mw-util.o: util.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_mw_CFLAGS) $(CFLAGS) -MT be_kicker_mw-util.o -MD -MP -MF "$(DEPDIR)/be_kicker_mw-util.Tpo" -c -o be_kicker_mw-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/be_kicker_mw-util.Tpo" "$(DEPDIR)/be_kicker_mw-util.Po"; else rm -f "$(DEPDIR)/be_kicker_mw-util.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='be_kicker_mw-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_mw_CFLAGS) $(CFLAGS) -c -o be_kicker_mw-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c
+
+be_kicker_mw-util.obj: util.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_mw_CFLAGS) $(CFLAGS) -MT be_kicker_mw-util.obj -MD -MP -MF "$(DEPDIR)/be_kicker_mw-util.Tpo" -c -o be_kicker_mw-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/be_kicker_mw-util.Tpo" "$(DEPDIR)/be_kicker_mw-util.Po"; else rm -f "$(DEPDIR)/be_kicker_mw-util.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='be_kicker_mw-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_mw_CFLAGS) $(CFLAGS) -c -o be_kicker_mw-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
+
 fe_attach_smoketest-util.o: util.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_attach_smoketest_CFLAGS) $(CFLAGS) -MT fe_attach_smoketest-util.o -MD -MP -MF "$(DEPDIR)/fe_attach_smoketest-util.Tpo" -c -o fe_attach_smoketest-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c; \
 @am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/fe_attach_smoketest-util.Tpo" "$(DEPDIR)/fe_attach_smoketest-util.Po"; else rm -f "$(DEPDIR)/fe_attach_smoketest-util.Tpo"; exit 1; fi
@@ -623,6 +693,20 @@ fe_jobsnap-util.obj: util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_jobsnap_CFLAGS) $(CFLAGS) -c -o fe_jobsnap-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
 
+fe_launch_middleware-util.o: util.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_middleware_CFLAGS) $(CFLAGS) -MT fe_launch_middleware-util.o -MD -MP -MF "$(DEPDIR)/fe_launch_middleware-util.Tpo" -c -o fe_launch_middleware-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/fe_launch_middleware-util.Tpo" "$(DEPDIR)/fe_launch_middleware-util.Po"; else rm -f "$(DEPDIR)/fe_launch_middleware-util.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='fe_launch_middleware-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_middleware_CFLAGS) $(CFLAGS) -c -o fe_launch_middleware-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c
+
+fe_launch_middleware-util.obj: util.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_middleware_CFLAGS) $(CFLAGS) -MT fe_launch_middleware-util.obj -MD -MP -MF "$(DEPDIR)/fe_launch_middleware-util.Tpo" -c -o fe_launch_middleware-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/fe_launch_middleware-util.Tpo" "$(DEPDIR)/fe_launch_middleware-util.Po"; else rm -f "$(DEPDIR)/fe_launch_middleware-util.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='fe_launch_middleware-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_middleware_CFLAGS) $(CFLAGS) -c -o fe_launch_middleware-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
+
 fe_launch_smoketest-util.o: util.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_smoketest_CFLAGS) $(CFLAGS) -MT fe_launch_smoketest-util.o -MD -MP -MF "$(DEPDIR)/fe_launch_smoketest-util.Tpo" -c -o fe_launch_smoketest-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c; \
 @am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/fe_launch_smoketest-util.Tpo" "$(DEPDIR)/fe_launch_smoketest-util.Po"; else rm -f "$(DEPDIR)/fe_launch_smoketest-util.Tpo"; exit 1; fi
@@ -650,6 +734,20 @@ fe_launch_usrpayload_test-util.obj: util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='fe_launch_usrpayload_test-util.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_usrpayload_test_CFLAGS) $(CFLAGS) -c -o fe_launch_usrpayload_test-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
+
+mw_comm_helper-util.o: util.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mw_comm_helper_CFLAGS) $(CFLAGS) -MT mw_comm_helper-util.o -MD -MP -MF "$(DEPDIR)/mw_comm_helper-util.Tpo" -c -o mw_comm_helper-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/mw_comm_helper-util.Tpo" "$(DEPDIR)/mw_comm_helper-util.Po"; else rm -f "$(DEPDIR)/mw_comm_helper-util.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='mw_comm_helper-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mw_comm_helper_CFLAGS) $(CFLAGS) -c -o mw_comm_helper-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c
+
+mw_comm_helper-util.obj: util.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mw_comm_helper_CFLAGS) $(CFLAGS) -MT mw_comm_helper-util.obj -MD -MP -MF "$(DEPDIR)/mw_comm_helper-util.Tpo" -c -o mw_comm_helper-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/mw_comm_helper-util.Tpo" "$(DEPDIR)/mw_comm_helper-util.Po"; else rm -f "$(DEPDIR)/mw_comm_helper-util.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='mw_comm_helper-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mw_comm_helper_CFLAGS) $(CFLAGS) -c -o mw_comm_helper-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
 
 .cxx.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -699,6 +797,20 @@ be_kicker-be_kicker.obj: be_kicker.cxx
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='be_kicker.cxx' object='be_kicker-be_kicker.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_CXXFLAGS) $(CXXFLAGS) -c -o be_kicker-be_kicker.obj `if test -f 'be_kicker.cxx'; then $(CYGPATH_W) 'be_kicker.cxx'; else $(CYGPATH_W) '$(srcdir)/be_kicker.cxx'; fi`
+
+be_kicker_mw-be_kicker_mw.o: be_kicker_mw.cxx
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_mw_CXXFLAGS) $(CXXFLAGS) -MT be_kicker_mw-be_kicker_mw.o -MD -MP -MF "$(DEPDIR)/be_kicker_mw-be_kicker_mw.Tpo" -c -o be_kicker_mw-be_kicker_mw.o `test -f 'be_kicker_mw.cxx' || echo '$(srcdir)/'`be_kicker_mw.cxx; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/be_kicker_mw-be_kicker_mw.Tpo" "$(DEPDIR)/be_kicker_mw-be_kicker_mw.Po"; else rm -f "$(DEPDIR)/be_kicker_mw-be_kicker_mw.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='be_kicker_mw.cxx' object='be_kicker_mw-be_kicker_mw.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_mw_CXXFLAGS) $(CXXFLAGS) -c -o be_kicker_mw-be_kicker_mw.o `test -f 'be_kicker_mw.cxx' || echo '$(srcdir)/'`be_kicker_mw.cxx
+
+be_kicker_mw-be_kicker_mw.obj: be_kicker_mw.cxx
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_mw_CXXFLAGS) $(CXXFLAGS) -MT be_kicker_mw-be_kicker_mw.obj -MD -MP -MF "$(DEPDIR)/be_kicker_mw-be_kicker_mw.Tpo" -c -o be_kicker_mw-be_kicker_mw.obj `if test -f 'be_kicker_mw.cxx'; then $(CYGPATH_W) 'be_kicker_mw.cxx'; else $(CYGPATH_W) '$(srcdir)/be_kicker_mw.cxx'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/be_kicker_mw-be_kicker_mw.Tpo" "$(DEPDIR)/be_kicker_mw-be_kicker_mw.Po"; else rm -f "$(DEPDIR)/be_kicker_mw-be_kicker_mw.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='be_kicker_mw.cxx' object='be_kicker_mw-be_kicker_mw.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_mw_CXXFLAGS) $(CXXFLAGS) -c -o be_kicker_mw-be_kicker_mw.obj `if test -f 'be_kicker_mw.cxx'; then $(CYGPATH_W) 'be_kicker_mw.cxx'; else $(CYGPATH_W) '$(srcdir)/be_kicker_mw.cxx'; fi`
 
 be_kicker_usrpayload_test-be_kicker_usrpayload_test.o: be_kicker_usrpayload_test.cxx
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(be_kicker_usrpayload_test_CXXFLAGS) $(CXXFLAGS) -MT be_kicker_usrpayload_test-be_kicker_usrpayload_test.o -MD -MP -MF "$(DEPDIR)/be_kicker_usrpayload_test-be_kicker_usrpayload_test.Tpo" -c -o be_kicker_usrpayload_test-be_kicker_usrpayload_test.o `test -f 'be_kicker_usrpayload_test.cxx' || echo '$(srcdir)/'`be_kicker_usrpayload_test.cxx; \
@@ -756,6 +868,20 @@ fe_jobsnap-fe_jobsnap.obj: fe_jobsnap.cxx
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_jobsnap_CXXFLAGS) $(CXXFLAGS) -c -o fe_jobsnap-fe_jobsnap.obj `if test -f 'fe_jobsnap.cxx'; then $(CYGPATH_W) 'fe_jobsnap.cxx'; else $(CYGPATH_W) '$(srcdir)/fe_jobsnap.cxx'; fi`
 
+fe_launch_middleware-fe_launch_middleware.o: fe_launch_middleware.cxx
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_middleware_CXXFLAGS) $(CXXFLAGS) -MT fe_launch_middleware-fe_launch_middleware.o -MD -MP -MF "$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Tpo" -c -o fe_launch_middleware-fe_launch_middleware.o `test -f 'fe_launch_middleware.cxx' || echo '$(srcdir)/'`fe_launch_middleware.cxx; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Tpo" "$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Po"; else rm -f "$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fe_launch_middleware.cxx' object='fe_launch_middleware-fe_launch_middleware.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_middleware_CXXFLAGS) $(CXXFLAGS) -c -o fe_launch_middleware-fe_launch_middleware.o `test -f 'fe_launch_middleware.cxx' || echo '$(srcdir)/'`fe_launch_middleware.cxx
+
+fe_launch_middleware-fe_launch_middleware.obj: fe_launch_middleware.cxx
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_middleware_CXXFLAGS) $(CXXFLAGS) -MT fe_launch_middleware-fe_launch_middleware.obj -MD -MP -MF "$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Tpo" -c -o fe_launch_middleware-fe_launch_middleware.obj `if test -f 'fe_launch_middleware.cxx'; then $(CYGPATH_W) 'fe_launch_middleware.cxx'; else $(CYGPATH_W) '$(srcdir)/fe_launch_middleware.cxx'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Tpo" "$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Po"; else rm -f "$(DEPDIR)/fe_launch_middleware-fe_launch_middleware.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fe_launch_middleware.cxx' object='fe_launch_middleware-fe_launch_middleware.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_middleware_CXXFLAGS) $(CXXFLAGS) -c -o fe_launch_middleware-fe_launch_middleware.obj `if test -f 'fe_launch_middleware.cxx'; then $(CYGPATH_W) 'fe_launch_middleware.cxx'; else $(CYGPATH_W) '$(srcdir)/fe_launch_middleware.cxx'; fi`
+
 fe_launch_smoketest-fe_launch_smoketest.o: fe_launch_smoketest.cxx
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_smoketest_CXXFLAGS) $(CXXFLAGS) -MT fe_launch_smoketest-fe_launch_smoketest.o -MD -MP -MF "$(DEPDIR)/fe_launch_smoketest-fe_launch_smoketest.Tpo" -c -o fe_launch_smoketest-fe_launch_smoketest.o `test -f 'fe_launch_smoketest.cxx' || echo '$(srcdir)/'`fe_launch_smoketest.cxx; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/fe_launch_smoketest-fe_launch_smoketest.Tpo" "$(DEPDIR)/fe_launch_smoketest-fe_launch_smoketest.Po"; else rm -f "$(DEPDIR)/fe_launch_smoketest-fe_launch_smoketest.Tpo"; exit 1; fi
@@ -783,6 +909,20 @@ fe_launch_usrpayload_test-fe_launch_usrpayload_test.obj: fe_launch_usrpayload_te
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fe_launch_usrpayload_test.cxx' object='fe_launch_usrpayload_test-fe_launch_usrpayload_test.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fe_launch_usrpayload_test_CXXFLAGS) $(CXXFLAGS) -c -o fe_launch_usrpayload_test-fe_launch_usrpayload_test.obj `if test -f 'fe_launch_usrpayload_test.cxx'; then $(CYGPATH_W) 'fe_launch_usrpayload_test.cxx'; else $(CYGPATH_W) '$(srcdir)/fe_launch_usrpayload_test.cxx'; fi`
+
+mw_comm_helper-mw_comm_helper.o: mw_comm_helper.cxx
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mw_comm_helper_CXXFLAGS) $(CXXFLAGS) -MT mw_comm_helper-mw_comm_helper.o -MD -MP -MF "$(DEPDIR)/mw_comm_helper-mw_comm_helper.Tpo" -c -o mw_comm_helper-mw_comm_helper.o `test -f 'mw_comm_helper.cxx' || echo '$(srcdir)/'`mw_comm_helper.cxx; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/mw_comm_helper-mw_comm_helper.Tpo" "$(DEPDIR)/mw_comm_helper-mw_comm_helper.Po"; else rm -f "$(DEPDIR)/mw_comm_helper-mw_comm_helper.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mw_comm_helper.cxx' object='mw_comm_helper-mw_comm_helper.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mw_comm_helper_CXXFLAGS) $(CXXFLAGS) -c -o mw_comm_helper-mw_comm_helper.o `test -f 'mw_comm_helper.cxx' || echo '$(srcdir)/'`mw_comm_helper.cxx
+
+mw_comm_helper-mw_comm_helper.obj: mw_comm_helper.cxx
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mw_comm_helper_CXXFLAGS) $(CXXFLAGS) -MT mw_comm_helper-mw_comm_helper.obj -MD -MP -MF "$(DEPDIR)/mw_comm_helper-mw_comm_helper.Tpo" -c -o mw_comm_helper-mw_comm_helper.obj `if test -f 'mw_comm_helper.cxx'; then $(CYGPATH_W) 'mw_comm_helper.cxx'; else $(CYGPATH_W) '$(srcdir)/mw_comm_helper.cxx'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/mw_comm_helper-mw_comm_helper.Tpo" "$(DEPDIR)/mw_comm_helper-mw_comm_helper.Po"; else rm -f "$(DEPDIR)/mw_comm_helper-mw_comm_helper.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mw_comm_helper.cxx' object='mw_comm_helper-mw_comm_helper.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mw_comm_helper_CXXFLAGS) $(CXXFLAGS) -c -o mw_comm_helper-mw_comm_helper.obj `if test -f 'mw_comm_helper.cxx'; then $(CYGPATH_W) 'mw_comm_helper.cxx'; else $(CYGPATH_W) '$(srcdir)/mw_comm_helper.cxx'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -999,6 +1139,15 @@ test.launch_5_usrpayload: test.launch_5_usrpayload.in Makefile
 test.launch_6_engine_failure: test.launch_6_engine_failure.in Makefile
 	$(do_subst) < test.launch_6_engine_failure.in > test.launch_6_engine_failure
 	chmod +x test.launch_6_engine_failure
+test.launch_mw_1_hostlist: test.launch_mw_1_hostlist.in Makefile
+	$(do_subst) < test.launch_mw_1_hostlist.in > test.launch_mw_1_hostlist
+	chmod +x test.launch_mw_1_hostlist
+test.launch_mw_2_coloc: test.launch_mw_2_coloc.in Makefile
+	$(do_subst) < test.launch_mw_2_coloc.in > test.launch_mw_2_coloc
+	chmod +x test.launch_mw_2_coloc
+test.launch_mw_5_mixall: test.launch_mw_5_mixall.in Makefile
+	$(do_subst) < test.launch_mw_5_mixall.in > test.launch_mw_5_mixall
+	chmod +x test.launch_mw_5_mixall
 test.attach_1: test.attach_1.in Makefile
 	$(do_subst) < test.attach_1.in > test.attach_1
 	chmod +x test.attach_1

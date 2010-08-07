@@ -46,14 +46,14 @@
 
 static struct timeval st, et;
 
-int 
+int
 begin_timer ()
 {
   return (gettimeofday ( &st, NULL ));
 }
 
 
-int 
+int
 time_stamp ( const char* description )
 {
   int rc;
@@ -81,4 +81,58 @@ time_stamp ( const char* description )
     } 
 
   return rc;
+}
+
+void
+fill_mpirun_args(const char *nP, const char *nN, const char *part, const char *app, 
+                 const char *mylauncher, char ***largvptr)
+{
+ char numprocs_opt[128];
+ char numnodes_opt[128];
+ char partition_opt[128];
+#if RM_BG_MPIRUN
+  //
+  // This will exercise CO or SMP on BlueGene
+  //
+  (*largvptr) = (char **) malloc(8*sizeof(char *));
+  (*largvptr)[0] = strdup(mylauncher);
+  (*largvptr)[1] = strdup("-verbose");
+  (*largvptr)[2] = strdup("1");
+  (*largvptr)[3] = strdup("-np");
+  (*largvptr)[4] = strdup(nP)
+  (*largvptr)[5] = strdup("-exe"); 
+  (*largvptr)[6] = strdup(app);
+  (*largvptr)[7] = NULL;
+#elif RM_SLURM_SRUN
+  snprintf(numprocs_opt, 128, "-n%s", nP);
+  snprintf(numnodes_opt, 128, "-N%s", nN);
+  snprintf(partition_opt, 128, "-p%s", part);
+  (*largvptr) = (char **) malloc (7*sizeof(char*));
+  (*largvptr)[0] = strdup(mylauncher);
+  (*largvptr)[1] = strdup(numprocs_opt);
+  (*largvptr)[2] = strdup(numnodes_opt);
+  (*largvptr)[3] = strdup(partition_opt);
+  (*largvptr)[4] = strdup("-l");
+  (*largvptr)[5] = strdup(app);
+  (*largvptr)[6] = NULL;
+#elif RM_ALPS_APRUN
+  snprintf(numprocs_opt, 128, "-n%s", nP);
+  (*largvptr) = (char **) malloc(4*sizeof(char*));
+  (*largvptr)[0] = strdup(mylauncher);
+  (*largvptr)[1] = strdup(numprocs_opt);
+  (*largvptr)[2] = strdup(app);
+  (*largvptr)[3] = NULL;
+#elif RM_ORTE_ORTERUN
+  (*largvptr) = (char **) malloc(5*sizeof(char*));
+  (*largvptr)[0] = strdup(mylauncher);
+  /* launcher_argv[1] = strdup("-gmca");
+  launcher_argv[2] = strdup("orte_enable_debug_cospawn_while_running");
+  launcher_argv[3] = strdup("1");*/
+  (*largvptr)[1] = strdup("-np");
+  (*largvptr)[2] = strdup(nP);
+  (*largvptr)[3] = strdup(app);
+  (*largvptr)[4] = NULL;
+#else
+# error add support for the RM of your interest here
+#endif
 }
