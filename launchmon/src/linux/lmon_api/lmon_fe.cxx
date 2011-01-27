@@ -26,6 +26,7 @@
  *--------------------------------------------------------------------------------
  *
  *  Update Log:
+ *        Jan 17 2011 JDG: Bug fix in LMON_fe_regPackForFeToMw, variable typo.
  *        Jul 30 2010 DHA: Added LMON MW support with limited functionality
  *        Jun 30 2010 DHA: Added faster engine parsing error detection support
  *        Jun 28 2010 DHA: Added LMON_fe_getRMInfo support
@@ -3867,7 +3868,7 @@ LMON_fe_regPackForFeToMw (
 	    "middleware pack was already registered. replacing it with the new func...");
 	}
 
-      mydesc->pack = packFemw;
+      mydesc->mw_pack = packFemw;
     }
   else
     {
