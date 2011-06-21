@@ -72,13 +72,15 @@ am_libmonbeapi_la_OBJECTS = libmonbeapi_la-lmon_be.lo \
 libmonbeapi_la_OBJECTS = $(am_libmonbeapi_la_OBJECTS)
 libmonfeapi_la_DEPENDENCIES =
 am_libmonfeapi_la_OBJECTS = libmonfeapi_la-sdbg_self_trace.lo \
-	libmonfeapi_la-sdbg_opt.lo libmonfeapi_la-sdbg_rsh_spawner.lo \
+	libmonfeapi_la-sdbg_opt.lo \
+	libmonfeapi_la-sdbg_rm_spawner.lo libmonfeapi_la-sdbg_rsh_spawner.lo \
 	libmonfeapi_la-lmon_fe.lo libmonfeapi_la-lmon_lmonp_msg.lo \
 	libmonfeapi_la-lmon_coloc_spawner.lo \
 	libmonfeapi_la-lmon_say_msg.lo
 libmonfeapi_la_OBJECTS = $(am_libmonfeapi_la_OBJECTS)
 libmonmwapi_la_DEPENDENCIES =
-am_libmonmwapi_la_OBJECTS = libmonmwapi_la-sdbg_rsh_spawner.lo \
+am_libmonmwapi_la_OBJECTS = libmonmwapi_la-sdbg_rm_spawner.lo \
+	libmonmwapi_la-sdbg_rsh_spawner.lo \
 	libmonmwapi_la-lmon_mw.lo \
 	libmonmwapi_la-lmon_daemon_internal.lo \
 	libmonmwapi_la-lmon_lmonp_msg.lo \
@@ -267,6 +269,7 @@ lib_LTLIBRARIES = libmonbeapi.la libmonfeapi.la libmonmwapi.la
 #
 libmonfeapi_la_SOURCES = ../../sdbg_self_trace.cxx \
                                ../../sdbg_opt.cxx \
+                               ../sdbg_rm_spawner.cxx \
                                ../sdbg_rsh_spawner.cxx \
                                lmon_fe.cxx \
                                lmon_lmonp_msg.cxx \
@@ -279,6 +282,7 @@ libmonfeapi_la_SOURCES = ../../sdbg_self_trace.cxx \
                                ../../lmon_api/lmon_say_msg.hxx \
                                ../../sdbg_opt.hxx \
                                ../../sdbg_base_spawner.hxx \
+                               ../sdbg_rm_spawner.cxx \
                                ../sdbg_rsh_spawner.hxx \
                                lmon_coloc_spawner.hxx
 
@@ -322,7 +326,8 @@ libmonbeapi_la_LIBADD = @LIBCOMM@ @LIBGCRYPT@ @LIBGPGERR@
 #
 # Middleware API
 #
-libmonmwapi_la_SOURCES = ../sdbg_rsh_spawner.cxx \
+libmonmwapi_la_SOURCES = ../sdbg_rm_spawner.cxx \
+                               ../sdbg_rsh_spawner.cxx \
                                lmon_mw.cxx \
                                lmon_daemon_internal.cxx \
                                lmon_lmonp_msg.cxx \
@@ -334,6 +339,7 @@ libmonmwapi_la_SOURCES = ../sdbg_rsh_spawner.cxx \
                                ../../lmon_api/lmon_lmonp_msg.h \
                                ../../lmon_api/lmon_say_msg.hxx \
                                ../../sdbg_base_spawner.hxx \
+                               ../sdbg_rm_spawer.hxx \
                                ../sdbg_rsh_spawer.hxx \
                                lmon_coloc_spawner.hxx \
                                lmon_daemon_internal.hxx
@@ -430,6 +436,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonfeapi_la-lmon_lmonp_msg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonfeapi_la-lmon_say_msg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonfeapi_la-sdbg_opt.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonfeapi_la-sdbg_rm_spawner.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonfeapi_la-sdbg_rsh_spawner.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonfeapi_la-sdbg_self_trace.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonmwapi_la-lmon_coloc_spawner.Plo@am__quote@
@@ -437,6 +444,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonmwapi_la-lmon_lmonp_msg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonmwapi_la-lmon_mw.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonmwapi_la-lmon_say_msg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonmwapi_la-sdbg_rm_spawner.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonmwapi_la-sdbg_rsh_spawner.Plo@am__quote@
 
 .cxx.o:
@@ -516,6 +524,13 @@ libmonfeapi_la-sdbg_rsh_spawner.lo: ../sdbg_rsh_spawner.cxx
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
 
+libmonfeapi_la-sdbg_rm_spawner.lo: ../sdbg_rm_spawner.cxx
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_rm_spawner.lo -MD -MP -MF "$(DEPDIR)/libmonfeapi_la-sdbg_rm_spawner.Tpo" -c -o libmonfeapi_la-sdbg_rm_spawner.lo `test -f '../sdbg_rm_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rm_spawner.cxx; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmonfeapi_la-sdbg_rm_spawner.Tpo" "$(DEPDIR)/libmonfeapi_la-sdbg_rm_spawner.Plo"; else rm -f "$(DEPDIR)/libmonfeapi_la-sdbg_rm_spawner.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rm_spawner.cxx' object='libmonfeapi_la-sdbg_rm_spawner.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_rm_spawner.lo `test -f '../sdbg_rm_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rm_spawner.cxx
+
 libmonfeapi_la-lmon_fe.lo: lmon_fe.cxx
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_fe.lo -MD -MP -MF "$(DEPDIR)/libmonfeapi_la-lmon_fe.Tpo" -c -o libmonfeapi_la-lmon_fe.lo `test -f 'lmon_fe.cxx' || echo '$(srcdir)/'`lmon_fe.cxx; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmonfeapi_la-lmon_fe.Tpo" "$(DEPDIR)/libmonfeapi_la-lmon_fe.Plo"; else rm -f "$(DEPDIR)/libmonfeapi_la-lmon_fe.Tpo"; exit 1; fi
@@ -550,6 +565,14 @@ libmonmwapi_la-sdbg_rsh_spawner.lo: ../sdbg_rsh_spawner.cxx
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rsh_spawner.cxx' object='libmonmwapi_la-sdbg_rsh_spawner.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
+
+libmonmwapi_la-sdbg_rm_spawner.lo: ../sdbg_rm_spawner.cxx
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-sdbg_rm_spawner.lo -MD -MP -MF "$(DEPDIR)/libmonmwapi_la-sdbg_rm_spawner.Tpo" -c -o libmonmwapi_la-sdbg_rm_spawner.lo `test -f '../sdbg_rm_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rm_spawner.cxx; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmonmwapi_la-sdbg_rm_spawner.Tpo" "$(DEPDIR)/libmonmwapi_la-sdbg_rm_spawner.Plo"; else rm -f "$(DEPDIR)/libmonmwapi_la-sdbg_rm_spawner.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rm_spawner.cxx' object='libmonmwapi_la-sdbg_rm_spawner.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-sdbg_rm_spawner.lo `test -f '../sdbg_rm_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rm_spawner.cxx
+
 
 libmonmwapi_la-lmon_mw.lo: lmon_mw.cxx
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_mw.lo -MD -MP -MF "$(DEPDIR)/libmonmwapi_la-lmon_mw.Tpo" -c -o libmonmwapi_la-lmon_mw.lo `test -f 'lmon_mw.cxx' || echo '$(srcdir)/'`lmon_mw.cxx; \

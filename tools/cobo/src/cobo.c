@@ -22,6 +22,10 @@
 #define ENV_REQUIRED (0)
 #define ENV_OPTIONAL (1)
 
+#ifndef MAX_BACKLOG       
+#define MAX_BACKLOG 1 /* for listen() */
+#endif
+
 /* set env variable to configure socket timeout parameters */
 #ifndef COBO_CONNECT_TIMEOUT       
 #define COBO_CONNECT_TIMEOUT (10) /* milliseconds -- wait this long before a connect() call times out*/
@@ -100,6 +104,7 @@ double __cobo_ts = 0.0f;
 /* startup time, time between starting cobo_open and finishing cobo_close */
 static struct timeval time_open, time_close;
 static struct timeval tree_start, tree_end;
+static FILE* err_file = NULL;
 
 /*
  * ==========================================================================
@@ -109,26 +114,43 @@ static struct timeval tree_start, tree_end;
  * ==========================================================================
  */
 
+static void cobo_gettimeofday(struct timeval* tv);
+
 /* print message to stderr */
 static void cobo_error(char *fmt, ...)
 {
     va_list argp;
     char hostname[256];
     gethostname(hostname, 256);
-    fprintf(stderr, "COBO ERROR: ");
+    struct timeval tv;
+    cobo_gettimeofday(&tv);
+    if(err_file==NULL){
+        err_file=stderr;
+/*
+        char hostname[256];
+        gethostname(hostname, 256);
+        char file_path[500];
+        snprintf(file_path, 500, "/g/g20/goehner1/mrnet/tests/cobo_backends/%s.%u", hostname, getpid() );
+        FILE * file= fopen( file_path, "a" );
+        err_file=file;
+*/
+    }
+    fprintf(err_file, "COBO ERROR: ", tv.tv_sec, tv.tv_usec);
     if (cobo_me >= 0) {
-        fprintf(stderr, "rank %d on %s: ", cobo_me, hostname);
+        fprintf(err_file, "rank %d on %s: ", cobo_me, hostname);
     } else if (cobo_me == -2) {
-        fprintf(stderr, "server on %s: ", hostname);
+        fprintf(err_file, "server on %s: ", hostname);
     } else if (cobo_me == -1) {
-        fprintf(stderr, "unitialized client task on %s: ", hostname);
+        fprintf(err_file, "unitialized client task on %s: ", hostname);
     } else {
-        fprintf(stderr, "unitialized task (server or client) on %s: ", hostname);
+        fprintf(err_file, "unitialized task (server or client) on %s: ", hostname);
     }
     va_start(argp, fmt);
-    vfprintf(stderr, fmt, argp);
+    vfprintf(err_file, fmt, argp);
     va_end(argp);
-    fprintf(stderr, "\n");
+    fprintf(err_file, "\n");
+    fflush(err_file);
+
 }
 
 /* print message to stderr */
@@ -137,20 +159,34 @@ static void cobo_warn(char *fmt, ...)
     va_list argp;
     char hostname[256];
     gethostname(hostname, 256);
-    fprintf(stderr, "COBO WARNING: ");
+    struct timeval tv;
+    cobo_gettimeofday(&tv);
+    if(err_file==NULL){
+        err_file=stderr;
+/*
+        char hostname[256];
+        gethostname(hostname, 256);
+        char file_path[500];
+        snprintf(file_path, 500, "/g/g20/goehner1/mrnet/tests/cobo_backends/%s.%u", hostname, getpid() );
+        FILE * file= fopen( file_path, "a" );
+        err_file=file;
+*/
+    }
+    fprintf(err_file, "COBO WARNING: ", tv.tv_sec, tv.tv_usec);
     if (cobo_me >= 0) {
-        fprintf(stderr, "rank %d on %s: ", cobo_me, hostname);
+        fprintf(err_file, "rank %d on %s: ", cobo_me, hostname);
     } else if (cobo_me == -2) {
-        fprintf(stderr, "server on %s: ", hostname);
+        fprintf(err_file, "server on %s: ", hostname);
     } else if (cobo_me == -1) {
-        fprintf(stderr, "unitialized client task on %s: ", hostname);
+        fprintf(err_file, "unitialized client task on %s: ", hostname);
     } else {
-        fprintf(stderr, "unitialized task (server or client) on %s: ", hostname);
+        fprintf(err_file, "unitialized task (server or client) on %s: ", hostname);
     }
     va_start(argp, fmt);
-    vfprintf(stderr, fmt, argp);
+    vfprintf(err_file, fmt, argp);
     va_end(argp);
-    fprintf(stderr, "\n");
+    fprintf(err_file, "\n");
+    fflush(err_file);
 }
 
 /* print message to stderr */
@@ -159,21 +195,36 @@ static void cobo_debug(int level, char *fmt, ...)
     va_list argp;
     char hostname[256];
     gethostname(hostname, 256);
+    struct timeval tv;
+    cobo_gettimeofday(&tv);
+
     if (cobo_echo_debug > 0 && cobo_echo_debug >= level) {
-        fprintf(stderr, "COBO DEBUG: ");
+        if(err_file==NULL){
+            err_file=stderr;
+/*
+            char hostname[256];
+            gethostname(hostname, 256);
+            char file_path[500];
+            snprintf(file_path, 500, "/g/g20/goehner1/mrnet/tests/cobo_backends/%s.%u", hostname, getpid() );
+            FILE * file= fopen( file_path, "a" );
+            err_file=file;
+*/
+        }
+        fprintf(err_file, "%ld.%ld: COBO DEBUG: ", tv.tv_sec, tv.tv_usec );
         if (cobo_me >= 0) {
-            fprintf(stderr, "rank %d on %s: ", cobo_me, hostname);
+            fprintf(err_file, "rank %d on %s: ", cobo_me, hostname);
         } else if (cobo_me == -2) {
-            fprintf(stderr, "server on %s: ", hostname);
+            fprintf(err_file, "server on %s: ", hostname);
         } else if (cobo_me == -1) {
-            fprintf(stderr, "unitialized client task on %s: ", hostname);
+            fprintf(err_file, "unitialized client task on %s: ", hostname);
         } else {
-            fprintf(stderr, "unitialized task (server or client) on %s: ", hostname);
+            fprintf(err_file, "unitialized task (server or client) on %s: ", hostname);
         }
         va_start(argp, fmt);
-        vfprintf(stderr, fmt, argp);
+        vfprintf(err_file, fmt, argp);
         va_end(argp);
-        fprintf(stderr, "\n");
+        fprintf(err_file, "\n");
+        fflush(err_file);
     }
 }
 
@@ -746,8 +797,19 @@ static int cobo_open_tree()
     /* try to bind the socket to one the ports in our allowed range */
     int i = 0;
     int port_is_bound = 0;
+/*
+    int try = 0;
+    srand ( time(NULL) );
+
+    while ( try < 5 && !port_is_bound){
+        int start = rand() % cobo_num_ports;
+        i=0;
+        try++;
+*/
+
     while (i < cobo_num_ports && !port_is_bound) {
         /* pick a port */
+        //int port = cobo_ports[(start+i)%cobo_num_ports];
         int port = cobo_ports[i];
         i++;
 
@@ -766,7 +828,7 @@ static int cobo_open_tree()
         }
 
         /* set the socket to listen for connections */
-        if (listen(sockfd, 1) < 0) {
+        if (listen(sockfd, MAX_BACKLOG ) < 0) {  //new stuff changed backlog to 32
             cobo_debug(2, "Setting parent socket to listen (listen() %m errno=%d) port=%d @ file %s:%d",
                 errno, port, __FILE__, __LINE__);
             continue;
@@ -776,11 +838,14 @@ static int cobo_open_tree()
         cobo_debug(0, "Opened socket on port %d", port);
         port_is_bound = 1;
     }
+/*
+    }
+*/
 
     /* failed to bind to a port, this is fatal */
     if (!port_is_bound) {
         /* TODO: would like to send an abort back to server */
-        cobo_error("Failed to open socket on any port @ file %s:%d",
+        cobo_error("Failed to open socket on any port @ file %s:%d\n",
                    __FILE__, __LINE__
         );
         exit(1);
@@ -856,8 +921,80 @@ static int cobo_open_tree()
         have_parent = 1;
     }
 
-    /* we've got the connection to our parent, so close the listening socket */
+    //new stuff
+/*
+    int done_pipe[2];
+    if ( pipe( done_pipe ) == -1){
+        cobo_error("creating pipe failed @ file %s:%d",
+                   __FILE__, __LINE__ );
+        exit(1);
+    }
+
+    pid_t childpid;
+    if( (childpid = fork()) ){
+        //parent thread keeps the socket
+        close( done_pipe[1] );  //don't need to write
+
+        int flags = fcntl(sockfd, F_GETFL);
+        fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);  //no-longer need to block on accept
+
+        fd_set fds, readyfds;
+
+        //int range=done_pipe[0];
+        //FD_SET( done_pipe[0], &fds );
+        //if( sockfd > range )
+
+        int range = sockfd;
+        FD_SET( sockfd, &fds );
+
+        cobo_error("sockfd=%i done_pipe[0]=%i", sockfd, done_pipe[0],
+           __FILE__, __LINE__ );
+
+        int cont_wait = 1;
+        while( cont_wait == 1 ){
+            readyfds = fds;
+            int num_waiting = select( range+1, &readyfds, NULL, NULL, NULL );
+            if( num_waiting == -1 ){
+                cobo_error("select() failed with err=%i (%i %i) @ file %s:%d",
+                   errno, EBADF, EINVAL, __FILE__, __LINE__ );
+            }else{
+                if( FD_ISSET( sockfd, &readyfds ) ){
+                    //let them down gently
+                    struct sockaddr parent_addr;
+                    socklen_t parent_len = sizeof(parent_addr);
+                    int temp = accept(sockfd, (struct sockaddr *) &parent_addr, &parent_len);
+                    while( temp != -1 ){
+                        //unsigned int no_matter = 0;
+                        //if (cobo_read_fd_w_timeout(temp, &no_matter, sizeof(no_matter), reply_timeout) < 0) {
+                        //    close(temp);
+                        //    continue;
+                        //}
+                        //if (cobo_read_fd_w_timeout(temp, &no_matter, sizeof(no_matter), reply_timeout) < 0) {
+                        //    close(temp);
+                        //    continue;
+                        //}
+                        close(temp);
+                        temp = accept(sockfd, (struct sockaddr *) &parent_addr, &parent_len);
+                    }
+                }
+                if( FD_ISSET( done_pipe[0], &readyfds ) ){
+                    //can safely close listening socket
+                    close(sockfd);
+                    close( done_pipe[0] );
+                }
+            }
+        }
+
+        exit(0);
+    }
+    close( done_pipe[0] ); //don't need to read
+*/
+
+
+
+    // we've got the connection to our parent, so close the listening socket
     close(sockfd);
+    //end new stuff
 
     cobo_gettimeofday(&tree_start);
 
@@ -870,6 +1007,7 @@ static int cobo_open_tree()
         );
         exit(1);
     }
+    cobo_debug(1, "rank %i: connected to parent",  cobo_me);
 
     /* discover how many ranks are in our world */
     if (cobo_read_fd(cobo_parent_fd, &cobo_nprocs, sizeof(int)) < 0) {
@@ -937,6 +1075,19 @@ static int cobo_open_tree()
         /* free the child hostname string */
         free(child_hostname);
     }
+
+    //new stuff
+/*
+    int done_sig=0;
+    write( done_pipe[1], (char*)&done_sig, sizeof(done_sig) );
+    close( done_pipe[1] );
+*/
+
+/*
+    cobo_barrier();
+*/
+    cobo_debug(1, "cobo done ");
+    //end new stuff
 
     return COBO_SUCCESS;
 }
@@ -1109,7 +1260,7 @@ static int cobo_scatter_tree(void* sendbuf, int sendcount, void* recvbuf)
     /* if i have any children, receive their data */
     int i;
     int offset = sendcount;
-    for(i=0; i<cobo_num_child; i++) {
+    for(i=cobo_num_child-1; i>=0; i--) {
         if (cobo_write_fd(cobo_child_fd[i], (char*)bigbuf + offset, sendcount * cobo_child_incl[i]) < 0) {
             cobo_error("Scattering data to child (rank %d) failed @ file %s:%d",
                        cobo_child[i], __FILE__, __LINE__
@@ -1428,6 +1579,20 @@ int cobo_open(unsigned int sessionid, int* portlist, int num_ports, int* rank, i
         }
     }
 
+/*
+    out_file=stdout;
+    err_file=stderr;
+    char hostname[256];
+    gethostname(hostname, 256);
+    char file_path[500];
+    snprintf(file_path, 500, "/g/g20/goehner1/mrnet/tests/cobo_backends/%s.%u", hostname, getpid() );
+    FILE * file= fopen( file_path, "a" );
+    out_file=file;
+    err_file=file;
+*/
+
+    //end newstuff
+
     cobo_debug(3, "In cobo_init():\n" \
         "COBO_CONNECT_TIMEOUT: %d, COBO_CONNECT_BACKOFF: %d, COBO_CONNECT_SLEEP: %d, COBO_CONNECT_TIMELIMIT: %d",
         cobo_connect_timeout, cobo_connect_backoff, cobo_connect_sleep, (int) cobo_connect_timelimit
@@ -1560,6 +1725,7 @@ int cobo_server_open(unsigned int sessionid, char** hostlist, int num_hosts, int
     }
 
     /* connect to first host */
+    cobo_debug(1, "Connecting to first host:%s", hostlist[0] );
     cobo_root_fd = cobo_connect_hostname(hostlist[0], 0);
     if (cobo_root_fd == -1) {
         cobo_error("Failed to connect to child (rank %d) on %s failed @ file %s:%d",

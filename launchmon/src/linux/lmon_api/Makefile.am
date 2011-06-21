@@ -59,6 +59,7 @@ lib_LTLIBRARIES              = libmonbeapi.la libmonfeapi.la libmonmwapi.la
 #
 libmonfeapi_la_SOURCES       = ../../sdbg_self_trace.cxx \
                                ../../sdbg_opt.cxx \
+                               ../sdbg_rm_spawner.cxx \
                                ../sdbg_rsh_spawner.cxx \
                                lmon_fe.cxx \
                                lmon_lmonp_msg.cxx \
@@ -71,6 +72,7 @@ libmonfeapi_la_SOURCES       = ../../sdbg_self_trace.cxx \
                                ../../lmon_api/lmon_say_msg.hxx \
                                ../../sdbg_opt.hxx \
                                ../../sdbg_base_spawner.hxx \
+                               ../sdbg_rm_spawner.cxx \
                                ../sdbg_rsh_spawner.hxx \
                                lmon_coloc_spawner.hxx
 
@@ -119,7 +121,8 @@ libmonbeapi_la_LIBADD        = @LIBCOMM@ @LIBGCRYPT@ @LIBGPGERR@
 #
 # Middleware API
 #
-libmonmwapi_la_SOURCES       = ../sdbg_rsh_spawner.cxx \
+libmonmwapi_la_SOURCES       = ../sdbg_rm_spawner.cxx \
+                               ../sdbg_rsh_spawner.cxx \
                                lmon_mw.cxx \
                                lmon_daemon_internal.cxx \
                                lmon_lmonp_msg.cxx \
@@ -131,6 +134,7 @@ libmonmwapi_la_SOURCES       = ../sdbg_rsh_spawner.cxx \
                                ../../lmon_api/lmon_lmonp_msg.h \
                                ../../lmon_api/lmon_say_msg.hxx \
                                ../../sdbg_base_spawner.hxx \
+                               ../sdbg_rm_spawer.hxx \
                                ../sdbg_rsh_spawer.hxx \
                                lmon_coloc_spawner.hxx \
                                lmon_daemon_internal.hxx

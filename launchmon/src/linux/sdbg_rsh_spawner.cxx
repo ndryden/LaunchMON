@@ -27,6 +27,7 @@
  *			
  *
  *  Update Log:
+ *        Jan 17 2011 JDG: Fixed unsigned int < 0 bug
  *        Jul 06 2010 DHA: Created file.
  */
 
@@ -121,12 +122,12 @@ spawner_rsh_t::spawn()
 
   if (lefton)
     {
-      for (j=left_start_index; j < halfhosts-1; ++j)
+      for (j=left_start_index; j+1 < halfhosts; ++j)
         {
             leftrsh += get_hosts_vector()[j] + std::string(LMON_HOST_DELIM);;
         }
 
-      if (j == halfhosts-1)
+      if (j+1 == halfhosts)
         {
           leftrsh += get_hosts_vector()[j++];
         }

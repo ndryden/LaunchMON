@@ -26,6 +26,7 @@
  *--------------------------------------------------------------------------------
  *
  *  Update Log:
+ *        Jan 17 2011 JDG: Bug fix in LMON_fe_regPackForFeToMw, variable typo.
  *        Jul 30 2010 DHA: Added LMON MW support with limited functionality
  *        Jun 30 2010 DHA: Added faster engine parsing error detection support
  *        Jun 28 2010 DHA: Added LMON_fe_getRMInfo support
@@ -231,11 +232,13 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <sys/time.h>
 
 #include "sdbg_self_trace.hxx"
 #include "sdbg_opt.hxx"
 #include "sdbg_rm_map.hxx"
 #include "sdbg_base_spawner.hxx"
+#include "sdbg_rm_spawner.hxx"
 #include "sdbg_rsh_spawner.hxx"
 #include "lmon_api/lmon_say_msg.hxx"
 #include "lmon_api/lmon_coloc_spawner.hxx"
@@ -919,7 +922,6 @@ LMON_fe_handleFeBeUsrData ( int sessionHandle,
 
       return LMON_EBDARG;
     }
-
   mydesc = &sess.sessionDescArray[sessionHandle];
 
   if ( (mydesc->registered == LMON_FALSE))
@@ -993,9 +995,9 @@ LMON_fe_handleFeBeUsrData ( int sessionHandle,
 	  // pack func must serialize febe_data into udata
 	  // serialized stream cannot be bigger than febe_data_len
 	  //
-	  if ( mydesc->pack ( febe_data, udata, LMON_MAX_USRPAYLOAD, &outlen ) 
+	  if ( mydesc->pack ( febe_data, udata, LMON_MAX_USRPAYLOAD, &outlen )
                < 0 )
-            {  
+            {
               return LMON_EINVAL;
             }
 
@@ -1657,7 +1659,10 @@ LMON_assist_ICCL_BE_init (lmon_session_desc_t *mydesc)
    * Now taking advantage of COBO's new scalable bootstrapping
    * Session id=10 for now.
    */
-  if ( cobo_server_open (10, (char **) hostlist, hcnt, portlist, COBO_PORT_RANGE)
+  unsigned int tmp_cobosessid = 10;
+  unsigned int tmp_sharedKey = (unsigned int)atoi( mydesc->shared_key );
+  tmp_cobosessid += (tmp_sharedKey>11) ? (tmp_sharedKey-11) : (tmp_sharedKey);
+  if ( cobo_server_open (tmp_cobosessid, (char **) hostlist, hcnt, portlist, COBO_PORT_RANGE)
        != COBO_SUCCESS )
     {
        LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
@@ -1796,11 +1801,15 @@ LMON_assist_ICCL_MW_init (lmon_session_desc_t *mydesc)
       cobohl[j] = (*h_it).c_str();
       j++;
     }
-
   //
   // session ID = 11 for now
   //
-  if ( cobo_server_open(11, (char **) cobohl, combinedHostList.size(), portlist, COBO_PORT_RANGE)
+  unsigned int tmp_cobosessid = 11;
+  unsigned int tmp_sharedKey = (unsigned int)atoi( mydesc->shared_key );
+  tmp_cobosessid += (tmp_sharedKey>11) ? (tmp_sharedKey-11) : (tmp_sharedKey);
+timeval t1,t2;
+gettimeofday( &t1, NULL );
+  if ( cobo_server_open(tmp_cobosessid, (char **) cobohl, combinedHostList.size(), portlist, COBO_PORT_RANGE)
        != COBO_SUCCESS )
     {
        LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
@@ -1808,6 +1817,7 @@ LMON_assist_ICCL_MW_init (lmon_session_desc_t *mydesc)
 
       return LMON_ESYS;
     }
+gettimeofday( &t2, NULL );
 
    if ( cobo_server_get_root_socket(&(mydesc->commDesc[fe_mw_conn].sessionAcceptSockFd))
         != COBO_SUCCESS)
@@ -1817,6 +1827,8 @@ LMON_assist_ICCL_MW_init (lmon_session_desc_t *mydesc)
 
        return LMON_ESYS;
      }
+double d1 = ((double)t2.tv_sec + ((double)t2.tv_usec * 0.000001)) - ((double)t1.tv_sec + ((double)t1.tv_usec * 0.000001));
+fprintf( stdout, "so:%f\t", d1 );
 
   free(portlist);
   free(cobohl);
@@ -2302,6 +2314,8 @@ LMON_fe_mwHandshakeSequence (
     return LMON_ESYS;
   }
 
+//timeval t1,t2;
+//gettimeofday( &t1, NULL );
   //
   // USRDATA MSG
   //  -- writing the lmonp_femw_usrdata message along with the user data 
@@ -2327,6 +2341,10 @@ LMON_fe_mwHandshakeSequence (
       return lrc;
     }
 
+//gettimeofday( &t2, NULL );
+//double d1 = ((double)t2.tv_sec + ((double)t2.tv_usec * 0.000001)) - ((double)t1.tv_sec + ((double)t1.tv_usec * 0.000001));
+//fprintf( stdout, "handshake:%f\t", d1 );
+//fflush(stdout);
   //
   // Handshake has been successful
   //
@@ -3454,7 +3472,7 @@ LMON_fe_createSession ( int *sessionHandle )
       //
       // a random seed for the random number generator
       //
-      srand (time(NULL));
+      srand ( time(NULL) + (*sessionHandle) );
 
       //
       // randomID is a random number and shared_key is a encryption key,
@@ -3867,7 +3885,7 @@ LMON_fe_regPackForFeToMw (
 	    "middleware pack was already registered. replacing it with the new func...");
 	}
 
-      mydesc->pack = packFemw;
+      mydesc->mw_pack = packFemw;
     }
   else
     {
@@ -4070,7 +4088,7 @@ lmon_rc_e LMON_fe_sendUsrDataBe ( int sessionHandle, void* febe_data )
   pthread_mutex_lock(&(mydesc->watchdogThr.eventMutex));
   rc = LMON_fe_handleFeBeUsrData ( sessionHandle, febe_data );
   pthread_mutex_unlock(&(mydesc->watchdogThr.eventMutex));
-  
+
   return rc;
 }
 
@@ -5436,12 +5454,18 @@ lmon_rc_e LMON_fe_launchMwDaemons(
                      k++;
                   }
 
-                spawner_base_t *rshSpawner
-                  = new spawner_rsh_t( std::string(req[i].mw_daemon_path),
-                                   argvect,
-                                   hostvect);
+                spawner_base_t *spawner;
+#ifdef RM_SLURM_SRUN
+                spawner = new spawner_rm_t( std::string(req[i].mw_daemon_path),
+                                            argvect,
+                                            hostvect);
 
-                mydesc->spawner_vector.push_back(rshSpawner);
+#else
+                spawner = new spawner_rsh_t( std::string(req[i].mw_daemon_path),
+                                             argvect,
+                                             hostvect);
+#endif
+                mydesc->spawner_vector.push_back(spawner);
               }
             else
               {

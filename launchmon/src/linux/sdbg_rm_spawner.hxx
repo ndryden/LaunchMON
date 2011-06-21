@@ -30,15 +30,8 @@
  *        Jul 02 2010 DHA: Created file.
  */
 
-//
-//
-// WARNING this module has not been implemented
-//
-//
 #ifndef SDBG_RM_SPAWNER_HXX
 #define SDBG_RM_SPAWNER_HXX 1
-
-#include "sdbg_std.hxx"
 
 #if HAVE_STRING
 # include <string>
@@ -46,8 +39,15 @@
 # error string is required
 #endif 
 
-#include "sdbg_rm_map.hxx"
-#include "sdbg_self_trace.hxx"
+
+#if HAVE_VECTOR
+# include <vector>
+#else
+# error vector is required
+#endif
+
+#include "sdbg_std.hxx"
+#include "sdbg_base_spawner.hxx"
 
 class spawner_rm_t : public spawner_base_t
 {
@@ -56,29 +56,52 @@ public:
   //
   //  Public Interfaces
   //
-  spawner_rm_t();
-  ~spawner_rm_t();
+  spawner_rm_t()
+  {
+      
+  }
 
-  spawner_rm_t(const std::string &rac,
-		 const std::vector<std::string> & racargs,
-		 const std::string ep);
+  spawner_rm_t(const std::string &dpath,
+            const std::vector<std::string> &dmonopts,
+            const std::vector<std::string> &hosts)
+            : spawner_base_t(std::string(TARGET_JOB_LAUNCHER_PATH), std::vector<std::string>(), dpath, dmonopts, hosts)
+    {
 
-  spawner_rm_t(const std::string &rac,
-		 const std::vector<std::string> & racargs,
-		 const std::string ep,
-		 const std::vector<std::string> & hosts);
+    }
 
-  virtual ~spawner_rm_t();
+  virtual ~spawner_rm_t()
+  {
+
+  }
+
+//  std::vector<std::string> & get_extra_daemon_args( int i = 0 )
+//    {
+//      while( i > extra_daemon_args.size()-1 ){
+//          std::vector<std::string> tempv;
+//          extra_daemon_args.push_back( tempv );
+//      }
+//      return extra_daemon_args[i];
+//    }
 
   virtual bool spawn();
 
-  virtual int combineHosts(std::vector<std::string> &combHosts);
-
-  static spawner_rm_t *new_spawner_rm_t(...);
+  virtual bool combineHosts(std::vector<std::string> &combHosts);
 
 private:
-
-  explict spawner_rm_t (const spawner_rsh_t & s);
+  explicit spawner_rm_t (const spawner_rm_t & s)
+   {
+     // does nothing
+   }
+  
+  bool create_launch_args();
+  //bool create_slurm_nodelist( std::vector<std::string> bulk_args, std::vector<std::string> & hosts );
+  bool create_slurm_nodelist_arbitrary();
+  bool create_slurm_nodelist_blocks();
+  
+  bool execute_rm_bulk_launch(int i);
+//  std::vector< std::vector<std::string> > extra_daemon_args;
+  
+  std::vector<pid_t> execpid;
 };
 
 #endif // SDBG_RM_SPAWNER_HXX
