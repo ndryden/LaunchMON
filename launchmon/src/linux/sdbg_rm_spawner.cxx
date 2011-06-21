@@ -117,12 +117,12 @@ spawner_rm_t::spawn()
               exit(1);
             }
         }
-        std::ostringstream complete;
-        for(int j=0; j<get_launch_cmd_args(i).size(); j++){
-            complete << get_launch_cmd_args(i)[j] << " ";
-        }
-        gettimeofday( &t1, NULL );
-        fprintf(stderr, "%ld.%ld %s\t", t1.tv_sec, t1.tv_usec, complete.str().c_str() );
+//        std::ostringstream complete;
+//        for(int j=0; j<get_launch_cmd_args(i).size(); j++){
+//            complete << get_launch_cmd_args(i)[j] << " ";
+//        }
+//        gettimeofday( &t1, NULL );
+//        fprintf(stderr, "%ld.%ld %s\t", t1.tv_sec, t1.tv_usec, complete.str().c_str() );
         execpid.push_back(temp);
     }
     return true;
