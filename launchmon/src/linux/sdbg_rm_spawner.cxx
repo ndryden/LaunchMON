@@ -117,12 +117,6 @@ spawner_rm_t::spawn()
               exit(1);
             }
         }
-//        std::ostringstream complete;
-//        for(int j=0; j<get_launch_cmd_args(i).size(); j++){
-//            complete << get_launch_cmd_args(i)[j] << " ";
-//        }
-//        gettimeofday( &t1, NULL );
-//        fprintf(stderr, "%ld.%ld %s\t", t1.tv_sec, t1.tv_usec, complete.str().c_str() );
         execpid.push_back(temp);
     }
     return true;
@@ -283,11 +277,6 @@ spawner_rm_t::create_slurm_nodelist_blocks()
                         nodes << "--nodes=" << count;
                         tasks << "--ntasks=" << count * i;
 
-//                        std::ostringstream extra;
-//                        extra << "--lmon-local=" << i;
-//                        get_extra_daemon_args(n).push_back( extra.str().c_str() );
-
-                        //tasks << "--ntasks=" << (count * i);
                         get_launch_cmd_args(n).push_back( std::string("--jobid=") + std::string(jobid) );
                         get_launch_cmd_args(n).push_back( std::string( nodes.str().c_str() ) );
                         get_launch_cmd_args(n).push_back( std::string(tasks.str().c_str()) );
@@ -321,20 +310,12 @@ spawner_rm_t::create_slurm_nodelist_blocks()
     return true;
 }
 
-typedef struct _c_range{
-    int start;
-    int end;
-} c_range;
-
 bool
 spawner_rm_t::create_slurm_nodelist_arbitrary()
 {
     //slurm host names are of the form basenameNUM
     //all host names must be of the same basename.
     //need to account for the same host name given multiple times
-
-//    timeval t1, t2;
-//    gettimeofday(&t1, NULL);
 
     std::vector<std::string>::const_iterator cur;
     std::map<int,int> host_map;
@@ -343,6 +324,7 @@ spawner_rm_t::create_slurm_nodelist_arbitrary()
     std::string base_name;
     std::ostringstream list;
     std::ostringstream nodes;
+    std::ostringstream tasks;
 
     char* jobid = getenv( "SLURM_JOB_ID" );
     if( jobid == NULL )
@@ -352,14 +334,11 @@ spawner_rm_t::create_slurm_nodelist_arbitrary()
     }
     get_launch_cmd_args().push_back( std::string("--jobid=") + std::string(jobid) );
     
-    //fprintf(stderr, "%s(%i) hosts.size()=%i\n", __FUNCTION__, __LINE__, get_hosts_vector().size() );
     if( get_hosts_vector().size() > 0 )
     {
         cur = get_hosts_vector().begin();
         num_start = (*cur).find_first_of("0123456789");
         base_name = (*cur).substr(0,num_start);
-        
-        //fprintf(stderr, "%s(%i) cur=%s num_start=%i base_name=%s\n", __FUNCTION__, __LINE__, (*cur).c_str(), num_start, base_name.c_str() );
         
         //populate host_map
         while( cur != get_hosts_vector().end() )
@@ -382,54 +361,11 @@ spawner_rm_t::create_slurm_nodelist_arbitrary()
             cur++;
         }
 
-        //reorder the hosts_vector for a faster cobo initialization.
-        std::vector<std::string> new_order;
-        int i;
-        iter = host_map.begin();
-        while( iter != host_map.end() )
-        {
-            std::ostringstream name;
-            name << base_name << iter->first;
-            for(i=0; i < iter->second; i++)
-                new_order.push_back( name.str() );
-            iter++;
-        }
-
-        std::vector<int> next;
-        std::vector<int> c_order;
-        int c_me, low, high, mid;
-        next.push_back(0);
-        while( next.size() > 0 ){  //code base on cobo implementation
-            c_me = next.front();
-            c_order.push_back(c_me);
-            next.erase( next.begin() );
-            low  = 0;
-            high = get_hosts_vector().size() - 1;
-            while (high - low > 0) {
-                mid = (high - low) / 2 + (high - low) % 2 + low;
-                if (low == c_me )
-                    next.push_back(mid);
-                if (mid <= c_me) { low  = mid; }
-                else             { high = mid-1; }
-            }//while
-        }//while
-
-        std::vector<int>::iterator o_iter = c_order.begin();
-        std::vector<std::string>::iterator h_iter = new_order.begin();
-        while( o_iter != c_order.end() ){
-            get_hosts_vector()[(*o_iter)] = (*h_iter);
-            h_iter++;
-            o_iter++;
-        }
-
-
-        //get_hosts_vector().erase( get_hosts_vector().begin(), get_hosts_vector().end()  );
-        //get_hosts_vector().insert( get_hosts_vector().begin(), new_order.begin(), new_order.end() );
-
-
         //depopulate host_map
         nodes << "--nodes=" << host_map.size();
         get_launch_cmd_args().push_back( nodes.str() );
+        tasks << "--ntasks=" << get_hosts_vector().size();
+        get_launch_cmd_args().push_back( tasks.str() );
         
         list << "--nodelist=" << base_name << "[";
 
@@ -472,17 +408,11 @@ spawner_rm_t::create_slurm_nodelist_arbitrary()
 
         list.seekp( -1, std::ios_base::cur );  //overwrite last ,
         list << "]";
-        //fprintf(stderr, "%s(%i) list=%s\n", __FUNCTION__, __LINE__, list.str().c_str() );
 
         get_launch_cmd_args().push_back( std::string("--distribution=arbitrary") );
-//        get_launch_cmd_args().push_back( std::string("--share") );
         get_launch_cmd_args().push_back( list.str() );
 //        get_launch_cmd_args().push_back( std::string("-vvv") );
     }
-
-//    gettimeofday(&t2, NULL);
-//    double d1 = ((double)t2.tv_sec + ((double)t2.tv_usec * 0.000001)) - ((double)t1.tv_sec + ((double)t1.tv_usec * 0.000001));
-//    fprintf( stdout, "or:%f\t", d1 );
 
     return true;
 }
@@ -514,26 +444,7 @@ spawner_rm_t::execute_rm_bulk_launch( int n )
     {
       av[i++] = strdup ((*iter).c_str());
     }
-//    for (iter = get_extra_daemon_args(n).begin(); iter != get_extra_daemon_args(n).end(); ++iter)
-//    {
-//      av[i++] = strdup ((*iter).c_str());
-//    }
-//    av[i++] = "2>&1";
-//    av[i++] = "|";
-//    av[i++] = "/g/g20/goehner1/mrnet/tests/timelog";
     av[i++] = NULL;
-
-//    std::ostringstream complete;
-//    for(int j=0; j+1<i; j++){
-//        complete << av[j] << " ";
-//    }
-//    complete << "2>&1 | /g/g20/goehner1/mrnet/tests/timelog > /g/g20/goehner1/mrnet/tests/srun_cobo" << n << getpid();
-      //fprintf(stderr, "%s(%i) arg[%i]=%s\n", __FUNCTION__, __LINE__, j, av[j] );
-
-//fprintf(stderr, "%s \n", complete.str().c_str());
-
-
-
 
     //
     // We use excvp so that we don't have to copy environ
@@ -543,9 +454,6 @@ spawner_rm_t::execute_rm_bulk_launch( int n )
     {
       return false;
     }
-//    if( system( complete.str().c_str() ) != 0 ){
-//        return false;
-//    }
 
     //
     // Unreachable but to satisfy the compiler

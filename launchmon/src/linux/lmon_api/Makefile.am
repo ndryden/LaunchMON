@@ -72,7 +72,7 @@ libmonfeapi_la_SOURCES       = ../../sdbg_self_trace.cxx \
                                ../../lmon_api/lmon_say_msg.hxx \
                                ../../sdbg_opt.hxx \
                                ../../sdbg_base_spawner.hxx \
-                               ../sdbg_rm_spawner.cxx \
+                               ../sdbg_rm_spawner.hxx \
                                ../sdbg_rsh_spawner.hxx \
                                lmon_coloc_spawner.hxx
 

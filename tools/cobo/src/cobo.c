@@ -126,14 +126,6 @@ static void cobo_error(char *fmt, ...)
     cobo_gettimeofday(&tv);
     if(err_file==NULL){
         err_file=stderr;
-/*
-        char hostname[256];
-        gethostname(hostname, 256);
-        char file_path[500];
-        snprintf(file_path, 500, "/g/g20/goehner1/mrnet/tests/cobo_backends/%s.%u", hostname, getpid() );
-        FILE * file= fopen( file_path, "a" );
-        err_file=file;
-*/
     }
     fprintf(err_file, "COBO ERROR: ", tv.tv_sec, tv.tv_usec);
     if (cobo_me >= 0) {
@@ -163,14 +155,6 @@ static void cobo_warn(char *fmt, ...)
     cobo_gettimeofday(&tv);
     if(err_file==NULL){
         err_file=stderr;
-/*
-        char hostname[256];
-        gethostname(hostname, 256);
-        char file_path[500];
-        snprintf(file_path, 500, "/g/g20/goehner1/mrnet/tests/cobo_backends/%s.%u", hostname, getpid() );
-        FILE * file= fopen( file_path, "a" );
-        err_file=file;
-*/
     }
     fprintf(err_file, "COBO WARNING: ", tv.tv_sec, tv.tv_usec);
     if (cobo_me >= 0) {
@@ -201,14 +185,6 @@ static void cobo_debug(int level, char *fmt, ...)
     if (cobo_echo_debug > 0 && cobo_echo_debug >= level) {
         if(err_file==NULL){
             err_file=stderr;
-/*
-            char hostname[256];
-            gethostname(hostname, 256);
-            char file_path[500];
-            snprintf(file_path, 500, "/g/g20/goehner1/mrnet/tests/cobo_backends/%s.%u", hostname, getpid() );
-            FILE * file= fopen( file_path, "a" );
-            err_file=file;
-*/
         }
         fprintf(err_file, "%ld.%ld: COBO DEBUG: ", tv.tv_sec, tv.tv_usec );
         if (cobo_me >= 0) {
@@ -1578,20 +1554,6 @@ int cobo_open(unsigned int sessionid, int* portlist, int num_ports, int* rank, i
             }
         }
     }
-
-/*
-    out_file=stdout;
-    err_file=stderr;
-    char hostname[256];
-    gethostname(hostname, 256);
-    char file_path[500];
-    snprintf(file_path, 500, "/g/g20/goehner1/mrnet/tests/cobo_backends/%s.%u", hostname, getpid() );
-    FILE * file= fopen( file_path, "a" );
-    out_file=file;
-    err_file=file;
-*/
-
-    //end newstuff
 
     cobo_debug(3, "In cobo_init():\n" \
         "COBO_CONNECT_TIMEOUT: %d, COBO_CONNECT_BACKOFF: %d, COBO_CONNECT_SLEEP: %d, COBO_CONNECT_TIMELIMIT: %d",

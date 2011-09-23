@@ -1661,7 +1661,7 @@ LMON_assist_ICCL_BE_init (lmon_session_desc_t *mydesc)
    */
   unsigned int tmp_cobosessid = 10;
   unsigned int tmp_sharedKey = (unsigned int)atoi( mydesc->shared_key );
-  tmp_cobosessid += (tmp_sharedKey>11) ? (tmp_sharedKey-11) : (tmp_sharedKey);
+  tmp_cobosessid += (tmp_sharedKey>tmp_cobosessid) ? (tmp_sharedKey-tmp_cobosessid) : (tmp_sharedKey+tmp_cobosessid);
   if ( cobo_server_open (tmp_cobosessid, (char **) hostlist, hcnt, portlist, COBO_PORT_RANGE)
        != COBO_SUCCESS )
     {
@@ -1806,9 +1806,7 @@ LMON_assist_ICCL_MW_init (lmon_session_desc_t *mydesc)
   //
   unsigned int tmp_cobosessid = 11;
   unsigned int tmp_sharedKey = (unsigned int)atoi( mydesc->shared_key );
-  tmp_cobosessid += (tmp_sharedKey>11) ? (tmp_sharedKey-11) : (tmp_sharedKey);
-timeval t1,t2;
-gettimeofday( &t1, NULL );
+  tmp_cobosessid += (tmp_sharedKey>tmp_cobosessid) ? (tmp_sharedKey-tmp_cobosessid) : (tmp_sharedKey+tmp_cobosessid);
   if ( cobo_server_open(tmp_cobosessid, (char **) cobohl, combinedHostList.size(), portlist, COBO_PORT_RANGE)
        != COBO_SUCCESS )
     {
@@ -1817,7 +1815,6 @@ gettimeofday( &t1, NULL );
 
       return LMON_ESYS;
     }
-gettimeofday( &t2, NULL );
 
    if ( cobo_server_get_root_socket(&(mydesc->commDesc[fe_mw_conn].sessionAcceptSockFd))
         != COBO_SUCCESS)
@@ -1827,8 +1824,6 @@ gettimeofday( &t2, NULL );
 
        return LMON_ESYS;
      }
-double d1 = ((double)t2.tv_sec + ((double)t2.tv_usec * 0.000001)) - ((double)t1.tv_sec + ((double)t1.tv_usec * 0.000001));
-fprintf( stdout, "so:%f\t", d1 );
 
   free(portlist);
   free(cobohl);
@@ -2314,8 +2309,6 @@ LMON_fe_mwHandshakeSequence (
     return LMON_ESYS;
   }
 
-//timeval t1,t2;
-//gettimeofday( &t1, NULL );
   //
   // USRDATA MSG
   //  -- writing the lmonp_femw_usrdata message along with the user data 
@@ -2341,10 +2334,6 @@ LMON_fe_mwHandshakeSequence (
       return lrc;
     }
 
-//gettimeofday( &t2, NULL );
-//double d1 = ((double)t2.tv_sec + ((double)t2.tv_usec * 0.000001)) - ((double)t1.tv_sec + ((double)t1.tv_usec * 0.000001));
-//fprintf( stdout, "handshake:%f\t", d1 );
-//fflush(stdout);
   //
   // Handshake has been successful
   //

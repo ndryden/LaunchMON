@@ -74,15 +74,6 @@ public:
 
   }
 
-//  std::vector<std::string> & get_extra_daemon_args( int i = 0 )
-//    {
-//      while( i > extra_daemon_args.size()-1 ){
-//          std::vector<std::string> tempv;
-//          extra_daemon_args.push_back( tempv );
-//      }
-//      return extra_daemon_args[i];
-//    }
-
   virtual bool spawn();
 
   virtual bool combineHosts(std::vector<std::string> &combHosts);
@@ -94,12 +85,10 @@ private:
    }
   
   bool create_launch_args();
-  //bool create_slurm_nodelist( std::vector<std::string> bulk_args, std::vector<std::string> & hosts );
   bool create_slurm_nodelist_arbitrary();
   bool create_slurm_nodelist_blocks();
   
   bool execute_rm_bulk_launch(int i);
-//  std::vector< std::vector<std::string> > extra_daemon_args;
   
   std::vector<pid_t> execpid;
 };
