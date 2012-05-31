@@ -27,6 +27,7 @@
  *
  *
  *  Update Log:
+ *        May 31 2012 DHA: (ID: 3530680) Added data structures for better debug message support
  *        Jun 28 2010 DHA: Added lmonp_rminfo OP to the lmon_fetofe message class
  *        Jun 22 2010 DHA: Added lmonp_febe_launch_dontstop and lmonp_febe_attach_stop
  *                          OP to the lmon_fetobe class.
@@ -51,6 +52,18 @@ BEGIN_C_DECLS
 //
 //
  
+typedef enum _lmonp_msg_field_selector_e {
+
+  field_class                         = 0,
+  field_type,               
+  field_security1,
+  field_security2,
+  field_long_num_tasks,
+  field_lmon_payload_length,
+  field_usr_payload_length
+
+} lmon_msg_field_selector_e;
+
 
 typedef enum _lmonp_msg_class_e {
   /*
@@ -384,11 +397,17 @@ typedef struct _lmonp_t {
 //
 //
 
+//! const char *lmon_msg_to_str
+/*!
+    returns a string corresponding to a field in an LMONP msg.
+*/
+const char *lmon_msg_to_str ( lmon_msg_field_selector_e s, 
+                       lmonp *msg );  
+
 //! void lmon_timedaccept
 /*!
     Timed accept 
 */
-
 int lmon_timedaccept ( int s, struct sockaddr *addr,
                        socklen_t *addrlen, int toutsec );
 

@@ -26,6 +26,7 @@
  *--------------------------------------------------------------------------------
  *
  *  Update Log:
+ *        May 30 2012 DHA: (ID: 3530680) Added better debug info.
  *        Nov 01 2010 DHA: Fix small memory leaks in createSession
  *        Jun 30 2010 DHA: Added faster engine parsing error detection support
  *        Jun 28 2010 DHA: Added LMON_fe_getRMInfo support
@@ -914,7 +915,7 @@ LMON_fe_handleFeBeUsrData ( int sessionHandle,
   if ( (mydesc->registered == LMON_FALSE))
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-        "session is invalid, the job killed?");
+        "session is invalid, the job has been killed?");
       return LMON_EBDARG;
     }
   
@@ -942,7 +943,7 @@ LMON_fe_handleFeBeUsrData ( int sessionHandle,
 	  lmonp_t empty_udata_msg;
 	  
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	     "did you forget to register a FEBE pack function?");
+	     "did you register a FEBE pack function?");
 		
 	  set_msg_header ( 
 		      &empty_udata_msg,
@@ -1018,7 +1019,7 @@ LMON_fe_handleFeMwUsrData (int sessionHandle,
        || (sessionHandle > MAX_LMON_SESSION) )    
     { 
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-        "session is invalid");
+        "session is invalid for LMON_fe_handleFeMwUsrData");
 
       return LMON_EBDARG;    
     }
@@ -1028,7 +1029,8 @@ LMON_fe_handleFeMwUsrData (int sessionHandle,
   if ( (mydesc->registered == LMON_FALSE))
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-        "session is invalid, the job killed?");
+        "session is invalid for LMON_fe_handleFeMwUsrData,"
+        " the job has been killed?");
 
       return LMON_EBDARG;
     }
@@ -1057,7 +1059,7 @@ LMON_fe_handleFeMwUsrData (int sessionHandle,
 	  lmonp_t empty_udata_msg;
 	  
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	    "did you forget to register a FEMW pack function?");
+	    "did you register a FEMW pack function?");
 		
 	  set_msg_header ( 
 		      &empty_udata_msg,
@@ -1135,7 +1137,7 @@ LMON_fe_handleBeFeUsrData (int sessionHandle,
        || (sessionHandle > MAX_LMON_SESSION) )    
     { 
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-        "session is invalid");
+        "session is invalid for handling backend-frontend user payload");
 
       return LMON_EBDARG;    
     }
@@ -1145,7 +1147,8 @@ LMON_fe_handleBeFeUsrData (int sessionHandle,
   if ( (mydesc->registered == LMON_FALSE))
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-        "session is invalid, the job killed?");
+        "session is invalid for handling backend-frontend user payload,"
+        " the job has been killed?");
       return LMON_EBDARG;
     }
   
@@ -1185,7 +1188,7 @@ LMON_fe_handleBeFeUsrData (int sessionHandle,
 	  // do nothiing
 	  //
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	    "did you forget to register a BEFE unpack function?");
+	    "did you register a BEFE unpack function?");
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
 	    "or pass a null pointer?");
 	  
@@ -1202,7 +1205,7 @@ LMON_fe_handleBeFeUsrData (int sessionHandle,
 			          befe_data )) < 0 )
             {
 	      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-		"the registered unpack function returned a negative return code");
+		"the unpack function you had registered returned a negative return code");
 
               lrc = LMON_ENEGCB;
             }
@@ -1233,7 +1236,7 @@ LMON_fe_handleMwFeUsrData (int sessionHandle,
        || (sessionHandle > MAX_LMON_SESSION) )    
     { 
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-         "session is invalid");
+         "session is invalid in handling middleware-frontent user payload");
 
       return LMON_EBDARG;    
     }
@@ -1243,7 +1246,8 @@ LMON_fe_handleMwFeUsrData (int sessionHandle,
   if ( (mydesc->registered == LMON_FALSE))
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-        "session is invalid, the job killed?");
+        "session is invalid in handling middleware-frontent user payload,"
+        " the job has been killed?");
 
       return LMON_EBDARG;
     }
@@ -1275,7 +1279,7 @@ LMON_fe_handleMwFeUsrData (int sessionHandle,
 	  // do nothiing
 	  //
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	    "did you forget to register a BEFE unpack function?");
+	    "did you register a BEMW unpack function?");
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
 	    "or pass a null pointer?");
 	  
@@ -1292,7 +1296,7 @@ LMON_fe_handleMwFeUsrData (int sessionHandle,
 			             mwfe_data )) < 0 )
             {
 	      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-		"the registered unpack function returned a negative return code");
+		"the unpack function that you registered returned a negative return code");
 
               lrc = LMON_ECLLB;
             }
@@ -1352,14 +1356,18 @@ LMON_fe_acceptEngine ( int sessionHandle )
   if ( mydesc->commDesc[fe_engine_conn].sessionAcceptSockFd == -2 )
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	"accepting a connection with an engine timed out");
+	"connection to the launchmon engine timed out");
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+	"the launchmon engine has been crashed or never been invoked?");
 
       return LMON_ETOUT;
     }
   else if ( mydesc->commDesc[fe_engine_conn].sessionAcceptSockFd < 0 )
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	"accepting a connection with an engine failed");
+	"connection to the launchmon engine failed");
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+	"the launchmon engine has been crashed or never been invoked?");
 
       return LMON_ESYS;
     }
@@ -1367,7 +1375,9 @@ LMON_fe_acceptEngine ( int sessionHandle )
   if ( read_lmonp_msgheader(mydesc->commDesc[fe_engine_conn].sessionAcceptSockFd, &msg) < 0 )
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	"read_lmonp_msg returned a negative return code");
+	"reading an LMON msg from the launchmon engine returns a negative return code");
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+	"LMONP protocol mismatch or problems while invoking the launchmon engine?");
 
       return LMON_ESYS;
     }
@@ -1375,14 +1385,18 @@ LMON_fe_acceptEngine ( int sessionHandle )
   if (msg.type.fetofe_type == lmonp_conn_ack_parse_error) 
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	"the engine reported parse errors with its connect-back");
+	"the launchmon engine encountered an error while parsing its command line.");
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+	"has an incorrect pid been provided?");
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+	"please check the command line provided to the engine.");
    
       return LMON_EINVAL;
     }
   else if (msg.type.fetofe_type != lmonp_conn_ack_no_error) 
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	"the engine sent a wrong msg type... a version mismatch?");
+	"the engine sent an unexpected msg type. LMONP version mismatch?");
    
       return LMON_EINVAL;
     }
@@ -1437,7 +1451,7 @@ LMON_assist_ICCL_BE_init (lmon_session_desc_t *mydesc)
   if (!mydesc->proctab_msg)
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-        "proctab msg has not yet arrived! A race condition?");
+        "proctab msg has not yet arrived from the launchmon engine! A race condition?");
 
       return LMON_EBUG;
     }
@@ -1446,7 +1460,7 @@ LMON_assist_ICCL_BE_init (lmon_session_desc_t *mydesc)
       if ( parse_raw_RPDTAB_msg (mydesc->proctab_msg, &(mydesc->pMap)) < 0 )
         {
           LMON_say_msg (LMON_FE_MSG_PREFIX, false,
-            "parse_raw_RPDTAB_msg failed to parse RPDTAB");
+            "failed to parse MPIR_proctable");
 
           return LMON_ESYS;
         }
@@ -1599,7 +1613,7 @@ LMON_fe_beHandshakeSequence (
     {
       
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-		     "LMON_assist_ICCL_BE_init failed ");
+		     "back ends bootstrapping throgh LMON_assist_ICCL_BE_init failed ");
       
       return LMON_EINVAL;
     }
@@ -1627,14 +1641,18 @@ LMON_fe_beHandshakeSequence (
       if ( mydesc->commDesc[fe_be_conn].sessionAcceptSockFd == -2 )
 	{
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-            "accepting a connection with the BE master timed out");
+            "connection to the back end master timed out");
+          LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+	    "the back ends have been crashed or never been invoked?");
 	  
 	  return LMON_ETOUT;
 	}
       else if ( mydesc->commDesc[fe_be_conn].sessionAcceptSockFd < 0 )
 	{
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	    "accepting a connection with the BE master failed");
+	    "connection to the back end master failed");
+          LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+	    "the back ends have been crashed or never been invoked?");
 	  
 	  return LMON_ESYS;
 	}
@@ -1656,7 +1674,27 @@ LMON_fe_beHandshakeSequence (
 	   || ( msg.lmon_payload_length != 0 ) )
 	{
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-			 "received an invalid message ");
+			 "Received an invalid LMONP msg: "
+                         "Front-end back-end protocol mismatch? "
+                         "or back-end disconnected?");
+
+	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+			 "  A proper msg of "
+                            "{Class(%s)," 
+                             "Type(%s),"
+                             "LMON_payload_size(%s)} is expected."
+                         "lmonp_fetobe",
+                         "lmonp_febe_security_chk",
+                         lmon_msg_to_str(field_lmon_payload_length, &msg));
+
+	  LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+			 "  A msg of "
+                            "{Class(%s)," 
+                             "Type(%s),"
+                             "LMON_payload_size(%d)} has been received.",
+                         lmon_msg_to_str(field_class, &msg),
+                         lmon_msg_to_str(field_type, &msg),
+                         lmon_msg_to_str(field_lmon_payload_length, &msg));
       
 	  return LMON_EBDMSG;      
 	}
@@ -1720,7 +1758,8 @@ LMON_fe_beHandshakeSequence (
 			     &msg ) < 0 )
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-		   "read_lmonp_msgheader failed");
+		   "read_lmonp_msgheader failed"
+                   " while attempting to handshake with back end master");
 
       return LMON_ESYS;
     }
@@ -1731,7 +1770,29 @@ LMON_fe_beHandshakeSequence (
        || ( (msg.lmon_payload_length + msg.usr_payload_length) < 0 ) )
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-	"received an invalid message ");
+	             "Received an invalid LMONP msg: "
+                     "Front-end back-end protocol mismatch? "
+                     "or back-end disconnected?");
+
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+			 "  A proper msg of "
+                            "{Class(%s)," 
+                             "Type(%s),"
+                             "LMON_payload_size(%s)} is expected."
+                         "lmonp_fetobe",
+                         "lmonp_febe_hostname",
+                         ">=0")
+
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+			 "  A msg of "
+                            "{Class(%s)," 
+                             "Type(%s),"
+                             "LMON_payload_size(%s),"
+                             "USR_payload_size(%s)} has been received.",
+                         lmon_msg_to_str(field_class, &msg),
+                         lmon_msg_to_str(field_type, &msg),
+                         lmon_msg_to_str(field_lmon_payload_length, &msg),
+                         lmon_msg_to_str(field_usr_payload_length, &msg));
 
       return LMON_EBDMSG;
     }
@@ -1750,7 +1811,8 @@ LMON_fe_beHandshakeSequence (
 			   len) < 0 )
   {
     LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-		   "read_lmonp_payloads failed");
+		   "read_lmonp_payloads failed"
+                   "while attempting to handshake with back end master");
 
     return LMON_ESYS;
   }
@@ -1772,7 +1834,8 @@ LMON_fe_beHandshakeSequence (
 		      + mydesc->proctab_msg->usr_payload_length ) < 0 )
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-		   "write_lmonp_long_msg failed");
+		   "write_lmonp_long_msg failed"
+                   "while attempting to handshake with back end master");
 
       return LMON_ESYS;
     }
