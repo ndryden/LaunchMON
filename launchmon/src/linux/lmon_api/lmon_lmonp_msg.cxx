@@ -455,30 +455,40 @@ const char *lmon_msg_to_str ( lmon_msg_field_selector_e s,
         }
       break;
 
-  case field_security1:
-    ret_str = (const char *) malloc (16);
-    snprintf(ret_str, 16, "%d", msg->sec_or_jobsizeinfo.security_key1);
-    break;
 
-  case field_security2:
-    ret_str = (const char *) malloc (16);
-    snprintf(ret_str, 16, "%d", msg->sec_or_stringinfo.security_key2);
+  case field_security1: {
+    char *tmp_str = (char *) malloc (16);
+    snprintf(tmp_str, 16, "%d", msg->sec_or_jobsizeinfo.security_key1);
+    ret_str = (const char *) tmp_str;
     break;
+  }
 
-  case field_long_num_tasks:
-    ret_str = (const char *) malloc (16);
-    snprintf(ret_str, 16, "%d", msg->long_num_tasks);
+  case field_security2: {
+    char *tmp_str = (char *) malloc (16);
+    snprintf(tmp_str, 16, "%d", msg->sec_or_stringinfo.security_key2);
+    ret_str = (const char *) tmp_str;
     break;
+  }
 
-  case field_lmon_payload_length:
-    ret_str = (const char *) malloc (16);
-    snprintf(ret_str, 16, "%d", msg->lmon_payload_length);
+  case field_long_num_tasks: {
+    char *tmp_str = (char *) malloc (16);
+    snprintf(tmp_str, 16, "%d", msg->long_num_tasks);
+    ret_str = (const char *) tmp_str;
     break;
+  }
+  case field_lmon_payload_length: {
+    char *tmp_str = (char *) malloc (16);
+    snprintf(tmp_str, 16, "%d", msg->lmon_payload_length);
+    ret_str = (const char *) tmp_str;
+    break;
+  }
 
-  case field_usr_payload_length:
-    ret_str = (const char *) malloc (16);
-    snprintf(ret_str, 16, "%d", msg->usr_payload_length);
+  case field_usr_payload_length: {
+    char *tmp_str = (char *) malloc (16);
+    snprintf(tmp_str, 16, "%d", msg->usr_payload_length);
+    ret_str = (const char *) tmp_str;
     break;
+  }
 
   default:
     break;
