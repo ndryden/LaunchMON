@@ -402,7 +402,7 @@ typedef struct _lmonp_t {
     returns a string corresponding to a field in an LMONP msg.
 */
 const char *lmon_msg_to_str ( lmon_msg_field_selector_e s, 
-                       lmonp *msg );  
+                       lmonp_t *msg );  
 
 //! void lmon_timedaccept
 /*!
