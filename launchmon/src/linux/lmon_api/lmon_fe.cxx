@@ -1781,7 +1781,7 @@ LMON_fe_beHandshakeSequence (
                              "LMON_payload_size(%s)} is expected."
                          "lmonp_fetobe",
                          "lmonp_febe_hostname",
-                         ">=0")
+                         ">=0");
 
       LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
 			 "  A msg of "
