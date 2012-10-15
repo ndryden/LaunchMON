@@ -171,17 +171,19 @@ LMON_daemon_internal_init ( int* argc, char*** argv, char *myhn, int is_be )
   char **nargv = *argv;
   int n_lmonopt = 0;
   int i;
+  unsigned int tmp_lmonsharedsec;  
 
   /*
    * The following code assumes lmon's options are specified after all other
    * options (e.g., PMGR's ) are given.
    */
-  for (i=1; i < (*argc); ++i) {
+  for (i=0; i < (*argc); ++i) {
     if ( (nargv[i][0] == '-') && (nargv[i][1]) ) {
       if ( strncmp (&(nargv[i][2]), "lmonsharedsec=", 14)== 0 )
 	{
 	   /* exporting a commandline option to an envVar */
            setenv (TOOL_SS_ENV, &(nargv[i][2])+14, 1); 
+           tmp_lmonsharedsec = (unsigned int)atoi( &(nargv[i][2])+14 );
 	   n_lmonopt++;
 	}
       else if ( strncmp (&(nargv[i][2]), "lmonsecchk=", 11)== 0 )
@@ -249,6 +251,8 @@ LMON_daemon_internal_init ( int* argc, char*** argv, char *myhn, int is_be )
    //
    iccl_begin_port = (is_be) ? COBO_BEGIN_PORT : COBO_BEGIN_PORT + COBO_PORT_RANGE;
    iccl_tmp_session = (is_be) ? 10 : 11;
+   iccl_tmp_session += (tmp_lmonsharedsec>iccl_tmp_session) ? (tmp_lmonsharedsec-iccl_tmp_session) : (iccl_tmp_session+tmp_lmonsharedsec);
+   tmp_lmonsharedsec = 0;
 
    int j;
    int *portlist = (int *) malloc (COBO_PORT_RANGE * sizeof(int));

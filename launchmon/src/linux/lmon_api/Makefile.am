@@ -65,7 +65,9 @@ libmonfeapi_la_SOURCES       = lmon_fe.cxx \
                                ../../sdbg_rm_map.cxx \
                                ../../sdbg_self_trace.cxx \
                                ../../sdbg_opt.cxx \
+                               ../sdbg_rm_spawner.cxx \
                                ../sdbg_rsh_spawner.cxx \
+                               ../sdbg_rm_spawner.hxx \
                                lmon_coloc_spawner.hxx \
                                ../sdbg_rsh_spawner.hxx \
                                ../../lmon_api/lmon_api_std.h \
@@ -75,7 +77,7 @@ libmonfeapi_la_SOURCES       = lmon_fe.cxx \
                                ../../sdbg_opt.hxx \
                                ../../sdbg_rm_map.hxx \
                                ../../lmon_api/lmon_say_msg.hxx \
-                               ../../sdbg_base_spawner.hxx 
+                               ../../sdbg_base_spawner.hxx
 
 libmonfeapi_la_CFLAGS        = $(AM_CFLAGS)
 libmonfeapi_la_CXXFLAGS      = $(AM_CXXFLAGS)
@@ -127,9 +129,11 @@ libmonmwapi_la_SOURCES       = lmon_mw.cxx \
                                lmon_say_msg.cxx \
                                lmon_coloc_spawner.cxx \
                                ../sdbg_rsh_spawner.cxx \
+                               ../sdbg_rm_spawner.cxx \
                                lmon_coloc_spawner.hxx \
                                lmon_daemon_internal.hxx \
                                ../sdbg_rsh_spawer.hxx \
+                               ../sdbg_rm_spawner.hxx \
                                ../../lmon_api/lmon_api_std.h \
                                ../../lmon_api/lmon_mw.h \
                                ../../lmon_api/lmon_proctab.h \

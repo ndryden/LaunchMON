@@ -238,6 +238,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <sys/time.h>
 
 #include "sdbg_self_trace.hxx"
 #include "sdbg_opt.hxx"
@@ -247,7 +248,7 @@
 // spawners to support Middleware
 //
 #include "sdbg_rsh_spawner.hxx"
-//#include "sdbg_rm_spawner.hxx"
+#include "sdbg_rm_spawner.hxx"
 #include "lmon_api/lmon_coloc_spawner.hxx"
 #include "lmon_api/lmon_say_msg.hxx"
 
@@ -1569,9 +1570,11 @@ LMON_assist_ICCL_BE_init (lmon_session_desc_t *mydesc)
 
   /*
    * Now taking advantage of COBO's new scalable bootstrapping
-   * Session id=10 for now.
    */
-  if ( cobo_server_open (10, (char **) hostlist, hcnt, portlist, COBO_PORT_RANGE)
+  unsigned int tmp_cobosessid = 10;
+  unsigned int tmp_sharedKey = (unsigned int)atoi( mydesc->shared_key );
+  tmp_cobosessid += (tmp_sharedKey>tmp_cobosessid) ? (tmp_sharedKey-tmp_cobosessid) : (tmp_sharedKey+tmp_cobosessid);
+  if ( cobo_server_open (tmp_cobosessid, (char **) hostlist, hcnt, portlist, COBO_PORT_RANGE)  
        != COBO_SUCCESS )
     {
        LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
@@ -1711,9 +1714,12 @@ LMON_assist_ICCL_MW_init (lmon_session_desc_t *mydesc)
     }
 
   //
-  // session ID = 11 for now
+  // Use a session ID modified by the shared key
   //
-  if ( cobo_server_open(11, (char **) cobohl, combinedHostList.size(), portlist, COBO_PORT_RANGE)
+  unsigned int tmp_cobosessid = 11;
+  unsigned int tmp_sharedKey = (unsigned int)atoi( mydesc->shared_key );
+  tmp_cobosessid += (tmp_sharedKey>tmp_cobosessid) ? (tmp_sharedKey-tmp_cobosessid) : (tmp_sharedKey+tmp_cobosessid);
+  if ( cobo_server_open(tmp_cobosessid, (char **) cobohl, combinedHostList.size(), portlist, COBO_PORT_RANGE)
        != COBO_SUCCESS )
     {
        LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
@@ -3552,7 +3558,7 @@ LMON_fe_createSession ( int *sessionHandle )
       //
       // a random seed for the random number generator
       //
-      srand (time(NULL));
+      srand ( time(NULL) + (*sessionHandle) );
 
       //
       // randomID is a random number and shared_key is a encryption key,
@@ -5502,7 +5508,6 @@ lmon_rc_e LMON_fe_launchMwDaemons(
         "invalid nreq. Does nreq exceed the number of different MW volume kinds?" );
       return LMON_EBDARG;
     }
-
   mydesc = &sess.sessionDescArray[sessionHandle];
 
   //
@@ -5585,12 +5590,18 @@ lmon_rc_e LMON_fe_launchMwDaemons(
                      k++;
                   }
 
-                spawner_base_t *rshSpawner
-                  = new spawner_rsh_t( std::string(req[i].mw_daemon_path),
+                spawner_base_t *spawner;
+#ifdef RM_SLURM_SRUN
+                spawner = new spawner_rm_t( std::string(req[i].mw_daemon_path),
                                    argvect,
                                    hostvect);
 
-                mydesc->spawner_vector.push_back(rshSpawner);
+#else
+                spawner = new spawner_rsh_t( std::string(req[i].mw_daemon_path),
+                                             argvect,
+                                             hostvect);
+#endif
+                mydesc->spawner_vector.push_back(spawner);
               }
             else
               {

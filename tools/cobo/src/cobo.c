@@ -22,6 +22,10 @@
 #define ENV_REQUIRED (0)
 #define ENV_OPTIONAL (1)
 
+#ifndef MAX_BACKLOG       
+#define MAX_BACKLOG 1 /* for listen() */
+#endif
+
 /* set env variable to configure socket timeout parameters */
 #ifndef COBO_CONNECT_TIMEOUT       
 #define COBO_CONNECT_TIMEOUT (10) /* milliseconds -- wait this long before a connect() call times out*/
@@ -100,6 +104,7 @@ double __cobo_ts = 0.0f;
 /* startup time, time between starting cobo_open and finishing cobo_close */
 static struct timeval time_open, time_close;
 static struct timeval tree_start, tree_end;
+static FILE* err_file = NULL;
 
 /*
  * ==========================================================================
@@ -109,26 +114,35 @@ static struct timeval tree_start, tree_end;
  * ==========================================================================
  */
 
+static void cobo_gettimeofday(struct timeval* tv);
+
 /* print message to stderr */
 static void cobo_error(char *fmt, ...)
 {
     va_list argp;
     char hostname[256];
     gethostname(hostname, 256);
-    fprintf(stderr, "COBO ERROR: ");
+    struct timeval tv;
+    cobo_gettimeofday(&tv);
+    if(err_file==NULL){
+        err_file=stderr;
+    }
+    fprintf(err_file, "COBO ERROR: ", tv.tv_sec, tv.tv_usec);
     if (cobo_me >= 0) {
-        fprintf(stderr, "rank %d on %s: ", cobo_me, hostname);
+        fprintf(err_file, "rank %d on %s: ", cobo_me, hostname);
     } else if (cobo_me == -2) {
-        fprintf(stderr, "server on %s: ", hostname);
+        fprintf(err_file, "server on %s: ", hostname);
     } else if (cobo_me == -1) {
-        fprintf(stderr, "unitialized client task on %s: ", hostname);
+        fprintf(err_file, "unitialized client task on %s: ", hostname);
     } else {
-        fprintf(stderr, "unitialized task (server or client) on %s: ", hostname);
+        fprintf(err_file, "unitialized task (server or client) on %s: ", hostname);
     }
     va_start(argp, fmt);
-    vfprintf(stderr, fmt, argp);
+    vfprintf(err_file, fmt, argp);
     va_end(argp);
-    fprintf(stderr, "\n");
+    fprintf(err_file, "\n");
+    fflush(err_file);
+
 }
 
 /* print message to stderr */
@@ -137,20 +151,26 @@ static void cobo_warn(char *fmt, ...)
     va_list argp;
     char hostname[256];
     gethostname(hostname, 256);
-    fprintf(stderr, "COBO WARNING: ");
+    struct timeval tv;
+    cobo_gettimeofday(&tv);
+    if(err_file==NULL){
+        err_file=stderr;
+    }
+    fprintf(err_file, "COBO WARNING: ", tv.tv_sec, tv.tv_usec);
     if (cobo_me >= 0) {
-        fprintf(stderr, "rank %d on %s: ", cobo_me, hostname);
+        fprintf(err_file, "rank %d on %s: ", cobo_me, hostname);
     } else if (cobo_me == -2) {
-        fprintf(stderr, "server on %s: ", hostname);
+        fprintf(err_file, "server on %s: ", hostname);
     } else if (cobo_me == -1) {
-        fprintf(stderr, "unitialized client task on %s: ", hostname);
+        fprintf(err_file, "unitialized client task on %s: ", hostname);
     } else {
-        fprintf(stderr, "unitialized task (server or client) on %s: ", hostname);
+        fprintf(err_file, "unitialized task (server or client) on %s: ", hostname);
     }
     va_start(argp, fmt);
-    vfprintf(stderr, fmt, argp);
+    vfprintf(err_file, fmt, argp);
     va_end(argp);
-    fprintf(stderr, "\n");
+    fprintf(err_file, "\n");
+    fflush(err_file);
 }
 
 /* print message to stderr */
@@ -159,21 +179,28 @@ static void cobo_debug(int level, char *fmt, ...)
     va_list argp;
     char hostname[256];
     gethostname(hostname, 256);
+    struct timeval tv;
+    cobo_gettimeofday(&tv);
+
     if (cobo_echo_debug > 0 && cobo_echo_debug >= level) {
-        fprintf(stderr, "COBO DEBUG: ");
+        if(err_file==NULL){
+            err_file=stderr;
+        }
+        fprintf(err_file, "%ld.%ld: COBO DEBUG: ", tv.tv_sec, tv.tv_usec );
         if (cobo_me >= 0) {
-            fprintf(stderr, "rank %d on %s: ", cobo_me, hostname);
+            fprintf(err_file, "rank %d on %s: ", cobo_me, hostname);
         } else if (cobo_me == -2) {
-            fprintf(stderr, "server on %s: ", hostname);
+            fprintf(err_file, "server on %s: ", hostname);
         } else if (cobo_me == -1) {
-            fprintf(stderr, "unitialized client task on %s: ", hostname);
+            fprintf(err_file, "unitialized client task on %s: ", hostname);
         } else {
-            fprintf(stderr, "unitialized task (server or client) on %s: ", hostname);
+            fprintf(err_file, "unitialized task (server or client) on %s: ", hostname);
         }
         va_start(argp, fmt);
-        vfprintf(stderr, fmt, argp);
+        vfprintf(err_file, fmt, argp);
         va_end(argp);
-        fprintf(stderr, "\n");
+        fprintf(err_file, "\n");
+        fflush(err_file);
     }
 }
 
@@ -766,7 +793,7 @@ static int cobo_open_tree()
         }
 
         /* set the socket to listen for connections */
-        if (listen(sockfd, 1) < 0) {
+        if (listen(sockfd, MAX_BACKLOG ) < 0) {  //new stuff changed backlog to 32
             cobo_debug(2, "Setting parent socket to listen (listen() %m errno=%d) port=%d @ file %s:%d",
                 errno, port, __FILE__, __LINE__);
             continue;
@@ -780,7 +807,7 @@ static int cobo_open_tree()
     /* failed to bind to a port, this is fatal */
     if (!port_is_bound) {
         /* TODO: would like to send an abort back to server */
-        cobo_error("Failed to open socket on any port @ file %s:%d",
+        cobo_error("Failed to open socket on any port @ file %s:%d\n",
                    __FILE__, __LINE__
         );
         exit(1);
@@ -856,7 +883,6 @@ static int cobo_open_tree()
         have_parent = 1;
     }
 
-    /* we've got the connection to our parent, so close the listening socket */
     close(sockfd);
 
     cobo_gettimeofday(&tree_start);
@@ -870,6 +896,7 @@ static int cobo_open_tree()
         );
         exit(1);
     }
+    cobo_debug(1, "rank %i: connected to parent",  cobo_me);
 
     /* discover how many ranks are in our world */
     if (cobo_read_fd(cobo_parent_fd, &cobo_nprocs, sizeof(int)) < 0) {
@@ -938,6 +965,7 @@ static int cobo_open_tree()
         free(child_hostname);
     }
 
+    cobo_debug(1, "cobo done ");
     return COBO_SUCCESS;
 }
 
@@ -1560,6 +1588,7 @@ int cobo_server_open(unsigned int sessionid, char** hostlist, int num_hosts, int
     }
 
     /* connect to first host */
+    cobo_debug(1, "Connecting to first host:%s", hostlist[0] );
     cobo_root_fd = cobo_connect_hostname(hostlist[0], 0);
     if (cobo_root_fd == -1) {
         cobo_error("Failed to connect to child (rank %d) on %s failed @ file %s:%d",

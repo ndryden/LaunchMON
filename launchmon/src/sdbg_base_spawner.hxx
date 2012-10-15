@@ -72,7 +72,7 @@ public:
       //
       // Copy remote access command arguments
       //
-      launch_cmd_args = racargs;
+      launch_cmd_args.push_back(racargs);
     }
 
   spawner_base_t(const std::string &rac,
@@ -88,7 +88,7 @@ public:
       //
       // Copy remote access command arguments
       //
-      launch_cmd_args = racargs;
+      launch_cmd_args.push_back(racargs);
 
       //
       // Copy daemon path
@@ -115,7 +115,7 @@ public:
       //
       // Copy remote access command arguments
       //
-      launch_cmd_args = racargs;
+      launch_cmd_args.push_back(racargs);
 
       //
       // Copy daemon path
@@ -194,9 +194,18 @@ public:
       return m_hosts;
     }
 
-  std::vector<std::string> & get_launch_cmd_args()
+  int get_num_cmds( )
     {
-      return launch_cmd_args;
+      return launch_cmd_args.size();
+    }
+
+  std::vector<std::string> & get_launch_cmd_args( int i = 0 )
+    {
+      while( i > launch_cmd_args.size()-1 ){
+          std::vector<std::string> tempv;
+          launch_cmd_args.push_back( tempv );
+      }
+      return launch_cmd_args[i];
     }
 
   std::vector<std::string> & get_daemon_args()
@@ -238,7 +247,7 @@ private:
     }
 
   std::string remote_launch_cmd;
-  std::vector<std::string> launch_cmd_args;
+  std::vector< std::vector<std::string> > launch_cmd_args;
   std::string daemon_path;
   std::vector<std::string> daemon_args;
   std::vector<std::string> m_hosts;

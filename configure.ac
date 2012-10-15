@@ -114,16 +114,16 @@ X_AC_TRACING_COST
 dnl -----------------------------------------------
 dnl Checks for the Resource Manager type
 dnl -----------------------------------------------
-dnl X_AC_RM
+X_AC_RM
 
-dnl AC_MSG_CHECKING(whether a supported MPI job launcher has been found)
-dnl if test -z "$ac_job_launcher_path" ; then
-dnl   AC_MSG_ERROR([No supported MPI job launcher has been found])
-dnl else
-dnl   AC_DEFINE_UNQUOTED(TARGET_JOB_LAUNCHER_PATH,["$ac_job_launcher_path"], [launcher path])
-dnl   AC_SUBST(TARGET_JOB_LAUNCHER_PATH,$ac_job_launcher_path)
-dnl   AC_MSG_RESULT([$ac_job_launcher_bits bit $ac_job_launcher_path])
-dnl fi
+AC_MSG_CHECKING(whether a supported MPI job launcher has been found)
+if test -z "$ac_job_launcher_path" ; then
+  AC_MSG_ERROR([No supported MPI job launcher has been found])
+else
+  AC_DEFINE_UNQUOTED(TARGET_JOB_LAUNCHER_PATH,["$ac_job_launcher_path"], [launcher path])
+  AC_SUBST(TARGET_JOB_LAUNCHER_PATH,$ac_job_launcher_path)
+  AC_MSG_RESULT([$ac_job_launcher_bits bit $ac_job_launcher_path])
+fi
 
 
 dnl -----------------------------------------------
