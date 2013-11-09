@@ -28,6 +28,7 @@
  *
  *
  *  Update Log:
+ *        Sep  27 2013 DHA: Added LMON_fe_launchAndSpawnDaemons2.
  *        May  31 2012 DHA: Merged with the middleware support from
  *                          the 0.8-middleware-support branch.
  *        Jul  02 2010 DHA: Augmented LMON_fe_launchMwDaemons
@@ -87,40 +88,40 @@ lmon_rc_e LMON_fe_createSession ( int *sessionHandle );
 lmon_rc_e LMON_fe_regPackForFeToBe (
 		int sessionHandle, 
 		int (*packFebe) 
-		(void* udata,void* msgbuf,int msgbufmax,int* msgbuflen));
+		(void *udata,void *msgbuf,int msgbufmax,int *msgbuflen));
 
 lmon_rc_e LMON_fe_regUnpackForBeToFe (
 	        int sessionHandle, 
 	        int (*unpackBefe)
-	        ( void* udatabuf,int udatabuflen, void* udata ));
+	        ( void *udatabuf,int udatabuflen, void *udata ));
 
 lmon_rc_e LMON_fe_regPackForFeToMw (
 		int sessionHandle, 
 		int (*packFemw) 
-		(void* udata,void* msgbuf,int msgbufmax,int* msgbuflen));
+		(void *udata,void *msgbuf,int msgbufmax,int *msgbuflen));
 
 lmon_rc_e LMON_fe_regUnpackForMwToFe (
 	        int sessionHandle, 
 	        int (*unpackMwfe)
-	        ( void* udatabuf,int udatabuflen, void* udata ));
+	        ( void *udatabuf,int udatabuflen, void *udata ));
 
 lmon_rc_e LMON_fe_putToBeDaemonEnv (
                 int sessionHandle, 
-                lmon_daemon_env_t* dmonEnv, 
+                lmon_daemon_env_t *dmonEnv, 
                 int numElem );
 
 lmon_rc_e LMON_fe_putToMwDaemonEnv (
                 int sessionHandle, 
-                lmon_daemon_env_t* dmonEnv, 
+                lmon_daemon_env_t *dmonEnv, 
                 int numElem);
 
-lmon_rc_e LMON_fe_sendUsrDataBe ( int sessionHandle, void* febe_data );
+lmon_rc_e LMON_fe_sendUsrDataBe ( int sessionHandle, void *febe_data );
 
-lmon_rc_e LMON_fe_sendUsrDataMw ( int sessionHandle, void* femw_data );
+lmon_rc_e LMON_fe_sendUsrDataMw ( int sessionHandle, void *femw_data );
 
-lmon_rc_e LMON_fe_recvUsrDataBe ( int sessionHandle, void* befe_data );
+lmon_rc_e LMON_fe_recvUsrDataBe ( int sessionHandle, void *befe_data );
 
-lmon_rc_e LMON_fe_recvUsrDataMw ( int sessionHandle, void* mwfe_data );
+lmon_rc_e LMON_fe_recvUsrDataMw ( int sessionHandle, void *mwfe_data );
 
 lmon_rc_e LMON_fe_detach ( int sessionHandle );
 
@@ -138,38 +139,38 @@ lmon_rc_e LMON_fe_getRMInfo (int sessionHandle, lmon_rm_info_t *info);
 
 lmon_rc_e LMON_fe_getProctable (
                 int sessionHandle,
-                MPIR_PROCDESC_EXT* proctable,
-                unsigned int* size,
+                MPIR_PROCDESC_EXT *proctable,
+                unsigned int *size,
                 unsigned int maxlen);
 
 lmon_rc_e LMON_fe_getProctableSize (
                 int sessionHandle,
-                unsigned int* size );
+                unsigned int *size );
 
 lmon_rc_e LMON_fe_getResourceHandle ( 
                 int sessionHandle, 
-                char* handle, 
-                int* size, 
+                char *handle, 
+                int *size, 
                 int maxstring );
 
 lmon_rc_e LMON_fe_launchAndSpawnDaemons ( 
 		int sessionHandle, 
-		const char* hostname,
-		const char* launcher, 
-		char* l_argv[], 
-		const char* toolDaemon, 
-		char* d_argv[], 
-		void* febe_data, 
-		void* befe_data );
+		const char *hostname,
+		const char *launcher, 
+		char *l_argv[], 
+		const char *toolDaemon, 
+		char *d_argv[], 
+		void *febe_data, 
+		void *befe_data );
 
 lmon_rc_e LMON_fe_attachAndSpawnDaemons ( 
                 int sessionHandle, 
-		const char* hostname,
+		const char *hostname,
                 pid_t launcherPid, 
-                const char* toolDaemon, 
-                char* d_argv[], 
-                void* febe_data, 
-                void* befe_data );
+                const char *toolDaemon, 
+                char *d_argv[], 
+                void *febe_data, 
+                void *befe_data );
 
 lmon_rc_e LMON_fe_launchMwDaemons (
                 int sessionHandle,

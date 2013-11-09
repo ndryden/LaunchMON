@@ -27,6 +27,7 @@
  *			
  *			
  *  Update Log:
+ *        Aug 23 2013 DHA: Added rm_driver_base_t support
  *        Aug 13 2009 DHA: Move copy constructor and create operator=
  *                         into the private section.
  *        Feb 09 2008 DHA: Added LLNS Copyright.
@@ -48,6 +49,7 @@
 #include "sdbg_base_mach.hxx"
 #include "sdbg_event_manager.hxx"
 #include "sdbg_base_launchmon.hxx"
+
 
 //! FILE: sdbg_base_driver.hxx
 /*!
@@ -140,5 +142,63 @@ private:
   std::string MODULENAME;  
 
 };
+
+
+//! class  rm_driver_base_t
+/*!
+    This class uses its containing rm_event_manager_t object
+    and rm_api_launchmon_base_t object to drive the new 
+    launchmon engine.
+*/
+
+class rm_driver_base_t
+{
+public:
+  /*
+   * constructors and destructors
+   */
+  rm_driver_base_t();
+  ~rm_driver_base_t();
+
+  driver_error_e drive ( int argc, char *argv[]);
+  driver_error_e drive ( opts_args_t *opt );
+  driver_error_e drive_engine ( opts_args_t *opt );
+
+  rm_event_manager_t *get_rm_evman ();
+  void set_rm_evman (rm_event_manager_t * em);
+
+  rm_api_launchmon_base_t *get_rm_lmon ();
+  void set_rm_lmon (rm_api_launchmon_base_t *lm);
+
+private:
+
+  bool LEVELCHK(self_trace_verbosity level) 
+       { return (self_trace_t::driver_module_trace.verbosity_level >= level); }
+
+  //
+  // make the copy constructor and operator= private 
+  // so that another driver class cannot be constructed 
+  // by copyting this object.
+  //
+  rm_driver_base_t(const rm_driver_base_t &d);
+  rm_driver_base_t & operator=(const rm_driver_base_t &rhs);
+
+  //
+  // event manager object
+  //
+  rm_event_manager_t *rm_evman;
+
+  //
+  // rm-based launchmon object
+  //
+  rm_api_launchmon_base_t *rm_lmon;
+
+  //
+  // For self tracing
+  // 
+  std::string MODULENAME;  
+};
+
+
 #endif // SDBG_BASE_DRIVER_HXX
 

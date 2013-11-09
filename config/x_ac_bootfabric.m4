@@ -87,7 +87,8 @@ AC_DEFUN([X_AC_BOOTFABRIC], [
       AC_DEFINE(TOOL_SS_ENV, "LMON_SHARED_SECRET", [Define TOOL_SS_ENV])
       AC_DEFINE(TOOL_SCH_ENV, "LMON_SEC_CHK", [Define TOOL_SCH_ENV])
       AC_SUBST(COMMLOC, tools/cobo/src)
-      AC_SUBST(LIBCOMM, -lcobo)
+      AC_SUBST(LIBCOMMFEN, -lcobo_fen)
+      AC_SUBST(LIBCOMMDMON, -lcobo_be)
 
       if test "x$with_cobo_port" != "xcheck" -a "x$with_cobo_port" != "xyes"; then
 	AC_DEFINE(COBO_BEGIN_PORT, $with_cobo_port, [Define a beginning port for COBO_BASED])
@@ -117,7 +118,8 @@ AC_DEFUN([X_AC_BOOTFABRIC], [
       AC_DEFINE(TOOL_SS_ENV, "LMON_SHARED_SECRET", [Define TOOL_SS_ENV])
       AC_DEFINE(TOOL_SCH_ENV, "LMON_SEC_CHK", [Define TOOL_SCH_ENV])
       AC_SUBST(COMMLOC, tools/cobo/src)
-      AC_SUBST(LIBCOMM, -lcobo)
+      AC_SUBST(LIBCOMMFEN, -lcobo_fen)
+      AC_SUBST(LIBCOMMDMON, -lcobo_be)
 
       if test "x$with_cobo_port" != "xcheck" -a "x$with_cobo_port" != "xyes"; then
         AC_DEFINE(COBO_BEGIN_PORT, $with_cobo_port, [Define a beginning port for COBO_BASED])
@@ -131,7 +133,6 @@ AC_DEFUN([X_AC_BOOTFABRIC], [
     fi
   fi
 
-  #AM_CONDITIONAL([WITH_PMGR_COLLECTIVE], [test "x$commfab_found" = "xyes" -a "x$with_fab" = "xpmgr"])
   AM_CONDITIONAL([WITH_COBO], [test "x$commfab_found" = "xyes" -a "x$with_fab" = "xcobo"])
   AC_MSG_RESULT($with_fab:$commfab_found)
 ])

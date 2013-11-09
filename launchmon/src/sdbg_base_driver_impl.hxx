@@ -1,5 +1,5 @@
 /*
- * $Header: /usr/gapps/asde/cvs-vault/sdb/launchmon/src/sdbg_base_driver_impl.hxx,v 1.7.2.2 2008/02/20 17:37:56 dahn Exp $
+ * $Header: $
  *--------------------------------------------------------------------------------
  * Copyright (c) 2008, Lawrence Livermore National Security, LLC. Produced at 
  * the Lawrence Livermore National Laboratory. Written by Dong H. Ahn <ahn1@llnl.gov>. 
@@ -60,6 +60,7 @@
 //
 ////////////////////////////////////////////////////////////////////
 
+
 //!
 /*!  driver_base_t<> constructors
 
@@ -71,6 +72,7 @@ driver_base_t<SDBG_DEFAULT_TEMPLPARAM>::driver_base_t
   // this copy construct doesn't copy evman and lmon
   MODULENAME = d.MODULENAME;
 }
+
 
 //!
 /*!  driver_base_t<> operator=
@@ -91,9 +93,46 @@ driver_base_t<SDBG_DEFAULT_TEMPLPARAM>::operator=
 
 ////////////////////////////////////////////////////////////////////
 //
+// PRIVATE copy constructor and operator= (class rm_driver_base_t)
+//
+////////////////////////////////////////////////////////////////////
+
+
+//!
+/*!  rm_driver_base_t<> constructors
+
+*/
+rm_driver_base_t::rm_driver_base_t (const rm_driver_base_t &d) 
+{
+  // this copy construct doesn't copy evman and lmon
+  rm_evman = d.rm_evman;
+  rm_lmon = d.rm_lmon;
+  MODULENAME = d.MODULENAME;
+}
+
+
+//!
+/*!  rm_driver_base_t<> constructors
+
+*/
+rm_driver_base_t &
+rm_driver_base_t::operator=(const rm_driver_base_t &rhs) 
+{
+  // this copy construct doesn't copy evman and lmon
+  rm_evman = rhs.rm_evman;
+  rm_lmon = rhs.rm_lmon;
+  MODULENAME = rhs.MODULENAME;
+
+  return *this;
+}
+
+
+////////////////////////////////////////////////////////////////////
+//
 // PUBLIC INTERFACES (class driver_base_t<>)
 //
 ////////////////////////////////////////////////////////////////////
+
 
 //!
 /*!  driver_base_t<> constructors
@@ -108,6 +147,7 @@ driver_base_t<SDBG_DEFAULT_TEMPLPARAM>::driver_base_t()
   //
   MODULENAME = self_trace_t::driver_module_trace.module_name;
 }
+
 
 //!
 /*!  driver_base_t<> dtor
@@ -275,6 +315,8 @@ driver_base_t<SDBG_DEFAULT_TEMPLPARAM>::drive_engine(opts_args_t *opt)
                             bulklauncher,
                             opt->get_my_opt()->tool_daemon,
                             opt->get_my_opt()->tool_daemon_opts,
+			    opt->get_my_opt()->febeconn_info,
+			    opt->get_my_opt()->femwconn_info,
                             launcher_proc->get_myimage(),
                             launcher_proc->get_myrmso_image()
 #ifdef RM_BE_STUB_CMD
@@ -372,6 +414,7 @@ driver_base_t<SDBG_DEFAULT_TEMPLPARAM>::drive
   opt->process_args(&argc, &argv);
   rc = drive_engine(opt);
   delete opt;
+  opt = NULL;
   return (rc);
 }
 
@@ -386,6 +429,158 @@ driver_base_t<SDBG_DEFAULT_TEMPLPARAM>::drive
 ( opts_args_t *opt )
 {
   return (drive_engine(opt));
+}
+
+
+////////////////////////////////////////////////////////////////////
+//
+// PUBLIC INTERFACES (class rm_driver_base_t)
+//
+////////////////////////////////////////////////////////////////////
+
+
+//! ctor: rm_driver_base_t 
+/*! 
+ 
+*/
+rm_driver_base_t::rm_driver_base_t ()
+{
+  rm_evman = NULL;
+  rm_lmon = NULL; 
+  MODULENAME = self_trace_t::rm_driver_module_trace.module_name; 
+}
+
+
+//! dtor: rm_driver_base_t 
+/*! 
+ 
+*/
+rm_driver_base_t::~rm_driver_base_t ()
+{
+  if (rm_evman) {
+    delete rm_evman;
+  }
+
+  if (rm_lmon) {
+    delete rm_lmon;
+  }
+}
+
+
+//! accessor: get_rm_evman 
+/*! 
+ 
+*/
+rm_event_manager_t *
+rm_driver_base_t::get_rm_evman ()
+{
+  return rm_evman;
+}
+
+
+//! accessor: set_rm_evman 
+/*! 
+ 
+*/
+void 
+rm_driver_base_t::set_rm_evman (rm_event_manager_t * em)
+{
+  rm_evman = em;
+}
+
+
+//! accessor: get_rm_lmon
+/*! 
+ 
+*/
+rm_api_launchmon_base_t *
+rm_driver_base_t::get_rm_lmon ()
+{
+  return rm_lmon;
+}
+
+
+//! accessor: set_rm_lmon
+/*! 
+ 
+*/
+void 
+rm_driver_base_t::set_rm_lmon (rm_api_launchmon_base_t * lm)
+{
+  rm_lmon = lm;
+}
+
+
+//! drive 
+/*! 
+ 
+*/
+driver_error_e
+rm_driver_base_t::drive ( opts_args_t *opt )
+{
+  return (drive_engine(opt));
+}
+
+
+//! drive:
+/*! rm_driver_base_t<> drive
+    The entry point of this method is the standalone case
+ */
+driver_error_e
+rm_driver_base_t::drive
+( int argc, char **argv )
+{
+
+  opts_args_t *opt = new opts_args_t();
+  driver_error_e rc;
+
+  //
+  // processing the commandline options and arguments
+  //
+  opt->process_args(&argc, &argv);
+  rc = drive_engine(opt);
+  delete opt;
+  opt = NULL;
+  return (rc);
+}
+
+
+//! drive_engine 
+/*! 
+ 
+*/
+driver_error_e
+rm_driver_base_t::drive_engine ( opts_args_t *opt )
+{
+  if ( !rm_evman || !rm_lmon )
+    return SDBG_DRIVER_FAILED;
+
+  //
+  // RM launchmon engine initialization
+  // this includes connecting to the FE client and 
+  // initialization of the target RM system.
+  //
+  if (rm_lmon->init( opt ) != RMAPI_LMON_OK)
+        return SDBG_DRIVER_FAILED;
+   
+  //
+  // FLUX TODO: we need a new signal handler
+  //
+  
+  //
+  // rm_event manager begin monitoring RM events and FE
+  // socket events using the rm_lmon object. 
+  //
+  while ( rm_evman->multiplex_events (*rm_lmon) )
+    {
+      //                                              //
+      // * * * * * Main Event Handler Loop * * * * *  //
+      //    for RM launchmon engine                   //
+      //      +                               +       //
+      //        -----------------------------         //
+    }
+
+  return SDBG_DRIVER_OK;
 }
 
 #endif // SDBG_BASE_DRIVER_IMPL_HXX

@@ -1,5 +1,5 @@
 /*
- * $Header: /usr/gapps/asde/cvs-vault/sdb/launchmon/src/sdbg_event_manager_impl.hxx,v 1.8.2.2 2008/02/20 17:37:57 dahn Exp $
+ * $Header: $
  *--------------------------------------------------------------------------------
  * Copyright (c) 2008, Lawrence Livermore National Security, LLC. Produced at 
  * the Lawrence Livermore National Laboratory. Written by Dong H. Ahn <ahn1@llnl.gov>. 
@@ -367,5 +367,113 @@ event_manager_t<SDBG_DEFAULT_TEMPLPARAM>::multiplex_events (
 
   return (rc);
 }
+
+
+
+////////////////////////////////////////////////////////////////////
+//
+// PUBLIC INTERFACES: rm_event_manager_t
+//
+///////////////////////////////////////////////////////////////////
+
+
+
+//! PUBLIC: constructors
+/*!
+
+*/
+rm_event_manager_t::rm_event_manager_t () 
+{
+    MODULENAME = self_trace_t::rm_event_module_trace.module_name;
+}
+
+
+//! PUBLIC: copy constructors
+/*!
+
+*/
+rm_event_manager_t::rm_event_manager_t (
+                 const rm_event_manager_t &e) 
+{
+  MODULENAME = e.MODULENAME;
+}
+
+
+//! PUBLIC: destructor
+/*!
+
+*/
+rm_event_manager_t::~rm_event_manager_t ()
+{
+
+}
+
+
+//! PUBLIC: poll_multiplex_events
+/*!
+
+*/
+bool 
+rm_event_manager_t::multiplex_events ( 
+		 rm_api_launchmon_base_t & lm )
+{
+  bool rc = true;
+
+  rc = poll_fe_socket ( lm );
+  if (rc) 
+    {
+      rc = poll_rm_events ( lm );
+    }
+  return (rc);
+}
+
+
+//! PUBLIC: poll_rm_socket
+/*!
+
+*/
+bool 
+rm_event_manager_t::poll_rm_events ( 
+		 rm_api_launchmon_base_t & lm )
+{
+  bool rc = true;
+
+  if ( lm.update_rm_events () == RMAPI_LMON_OK )
+    {
+      rmapi_lmon_rc_e lrc;  
+      //TODO: for now, when application terminate
+      // this poll returns false; 
+      lrc = lm.invoke_action_handlers ();
+      if (lrc == RMAPI_LMON_MAINPROCGRP_EXITED) {
+        rc = false;
+      }
+    }
+  else 
+    {
+      rc = false;
+    }
+
+  return rc;
+}
+
+
+//! PUBLIC: poll_FE_socket
+/*!
+
+*/
+bool 
+rm_event_manager_t::poll_fe_socket ( 
+		 rm_api_launchmon_base_t & lm )
+{
+  bool rc = true;
+
+  if ( lm.update_socket_events () != RMAPI_LMON_OK )
+    {
+      rc = false;
+    }
+
+  return rc;
+}
+
 #endif // SDBG_EVENT_MANAGER_IMPL_HXX
 

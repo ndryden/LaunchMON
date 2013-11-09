@@ -1,5 +1,5 @@
 /*
- * $Header: /usr/gapps/asde/cvs-vault/sdb/launchmon/src/sdbg_event_manager.hxx,v 1.5.2.2 2008/02/20 17:37:57 dahn Exp $
+ * $Header:  $
  *--------------------------------------------------------------------------------
  * Copyright (c) 2008, Lawrence Livermore National Security, LLC. Produced at 
  * the Lawrence Livermore National Laboratory. Written by Dong H. Ahn <ahn1@llnl.gov>. 
@@ -43,6 +43,7 @@
 
 #include "sdbg_base_mach.hxx"
 #include "sdbg_base_launchmon.hxx"
+#include "sdbg_base_rmapi_launchmon.hxx"
 
 
 template <SDBG_DEFAULT_TEMPLATE_WIDTH>
@@ -96,6 +97,35 @@ private:
   //std::list <process_base_t<SDBG_DEFAULT_TEMPLPARAM>* > proclist;
   monitor_proc_thread_t<SDBG_DEFAULT_TEMPLPARAM> *ev_monitor;
 
+  //
+  // For self tracing
+  //
+  std::string MODULENAME; 
+};
+
+
+//! rm_event_manager_t
+/*!
+    The class coordinate events coming from procgrp RM events
+    and FE
+*/
+class rm_event_manager_t
+{
+
+public:
+  rm_event_manager_t ();
+  rm_event_manager_t (const rm_event_manager_t & e);
+  virtual ~rm_event_manager_t ();
+
+  bool multiplex_events ( rm_api_launchmon_base_t & lm );
+  bool poll_fe_socket ( rm_api_launchmon_base_t & lm );
+  bool poll_rm_events ( rm_api_launchmon_base_t & lm );
+
+
+private:
+
+  bool LEVELCHK(self_trace_verbosity level) 
+       { return (self_trace_t::event_module_trace.verbosity_level >= level); }
   //
   // For self tracing
   //

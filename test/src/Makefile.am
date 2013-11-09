@@ -65,7 +65,8 @@ test_PROGRAMS                     = fe_jobsnap \
                                     mw_comm_helper \
 				    run_3mins \
 				    hang_on_SIGUSR1 \
-				    simple_MPI 
+				    simple_MPI \
+				    sleep_long
 
 LE_model_checker_SOURCES          = LE_model_checker.c
 LE_model_checker_CFLAGS           = @LNCHR_BIT_FLAGS@ $(AM_CFLAGS)
@@ -76,13 +77,15 @@ LE_model_checker_LDFLAGS          = @LNCHR_BIT_FLAGS@ @LIBPTHREAD@ $(AM_LDFLAGS)
 fe_launch_smoketest_SOURCES       = fe_launch_smoketest.cxx util.c
 fe_launch_smoketest_CFLAGS        = $(AM_CFLAGS)
 fe_launch_smoketest_CXXFLAGS      = $(AM_CXXFLAGS)
-fe_launch_smoketest_LDFLAGS       = -L$(top_srcdir)/@LMONAPILOC@ 
+fe_launch_smoketest_LDFLAGS       = -L$(top_srcdir)/@LMONAPILOC@ \
+                                     -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 fe_launch_smoketest_LDADD         = -lmonfeapi 
 
 fe_launch_usrpayload_test_SOURCES = fe_launch_usrpayload_test.cxx util.c
-fe_launch_usrpayload_test_CFLAGS   = $(AM_CFLAGS)
+fe_launch_usrpayload_test_CFLAGS  = $(AM_CFLAGS)
 fe_launch_usrpayload_test_CXXFLAGS = $(AM_CXXFLAGS)
-fe_launch_usrpayload_test_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+fe_launch_usrpayload_test_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ \
+			            -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 fe_launch_usrpayload_test_LDADD   = -lmonfeapi 
 
 #fe_multisession_launch_SOURCES    = fe_multisession_launch.cxx util.c
@@ -92,25 +95,29 @@ fe_launch_usrpayload_test_LDADD   = -lmonfeapi
 fe_attach_smoketest_SOURCES       = fe_attach_smoketest.cxx util.c
 fe_attach_smoketest_CFLAGS        = $(AM_CFLAGS)
 fe_attach_smoketest_CXXFLAGS      = $(AM_CXXFLAGS)
-fe_attach_smoketest_LDFLAGS       = -L$(top_srcdir)/@LMONAPILOC@
+fe_attach_smoketest_LDFLAGS       = -L$(top_srcdir)/@LMONAPILOC@ \
+			            -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 fe_attach_smoketest_LDADD         = -lmonfeapi
 
 be_kicker_SOURCES                 = be_kicker.cxx util.c
 be_kicker_CFLAGS                  = $(AM_CFLAGS)
 be_kicker_CXXFLAGS                = $(AM_CXXFLAGS)
-be_kicker_LDFLAGS    	          = -L$(top_srcdir)/@LMONAPILOC@ 
+be_kicker_LDFLAGS    	          = -L$(top_srcdir)/@LMONAPILOC@ \
+                                    -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 be_kicker_LDADD                   = -lmonbeapi 
 
 be_kicker_usrpayload_test_SOURCES = be_kicker_usrpayload_test.cxx
 be_kicker_usrpayload_test_CFLAGS   = $(AM_CFLAGS)
 be_kicker_usrpayload_test_CXXFLAGS = $(AM_CXXFLAGS)
-be_kicker_usrpayload_test_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ 
+be_kicker_usrpayload_test_LDFLAGS = -L$(top_srcdir)/@LMONAPILOC@ \
+			            -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 be_kicker_usrpayload_test_LDADD   = -lmonbeapi
 
 fe_launch_middleware_SOURCES       = fe_launch_middleware.cxx util.c
 fe_launch_middleware_CFLAGS        = $(AM_CFLAGS)
 fe_launch_middleware_CXXFLAGS      = $(AM_CXXFLAGS)
-fe_launch_middleware_LDFLAGS       = -L$(top_srcdir)/@LMONAPILOC@ 
+fe_launch_middleware_LDFLAGS       = -L$(top_srcdir)/@LMONAPILOC@ \
+                                    -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 fe_launch_middleware_LDADD         = -lmonfeapi 
 
 be_standalone_kicker_SOURCES      = be_standalone_kicker.cxx
@@ -128,18 +135,22 @@ be_mem_fetcher_LDADD              = -lmonbeapi
 fe_jobsnap_SOURCES                = fe_jobsnap.cxx util.c
 fe_jobsnap_CFLAGS                 = $(AM_CFLAGS)
 fe_jobsnap_CXXFLAGS               = $(AM_CXXFLAGS)
-fe_jobsnap_LDFLAGS                = -L$(top_srcdir)/@LMONAPILOC@
+fe_jobsnap_LDFLAGS                = -L$(top_srcdir)/@LMONAPILOC@ \
+                                    -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 fe_jobsnap_LDADD                  = -lmonfeapi 
+
 be_jobsnap_SOURCES                = be_jobsnap.cxx util.c
 be_jobsnap_CFLAGS                 = $(AM_CFLAGS)
 be_jobsnap_CXXFLAGS               = $(AM_CXXFLAGS)
-be_jobsnap_LDFLAGS                = -L$(top_srcdir)/@LMONAPILOC@
+be_jobsnap_LDFLAGS                = -L$(top_srcdir)/@LMONAPILOC@ \
+                                    -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 be_jobsnap_LDADD                  = -lmonbeapi
 
 mw_comm_helper_SOURCES            = mw_comm_helper.cxx util.c
 mw_comm_helper_CFLAGS             = $(AM_CFLAGS)
 mw_comm_helper_CXXFLAGS           = $(AM_CXXFLAGS)
-mw_comm_helper_LDFLAGS            = -L$(top_srcdir)/@LMONAPILOC@
+mw_comm_helper_LDFLAGS            = -L$(top_srcdir)/@LMONAPILOC@ \
+                                    -Wl,-rpath=@RMAPI_COMMLIB_PATH@ 
 mw_comm_helper_LDADD              = -lmonmwapi
 
 test_SCRIPTS                      = test.LE_model_checker_mainthread \
@@ -147,6 +158,7 @@ test_SCRIPTS                      = test.LE_model_checker_mainthread \
 			            test.LE_model_checker_large \
 				    test.LE_model_checker_extreme \
 				    test.launch_1 \
+				    test.newlaunch_1 \
 				    test.launch_1_remote \
 			   	    test.launch_2_half \
 				    test.launch_2_uneven \
@@ -160,6 +172,7 @@ test_SCRIPTS                      = test.LE_model_checker_mainthread \
                                     test.launch_mw_2_coloc \
                                     test.launch_mw_5_mixall \
 				    test.attach_1 \
+				    test.newattach_1 \
                                     test.attach_1_mem_fetcher \
 				    test.attach_1_remote \
 				    test.attach_1_pdebugmax \
@@ -181,6 +194,7 @@ EXTRA_DIST                        = test.LE_model_checker_mainthread.in \
                                     test.LE_model_checker_large.in \
                                     test.LE_model_checker_extreme.in \
                                     test.launch_1.in \
+                                    test.newlaunch_1.in \
                                     test.launch_1_remote.in \
                                     test.launch_2_half.in \
                                     test.launch_2_uneven.in \
@@ -194,6 +208,7 @@ EXTRA_DIST                        = test.LE_model_checker_mainthread.in \
                                     test.launch_mw_2_coloc.in \
                                     test.launch_mw_5_mixall.in \
                                     test.attach_1.in \
+                                    test.newattach_1.in \
                                     test.attach_1_mem_fetcher.in \
                                     test.attach_1_remote.in \
                                     test.attach_1_pdebugmax.in \
@@ -210,6 +225,7 @@ EXTRA_DIST                        = test.LE_model_checker_mainthread.in \
 
 
 do_subst = sed -e 's,@LMON@,$(prefix)/bin/launchmon$(EXEEXT),g' \
+	       -e 's,@NEWLMON@,$(prefix)/bin/newlaunchmon$(EXEEXT),g' \
                -e 's,@LMONMWHL@,$(LMONHOSTLIST),g' \
 	       -e 's,@LMONPREFIX@,$(prefix),g' \
                -e 's,@TJLPATH@,$(TARGET_JOB_LAUNCHER_PATH),g' \
@@ -233,6 +249,9 @@ test.LE_model_checker_extreme: test.LE_model_checker_extreme.in Makefile
 test.launch_1: test.launch_1.in Makefile
 	$(do_subst) < test.launch_1.in > test.launch_1
 	chmod +x test.launch_1
+test.newlaunch_1: test.newlaunch_1.in Makefile
+	$(do_subst) < test.newlaunch_1.in > test.newlaunch_1
+	chmod +x test.newlaunch_1
 test.launch_1_remote: test.launch_1_remote.in Makefile
 	$(do_subst) < test.launch_1_remote.in > test.launch_1_remote
 	chmod +x test.launch_1_remote
@@ -272,6 +291,9 @@ test.launch_mw_5_mixall: test.launch_mw_5_mixall.in Makefile
 test.attach_1: test.attach_1.in Makefile
 	$(do_subst) < test.attach_1.in > test.attach_1
 	chmod +x test.attach_1
+test.newattach_1: test.newattach_1.in Makefile
+	$(do_subst) < test.newattach_1.in > test.newattach_1
+	chmod +x test.newattach_1
 test.attach_1_mem_fetcher: test.attach_1_mem_fetcher.in Makefile
 	$(do_subst) < test.attach_1_mem_fetcher.in > test.attach_1_mem_fetcher
 	chmod +x test.attach_1_mem_fetcher
@@ -318,6 +340,8 @@ hang_on_SIGUSR1: hang_on_SIGUSR1.c Makefile
 	$(MPICC) $(DEFS) $(DEFAULT_INCLUDES) -I$(top_srcdir)/launchmon/src $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -o $@ $<	
 simple_MPI: simple_MPI.c Makefile
 	$(MPICC) $(DEFS) $(DEFAULT_INCLUDES) -I$(top_srcdir)/launchmon/src $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -o $@ $<	
+sleep_long: sleep_long.c Makefile
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) -I$(top_srcdir)/launchmon/src $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -o $@ $<	
 #LMBench: LMBench.cxx Makefile
 #	/bin/sh $(top_srcdir)/libtool --tag=CXX --mode=link $(MPICXX) $(DEFS) $(DEFAULT_INCLUDES) -I$(top_srcdir)/launchmon/src -I$(top_srcdir)/@LMONAPILOC@ $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -o $@ $< $(top_srcdir)/@LMONAPILOC@/lmon_be_comm.o  $(top_srcdir)/@LMONAPILOC@/lmon_say_msg.o -L$(top_srcdir)/@LMONAPILOC@ -lmonbeapi 
 

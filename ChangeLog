@@ -1,3 +1,23 @@
+2013-08-30 Dong H. Ahn <ahn1@llnl.gov>
+	* launchmon/src/sdbg_base_driver.hxx 
+	launchmon/src/sdbg_base_driver_impl.hxx
+	launchmon/src/sdbg_event_manager.hxx
+	launchmon/src/sdbg_event_manager_impl.hxx
+	launchmon/src/sdbg_base_rm_procgrp_status.hxx
+	launchmon/src/sdbg_base_rm_procgrp_status_impl.hxx
+	launchmon/src/sdbg_base_rmapi_launchmon.hxx
+	launchmon/src/sdbg_base_rmapi_launchmon_impl.hxx
+	launchmon/src/sdbg_self_trace.hxx
+	launchmon/src/linux/Makefile
+	launchmon/src/linux/sdbg_flux_main.cxx
+	launchmon/src/linux/sdbg_rm_flux_launchmon.cxx
+	launchmon/src/linux/sdbg_rm_flux_lwj_status.hxx
+	launchmon/src/linux/sdbg_rm_flux_lwj_status_impl.hxx: 
+	Prototype support for new launchmon engine that 
+	interacts with a resource manager like FLUX through
+	an API instead of MPIR debug interface.
+
+
 2012-05-31 Dong H. Ahn <ahn1@llnl.gov>
 	* tools/libgpg-error/src/gpg-error.c:
 	Fix a bug where libgpg-errors is complaining about LC_ALL 

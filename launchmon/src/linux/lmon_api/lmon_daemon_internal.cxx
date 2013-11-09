@@ -33,6 +33,8 @@
  *
  *
  *  Update Log:
+ *        Oct  03 2012 DHA: Incorporated the new cobo interface, implemented
+ *                          as part of FLUX CMB work.
  *        Aug  02 2010 DHA: Changed the file name to lmon_daemon_internal.cxx
  *                          to support middleware daemons
  *        Oct  07 2011 DHA: Deprecated PMGR Collective support
@@ -117,7 +119,7 @@ extern "C" {
 }
 #elif COBO_BASED
 extern "C" {
-#include <cobo.h>
+#include <cobo_be.h>
 }
 #endif
 
@@ -169,8 +171,12 @@ LMON_daemon_internal_init ( int* argc, char*** argv, char *myhn, int is_be )
 {
   int rc;
   char **nargv = *argv;
+  char *ip = NULL;
+  char *port = NULL;
   int n_lmonopt = 0;
   int i;
+  int tsess = 0;
+  int msess = 0;
 
   /*
    * The following code assumes lmon's options are specified after all other
@@ -190,10 +196,27 @@ LMON_daemon_internal_init ( int* argc, char*** argv, char *myhn, int is_be )
           setenv (TOOL_SCH_ENV, &(nargv[i][2])+11, 1); 
 	  n_lmonopt++;
 	}
+      else if ( strncmp (&(nargv[i][2]), "lmonconnfe=", 11)== 0 )
+	{
+	  /* exporting a commandline option to an envVar */
+	  ip = strtok(&(nargv[i][2])+11, ":");
+	  port = strtok(NULL, ":");
+	  n_lmonopt++;
+	}
+      else if ( strncmp (&(nargv[i][2]), "mylwj=", 6)== 0 )
+	{
+	  msess = atoi (&(nargv[i][2])+6);
+	  n_lmonopt++;
+	}
+      else if ( strncmp (&(nargv[i][2]), "targetlwj=", 10)== 0 )
+	{
+	  tsess = atoi (&(nargv[i][2])+10);
+	  n_lmonopt++;
+        }
       }
     } /* for */
 
-  if (n_lmonopt != 2) {
+  if (n_lmonopt < 3) {
     LMON_say_msg(LMON_DAEMON_MSG_PREFIX, true,
                  "LaunchMON-specific arguments have not been passed "
                  "to the daemon through the command-line arguments.");
@@ -242,41 +265,21 @@ LMON_daemon_internal_init ( int* argc, char*** argv, char *myhn, int is_be )
   __cobo_ts = gettimeofdayD();
 # endif
 
-   int iccl_begin_port, iccl_tmp_session;
-
-   //
-   //TODO: session id=10 for now.
-   //
-   iccl_begin_port = (is_be) ? COBO_BEGIN_PORT : COBO_BEGIN_PORT + COBO_PORT_RANGE;
-   iccl_tmp_session = (is_be) ? 10 : 11;
-
-   int j;
-   int *portlist = (int *) malloc (COBO_PORT_RANGE * sizeof(int));
-
-   if (portlist == NULL)
+  unsigned int iccl_tmp_session = msess;
+  
+  rc = cobo_open ( argc, 
+                   argv,
+                   (const char *) ip,
+                   atoi(port),
+                   &ICCL_size,
+                   &ICCL_rank,
+                   &iccl_tmp_session);
+  if (rc != COBO_SUCCESS) 
     {
       LMON_say_msg(LMON_DAEMON_MSG_PREFIX, true,
-        "malloc returned NULL");
-
+        "cobo_open failed.", 1);
       return LMON_EINVAL;
     }
-
-   for (j=0; j < COBO_PORT_RANGE; ++j)
-     portlist[j] = iccl_begin_port + j;
-
-   if ( ( rc = cobo_open (iccl_tmp_session,
-                          portlist,
-                          COBO_PORT_RANGE,
-                          &ICCL_rank, &ICCL_size) )
-            != COBO_SUCCESS )
-    {
-      LMON_say_msg(LMON_DAEMON_MSG_PREFIX, true,
-        "cobo_open failed");
-
-      return LMON_EINVAL;
-    }
-
-  free(portlist);
 
 # if VERBOSE
     LMON_say_msg(LMON_DAEMON_MSG_PREFIX, false,

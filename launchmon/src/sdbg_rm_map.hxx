@@ -172,11 +172,14 @@ struct coloc_str_param_t
     : rm_daemon_path(std::string("na")),
       rm_daemon_args(std::string("na")),
       rm_daemon_stub(std::string("na")),
+      febe_conn_info(std::string("na")),
+      femw_conn_info(std::string("na")),
       nnodes(-1),
       ndaemons(-1),
       sharedsec(NULL),
       randomid(NULL),
       resourceid(-1),
+      sessid(-1),
       hnfilename(NULL)
     {
 
@@ -187,11 +190,14 @@ struct coloc_str_param_t
       rm_daemon_path = o.rm_daemon_path; 
       rm_daemon_args = o.rm_daemon_args;
       rm_daemon_stub = o.rm_daemon_stub;
+      febe_conn_info = o.febe_conn_info;
+      femw_conn_info = o.femw_conn_info;      
       nnodes = o.nnodes;
       ndaemons = o.ndaemons;
       sharedsec = o.sharedsec;
       randomid = o.randomid;
       resourceid = o.resourceid;
+      sessid = o.sessid;
       hnfilename = o.hnfilename;
     }
 
@@ -203,22 +209,28 @@ struct coloc_str_param_t
       rm_daemon_path = rhs.rm_daemon_path;
       rm_daemon_args = rhs.rm_daemon_args;
       rm_daemon_stub = rhs.rm_daemon_stub;
+      febe_conn_info = rhs.febe_conn_info;
+      femw_conn_info = rhs.femw_conn_info;
       nnodes = rhs.nnodes;
       ndaemons = rhs.ndaemons;
       sharedsec = rhs.sharedsec;
       randomid = rhs.randomid;
       resourceid = rhs.resourceid;
+      sessid = rhs.sessid;
       hnfilename = rhs.hnfilename;
     }
 
   std::string rm_daemon_path;
   std::string rm_daemon_args;
   std::string rm_daemon_stub;
+  std::string febe_conn_info;
+  std::string femw_conn_info;
   int nnodes;
   int ndaemons;
   char *sharedsec;
   char *randomid;
   int resourceid;
+  int sessid;
   char *hnfilename;
 };
 
@@ -241,13 +253,16 @@ public:
   define_gset(std::vector<int>&, kill_signals)
   define_gset(bool, fail_detection_supported)
   define_gset(std::string&, launch_string)
+  define_gset(std::string&, newlaunch_string)
   define_gset(std::string&, expanded_launch_string)
+  define_gset(std::string&, expanded_newlaunch_string)
   define_gset(bool, has_launcher_so)
   define_gset(std::string&, launcher_so_name)
   define_gset(std::string&, attach_fifo_path)
 
   const std::vector<rm_id_t>& get_const_launcher_ids() const; 
   const std::vector<std::string>& get_const_launchers() const; 
+  const rm_catalogue_e get_const_rm() const;
 
   void fill_rm_type(const std::string &v);
   void fill_mpir_type(const std::string &v);
@@ -260,7 +275,9 @@ public:
   void fill_launcher_so(const std::string &v);
   void fill_launch_helper(const std::string &v);
   void fill_launch_string(const std::string &v);
+  void fill_newlaunch_string(const std::string &v);
   void fill_expanded_launch_string(const std::string &v);
+  void fill_expanded_newlaunch_string(const std::string &v);
   void fill_attach_fifo_path(const std::string &v);
 
 private:
@@ -276,7 +293,9 @@ private:
   std::vector<int> kill_signals;
   bool fail_detection_supported;
   std::string launch_string;
+  std::string newlaunch_string;
   std::string expanded_launch_string;
+  std::string expanded_newlaunch_string;
   bool has_launcher_so;
   std::string launcher_so_name;
   std::string attach_fifo_path;
@@ -294,13 +313,19 @@ public:
   bool init(const std::string &os_isa_string);
 
   bool set_paramset (int n_nodes, int n_daemons, char *secret,
-                     char *ran_id, int resource_id,
+                     char *ran_id, int resource_id, int sess_id,
                      char *host_file_name);
 
   const std::list<std::string>
         expand_launch_string(std::string &s);
 
   const std::string & get_expanded_launch_string();
+
+  const std::list<std::string> 
+        expand_newlaunch_string(std::string &expanded_string);
+
+  const std::string & 
+        get_expanded_newlaunch_string();
 
   bool graceful_rmkill(int pid);
 
@@ -377,6 +402,8 @@ public:
                  const std::string &lnchrpath,
                  const std::string &tool_daemon_path,
                  const std::string &tool_daemon_opts,
+                 const std::string &febeconn,
+                 const std::string &femwconn,
                  const image_base_t<BASE_IMAGE_TEMPLPARAM> *main_symtab=NULL,
                  const image_base_t<BASE_IMAGE_TEMPLPARAM> *rmso_symtab=NULL,
                  const std::string be_stub_path="");
@@ -406,6 +433,8 @@ rc_rm_plat_matcher<BASE_IMAGE_TEMPLPARAM>::init_rm_instance(rc_rm_t &rm_obj,
               const std::string &launchr_path,
               const std::string &tool_daemon_path,
               const std::string &tool_daemon_opts,
+	      const std::string &febeconn,
+              const std::string &femwconn,
               const image_base_t<BASE_IMAGE_TEMPLPARAM> *main_symtab,
               const image_base_t<BASE_IMAGE_TEMPLPARAM> *rmso_symtab,
               const std::string be_stub_path)
@@ -432,6 +461,10 @@ rc_rm_plat_matcher<BASE_IMAGE_TEMPLPARAM>::init_rm_instance(rc_rm_t &rm_obj,
     = tool_daemon_opts;
   rm_obj.get_coloc_paramset().rm_daemon_stub
     = be_stub_path;
+  rm_obj.get_coloc_paramset().febe_conn_info
+    = febeconn;
+  rm_obj.get_coloc_paramset().femw_conn_info
+    = femwconn;
 
   return found_matched_rm;
 }

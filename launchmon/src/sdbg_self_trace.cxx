@@ -67,8 +67,11 @@
 #include "lmon_api/lmon_say_msg.hxx"
 #include "sdbg_self_trace.hxx"
 
+self_trace_entry_t self_trace_t::rm_launchmon_module_trace 
+     =  { quiet, "<RmLaunchMON>", "rm_launchmon" };
+
 self_trace_entry_t self_trace_t::launchmon_module_trace 
-     =  { quiet, "<Launchmon>", "launchmon" };
+     =  { quiet, "<LaunchMON>", "launchmon" };
 
 self_trace_entry_t self_trace_t::tracer_module_trace 
      = { quiet, "<ProcTracer>", "tracer" };
@@ -79,11 +82,17 @@ self_trace_entry_t self_trace_t::symtab_module_trace
 self_trace_entry_t self_trace_t::machine_module_trace 
      = { quiet, "<Machine>", "machine"};
 
+self_trace_entry_t self_trace_t::rm_event_module_trace
+     = { quiet, "<RmEventMgr>", "rmevent"};
+
 self_trace_entry_t self_trace_t::event_module_trace
      = { quiet, "<EventMgr>", "event"};
 
 self_trace_entry_t self_trace_t::driver_module_trace
      = { quiet, "<Driver>", "driver"};
+
+self_trace_entry_t self_trace_t::rm_driver_module_trace
+     = { quiet, "<RmDriver>", "rmdriver"};
 
 self_trace_entry_t self_trace_t::opt_module_trace
      = { quiet, "<OptionParser>", "option"};

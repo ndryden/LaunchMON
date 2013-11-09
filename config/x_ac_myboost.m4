@@ -41,7 +41,7 @@ AC_DEFUN([X_AC_MYBOOST], [
   )
 
   myboost_configured="no"
-  if test "x$with_myboost" == "xyes"; then 
+  if test "x$with_myboost" = "xyes"; then 
     if test -d tools/myboost; then
       AC_SUBST(MYBOOSTLOC, [tools/myboost])
       myboost_configured="yes"

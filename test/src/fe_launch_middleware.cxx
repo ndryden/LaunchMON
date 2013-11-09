@@ -217,6 +217,17 @@ main (int argc, char *argv[])
       launcher_argv[5] = strdup(argv[1]);
       launcher_argv[6] = NULL;
     }
+  else if (rmenv_str == std::string("RC_flux"))
+    {
+      numprocs_opt     = string("-n") + string(argv[2]);
+      numnodes_opt     = string("-N") + string(argv[3]);
+      launcher_argv    = (char **) malloc (5*sizeof(char*));
+      launcher_argv[0] = strdup(mylauncher);  
+      launcher_argv[1] = strdup(numprocs_opt.c_str());
+      launcher_argv[2] = strdup(numnodes_opt.c_str());
+      launcher_argv[3] = strdup(argv[1]);
+      launcher_argv[4] = NULL;
+    }
   else if (rmenv_str == std::string("RC_alps"))
     {
       numprocs_opt     = string("-n") + string(argv[2]);

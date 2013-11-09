@@ -27,6 +27,7 @@
  *                  
  *
  *  Update Log:
+ *        Aug  20 2013 DHA: Added linux_rm_driver_t support
  *        Feb  09 2008 DHA: Added LLNS Copyright
  *        Jan  08 2006 DHA: Created file.          
  */ 
@@ -70,7 +71,7 @@ public:
   virtual ~linux_driver_t();
 
   //
-  // "main" for the whole project 
+  // "main" for the launchmon engine 
   //
   int driver_main (int argc, char *argv[]);
 
@@ -85,4 +86,6 @@ public:
       create_process ( pid_t pid, const std::string &mi);
 };
 
+
 #endif // SDBG_LINUX_DRIVER_HXX
+

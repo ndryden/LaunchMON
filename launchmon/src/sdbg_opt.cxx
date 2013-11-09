@@ -191,6 +191,10 @@ opts_args_t::process_args ( int *argc, char ***argv )
 		c = 'o';
 	      else if ( string(&nargv[i][2]) == string("remote"))
 		c = 'r';
+	      else if ( string(&nargv[i][2]) == string("lmonconnfebe"))
+		c = 'b';
+	      else if ( string(&nargv[i][2]) == string("lmonconnfemw"))
+		c = 'm';
 	      else if ( string(&nargv[i][2]) == string("lmonsec"))	
 	        c = 's';
 	    }
@@ -269,7 +273,7 @@ opts_args_t::process_args ( int *argc, char ***argv )
 
 	    case 'p':
 	      my_opt->launcher_pid = (pid_t)atoi(nargv[i+1]);
-	      if (LMON_get_execpath(my_opt->launcher_pid, my_opt->debugtarget) <  0)
+	      if (LMON_get_execpath (my_opt->launcher_pid, my_opt->debugtarget) <  0)
                 {
 		  has_parse_error = true;
 		  fin_parsing = true;
@@ -282,6 +286,18 @@ opts_args_t::process_args ( int *argc, char ***argv )
 	    case 'r':
 	      my_opt->remote = true;
 	      my_opt->remote_info = nargv[i+1]; // it should have hostname:port
+	      i++;
+	      break;
+
+	    case 'b':
+	      my_opt->remote = true;
+	      my_opt->febeconn_info = nargv[i+1]; // it should have hostname:port
+	      i++;
+	      break;
+
+	    case 'm':
+	      my_opt->remote = true;
+	      my_opt->femwconn_info = nargv[i+1]; // it should have hostname:port
 	      i++;
 	      break;
 
@@ -465,9 +481,9 @@ opts_args_t::print_usage()
   using std::endl;
 
   cerr << "Usage: " << endl;
-  cerr << "  launchmon <options> srun -a <srun options>" << endl;
+  cerr << "  launchmon <options> launcher -a <srun options>" << endl;
   cerr << "      or " << endl;
-  cerr << "  launchmon <options> -p srun_pid " << endl << endl;
+  cerr << "  launchmon <options> -p launcher_pid " << endl << endl;
   cerr << "options:" << endl;
   cerr << "\t\t-v, --verbose 0~2           sets the verbosity level." << endl;
   cerr << "\t\t-h, --help                  prints this message." << endl;

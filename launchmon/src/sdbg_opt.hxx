@@ -110,6 +110,8 @@ struct opt_struct_t {
   std::string launchstring;     // launch string to be expanded
   std::string tool_daemon_opts; // options to the lightweight debug engine
   std::string remote_info;      // ip:port
+  std::string febeconn_info;    // ip:port for fe<-be listening socket
+  std::string femwconn_info;    // ip:port for fe<-mw listening socket
   std::string lmon_sec_info;    // shared secret:randomID
   pid_t       launcher_pid;     // the pid of a running parallel launcher process
   char      **remaining;        // options and arguments to be passed 

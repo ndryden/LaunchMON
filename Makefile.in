@@ -48,6 +48,7 @@ am__aclocal_m4_deps = $(top_srcdir)/config/libtool.m4 \
 	$(top_srcdir)/config/lt~obsolete.m4 \
 	$(top_srcdir)/config/x_ac_bootfabric.m4 \
 	$(top_srcdir)/config/x_ac_enable_debug.m4 \
+	$(top_srcdir)/config/x_ac_enable_newengine.m4 \
 	$(top_srcdir)/config/x_ac_enable_verbose.m4 \
 	$(top_srcdir)/config/x_ac_gcrypt.m4 \
 	$(top_srcdir)/config/x_ac_mpicc.m4 \
@@ -158,7 +159,8 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
-LIBCOMM = @LIBCOMM@
+LIBCOMMDMON = @LIBCOMMDMON@
+LIBCOMMFEN = @LIBCOMMFEN@
 LIBDL = @LIBDL@
 LIBELF = @LIBELF@
 LIBGCRYPT = @LIBGCRYPT@
@@ -198,6 +200,12 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 RANLIB = @RANLIB@
+RMAPI_COMMINC_PATH = @RMAPI_COMMINC_PATH@
+RMAPI_COMMLIB_PATH = @RMAPI_COMMLIB_PATH@
+RMAPI_INC_PATH = @RMAPI_INC_PATH@
+RMAPI_LIB_PATH = @RMAPI_LIB_PATH@
+RMAPI_LINK = @RMAPI_LINK@
+RMAPI_UTIL_PATH = @RMAPI_UTIL_PATH@
 RMINC = @RMINC@
 RMLIB = @RMLIB@
 RM_TYPE = @RM_TYPE@
@@ -597,7 +605,7 @@ distcheck: dist
 	*.zip*) \
 	  unzip $(distdir).zip ;;\
 	esac
-	chmod -R a-w $(distdir); chmod a+w $(distdir)
+	chmod -R a-w $(distdir); chmod u+w $(distdir)
 	mkdir $(distdir)/_build
 	mkdir $(distdir)/_inst
 	chmod a-w $(distdir)

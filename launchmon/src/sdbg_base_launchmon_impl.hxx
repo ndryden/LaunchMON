@@ -182,7 +182,8 @@ launchmon_base_t<SDBG_DEFAULT_TEMPLPARAM>::~launchmon_base_t ()
                     {
                       free((*viter)->pd.executable_name);
                     }
-                  free(*viter);
+                  //TODO: find a way to free the pointer to the first element
+                  //free(*viter);
                 }
             }
         }
@@ -877,7 +878,7 @@ launchmon_base_t<SDBG_DEFAULT_TEMPLPARAM>::handle_incoming_socket_event (
 	      {
 	        self_trace_t::trace ( LEVELCHK(level1), 
 	          MODULENAME, 1, 
-		  "read_lmonp_msgheader pulled out a ill-formed message");  
+		  "read_lmonp_msgheader pulled out an ill-formed message");  
 
 	        // FAILED is a misnomer in this case
 	        goto ret_fail;

@@ -23,9 +23,10 @@
  * You should have received a copy of the GNU Lesser General Public License along 
  * with this program; if not, write to the Free Software Foundation, Inc., 59 Temple 
  * Place, Suite 330, Boston, MA 02111-1307 USA
- *--------------------------------------------------------------------------------			
+ *--------------------------------------------------------------------------------  	
  *
  *  Update Log:
+ *        Aug  26 2013 DHA: Added linux_flux_driver_t support
  *        Mar  11 2008 DHA: Added PowerPC support
  *        Feb  09 2008 DHA: Added LLNS Copyright
  *        Mar  13 2007 DHA: pipe_t support
@@ -39,6 +40,11 @@
 
 #include "sdbg_base_driver.hxx"
 #include "sdbg_base_driver_impl.hxx"
+#include "sdbg_event_manager.hxx"
+#include "sdbg_event_manager_impl.hxx"
+#include "sdbg_base_rmapi_launchmon.hxx"
+#include "sdbg_base_rmapi_launchmon_impl.hxx"
+#include "sdbg_rm_flux_launchmon.hxx"
 
 #include "sdbg_linux_mach.hxx"
 #include "sdbg_linux_launchmon.hxx"
@@ -47,7 +53,41 @@
 
 ////////////////////////////////////////////////////////////////////
 //
-// PUBLIC INTERFACES (class symbol_base_t<>)
+// PRIVATE INTERFACES (class linux_flux_driver_t)
+//
+////////////////////////////////////////////////////////////////////
+
+linux_flux_driver_t::linux_flux_driver_t (
+	         const linux_flux_driver_t & d)
+{
+
+}
+
+
+linux_flux_driver_t &
+linux_flux_driver_t::operator=(
+                 const linux_flux_driver_t & d)
+{
+
+}
+
+
+////////////////////////////////////////////////////////////////////
+//
+// PRIVATE INTERFACES (class linux_flux_driver_t)
+//
+////////////////////////////////////////////////////////////////////
+template <LINUX_DRIVER_TEMPLATELIST>
+linux_driver_t<LINUX_DRIVER_TEMPLPARAM>::linux_driver_t(
+	         const linux_driver_t & d)
+{
+
+}
+
+
+////////////////////////////////////////////////////////////////////
+//
+// PUBLIC INTERFACES (class linux_driver_t<>)
 //
 ////////////////////////////////////////////////////////////////////
 
@@ -60,13 +100,6 @@ template <LINUX_DRIVER_TEMPLATELIST>
 linux_driver_t<LINUX_DRIVER_TEMPLPARAM>::linux_driver_t ()
 {
   // more init
-}
-
-template <LINUX_DRIVER_TEMPLATELIST>
-linux_driver_t<LINUX_DRIVER_TEMPLPARAM>::linux_driver_t (
-                 const linux_driver_t& d )
-{
-  // copy
 }
 
 
@@ -140,7 +173,6 @@ linux_driver_t<LINUX_DRIVER_TEMPLPARAM>::create_process (
 
 }
 
-//int MPIR_being_debugged = 0;
 
 //!
 /*!  driver_base_t<> driver_main
@@ -168,7 +200,9 @@ linux_driver_t<LINUX_DRIVER_TEMPLPARAM>::driver_main
      //
      // Start driving events, calling into the base driver layer 
      //
-     error_code = driver_base_t<LINUX_DRIVER_TEMPLPARAM, my_thrinfo_t,elf_wrapper>::drive ( argc, argv );
+     error_code 
+       = driver_base_t<LINUX_DRIVER_TEMPLPARAM, my_thrinfo_t,elf_wrapper>
+	  ::drive ( argc, argv );
 
      return ( ( error_code == SDBG_DRIVER_OK) ? 0 : 1 );
    }

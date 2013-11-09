@@ -29,6 +29,7 @@
 ##--------------------------------------------------------------------------------
 ##
 ##  Update Log:
+##        Oct 30 2013 DHA: Added rm_flux.conf
 ##        Jun 06 2008 DHA: Taken from the old Makefile, converting
 ##                         to automake Makefile.am
 ##        Feb 09 2008 DHA: Added LLNS Copyright
@@ -53,7 +54,8 @@ etc_SCRIPTS            = rm_info.conf \
                          rm_bgq_slurm.conf \
                          rm_mchecker.conf \
                          rm_openrte.conf \
-                         rm_slurm.conf
+                         rm_slurm.conf \
+			 rm_flux.conf
 
 EXTRA_DIST             = rm_info.conf \
                          rm_alps.conf \
@@ -64,4 +66,5 @@ EXTRA_DIST             = rm_info.conf \
                          rm_bgq_slurm.conf \
                          rm_mchecker.conf \
                          rm_openrte.conf \
-                         rm_slurm.conf
+                         rm_slurm.conf \
+		         rm_flux.conf

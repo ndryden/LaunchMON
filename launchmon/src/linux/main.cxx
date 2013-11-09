@@ -1,5 +1,5 @@
 /*
- * $Header: /usr/gapps/asde/cvs-vault/sdb/launchmon/src/linux/main.cxx,v 1.5.2.1 2008/02/20 17:37:57 dahn Exp $
+ * $Header: $
  *--------------------------------------------------------------------------------
  * Copyright (c) 2008, Lawrence Livermore National Security, LLC. Produced at 
  * the Lawrence Livermore National Laboratory. Written by Dong H. Ahn <ahn1@llnl.gov>. 
@@ -23,7 +23,7 @@
  * You should have received a copy of the GNU Lesser General Public License along 
  * with this program; if not, write to the Free Software Foundation, Inc., 59 Temple 
  * Place, Suite 330, Boston, MA 02111-1307 USA
- *--------------------------------------------------------------------------------			
+ *--------------------------------------------------------------------------------
  *
  *  Update Log:
  *        Nov  08 2010 DHA: Added a lexical scope around the driver object

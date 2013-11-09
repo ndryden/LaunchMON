@@ -162,7 +162,9 @@ resource_manager_t::resource_manager_t()
     mpir(x_none),
     fail_detection_supported(false),
     launch_string(""),
+    newlaunch_string(""),
     expanded_launch_string(""),
+    expanded_newlaunch_string(""),
     has_launcher_so(false),
     launcher_so_name(""),
     attach_fifo_path("")
@@ -182,7 +184,9 @@ resource_manager_t::resource_manager_t(const resource_manager_t &r)
   kill_signals = r.kill_signals;
   fail_detection_supported = r.fail_detection_supported;
   launch_string = r.launch_string;
+  newlaunch_string = r.newlaunch_string;
   expanded_launch_string = r.expanded_launch_string;
+  expanded_newlaunch_string = r.expanded_newlaunch_string;
   has_launcher_so = r.has_launcher_so;
   launcher_so_name = r.launcher_so_name;
   attach_fifo_path = r.attach_fifo_path;
@@ -215,7 +219,9 @@ resource_manager_t::operator=(const resource_manager_t &r)
   kill_signals = r.kill_signals;
   fail_detection_supported = r.fail_detection_supported;
   launch_string = r.launch_string;
+  newlaunch_string = r.newlaunch_string;
   expanded_launch_string = r.expanded_launch_string;
+  expanded_newlaunch_string = r.expanded_newlaunch_string;
   has_launcher_so = r.has_launcher_so;
   launcher_so_name = r.launcher_so_name;
   attach_fifo_path = r.attach_fifo_path;
@@ -235,6 +241,11 @@ resource_manager_t::get_const_launchers() const
   return launchers;
 }
 
+const rm_catalogue_e 
+resource_manager_t::get_const_rm() const
+{
+  return rm;
+}
 
 void
 resource_manager_t::fill_rm_type(const std::string &v)
@@ -274,6 +285,10 @@ resource_manager_t::fill_rm_type(const std::string &v)
   else if (v == std::string("gupc"))
     {
       rm = RC_gupc;
+    }
+  else if (v == std::string("flux"))
+    {
+      rm = RC_flux;
     }
   else
     {
@@ -479,9 +494,23 @@ resource_manager_t::fill_launch_string(const std::string &v)
 
 
 void
+resource_manager_t::fill_newlaunch_string(const std::string &v)
+{
+  newlaunch_string = v;
+}
+
+
+void
 resource_manager_t::fill_expanded_launch_string(const std::string &v)
 {
   expanded_launch_string = v;
+}
+
+
+void
+resource_manager_t::fill_expanded_newlaunch_string(const std::string &v)
+{
+  expanded_newlaunch_string = v;
 }
 
 
@@ -602,6 +631,7 @@ rc_rm_t::set_paramset (int n_nodes,
                        char *secret,
                        char *ran_id,
                        int resource_id,
+                       int sess_id,
                        char *host_file_name)
 {
   if (!secret || !ran_id)
@@ -618,6 +648,7 @@ rc_rm_t::set_paramset (int n_nodes,
   coloc_paramset.sharedsec = strdup(secret);
   coloc_paramset.randomid = strdup(ran_id);
   coloc_paramset.resourceid = resource_id;
+  coloc_paramset.sessid = sess_id;
 
   if (host_file_name)
     {
@@ -625,6 +656,109 @@ rc_rm_t::set_paramset (int n_nodes,
     }
 
   return true;
+}
+
+
+const std::list<std::string>
+rc_rm_t::expand_newlaunch_string(std::string &expanded_string)
+{
+  std::string tmp_lstr = resource_manager.get_newlaunch_string();
+  std::list<std::string> tokens;
+  std::string token;
+  size_t ix = 0;
+  size_t ix2 = 0;
+
+  while ( (ix2 = tmp_lstr.find_first_of(" ", ix)) != std::string::npos)
+    {
+      token = tmp_lstr.substr(ix, ix2-ix);
+      tokens.push_back(token);
+      ix = ix2+1;
+    }
+
+  if (ix != std::string::npos)
+    {
+      token = tmp_lstr.substr(ix, ix2-ix);
+      tokens.push_back(token);
+    }
+
+  if (tokens.empty())
+    {
+      self_trace_t::trace ( LEVELCHK(level1),
+        MODULENAME,1,
+        "ill-formed RM_newlaunch_str?");
+
+      return tokens;
+    }
+
+  std::list<std::string>::iterator itr;
+
+  for (itr=tokens.begin(); itr != tokens.end(); itr++)
+    {
+      size_t perc_sign_ix = (*itr).find_first_of("%", 0);
+      if ((perc_sign_ix < std::string::npos)
+           && ((perc_sign_ix+1) < (*itr).size()))
+        {
+          bool split_case = false;
+          std::string exp_substr = expand_a_letter((*itr)[perc_sign_ix+1], 
+                                                   &split_case);
+          if (exp_substr != std::string("na"))
+            {
+              (*itr).replace(perc_sign_ix, 2, exp_substr);
+            }
+
+          if (split_case) 
+            {
+              std::string sep1("");
+              std::string sep2(" ");
+              std::string sep3("\"\'");
+              boost::escaped_list_separator<char> esc(sep1,sep2,sep3);
+              boost::tokenizer<boost::escaped_list_separator<char> > boost_token((*itr), esc); 
+              boost::tokenizer<boost::escaped_list_separator<char> >::iterator boost_itr;
+              std::list<std::string> sub_list; 
+              for (boost_itr = boost_token.begin(); 
+                     boost_itr != boost_token.end(); boost_itr++)
+                {
+                  sub_list.push_back(*boost_itr);
+                }
+
+              if (sub_list.size() > 1) 
+                {
+                  // insert the new sublist into the master list
+                  tokens.splice(itr, sub_list);
+                  // erase the current element and make sure
+                  // to update the itr to its previous iter so that
+                  // current for-loop can progress.
+                  tokens.erase(itr--);
+                }
+            }
+        }
+    }
+
+  tokens.remove(std::string(""));
+
+  expanded_string = "";
+  if (!tokens.empty())
+    {
+      int i;
+      for (itr=tokens.begin(); itr != tokens.end(); itr++)
+        {
+          expanded_string += (*itr);
+          if (itr != tokens.end())
+            {
+              expanded_string += " ";
+            }
+        }
+    }
+
+  resource_manager.fill_expanded_newlaunch_string (expanded_string);
+  return tokens;
+}
+
+
+const std::string &
+rc_rm_t::get_expanded_newlaunch_string()
+{
+  return resource_manager.get_expanded_newlaunch_string();
 }
 
 
@@ -1120,6 +1254,12 @@ rc_rm_t::parse_and_fill_rm(const std::string &rm_conf_path,
       a_rm.fill_launch_string(iter->second[0]);
     }
 
+  iter = key_value_pair.find(std::string("RM_newlaunch_str"));
+  if (iter != key_value_pair.end())
+    {
+      a_rm.fill_newlaunch_string(iter->second[0]);
+    }
+
   return error_found;
 }
 
@@ -1144,8 +1284,16 @@ rc_rm_t::expand_a_letter(const char p, bool *split_maybe_needed)
       ssm << coloc_paramset.rm_daemon_path;
       break;
 
+    case 'f':
+      ssm << coloc_paramset.febe_conn_info;
+      break;
+
     case 'j':
       ssm << coloc_paramset.resourceid;
+      break;
+
+    case 'm':
+      ssm << coloc_paramset.sessid;
       break;
 
     case 'l':

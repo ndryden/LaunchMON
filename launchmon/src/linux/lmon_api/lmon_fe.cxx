@@ -26,6 +26,7 @@
  *--------------------------------------------------------------------------------
  *
  *  Update Log:
+ *        Aug 30 2013 DHA: Added newlaunchmon engine support
  *        Jan 09 2013 DHA: Remove verbosity ref to the deprecated
  *                         thread tracer module.
  *        May 31 2012 DHA: Merged with the middleware support 
@@ -259,7 +260,7 @@
 
 #if COBO_BASED
 extern "C" {
-#include <cobo.h>
+#include <cobo_fen.h>
 }
 #endif
 
@@ -1498,6 +1499,7 @@ LMON_assist_ICCL_BE_init (lmon_session_desc_t *mydesc)
   int i      = 0;
   int tosec  = 0;
   int ndmons = 0;
+  unsigned int sessid = 0;
   char *tout = NULL;
   unsigned int hcnt   =0;
   const char **hostlist = NULL;
@@ -1528,52 +1530,14 @@ LMON_assist_ICCL_BE_init (lmon_session_desc_t *mydesc)
 
           return LMON_ESYS;
         }
-
-      if ( (mydesc->pMap.size()) != 0 )
-        {
-          int j;
-          std::map<std::string, std::vector<MPIR_PROCDESC_EXT *> >::const_iterator iter;
-          hostlist = (const char **) malloc (mydesc->pMap.size() * sizeof(const char *));
-          if (hostlist == NULL)
-            {
-              LMON_say_msg (LMON_FE_MSG_PREFIX, false,
-                "malloc returned NULL");
-
-              return LMON_ENOMEM;
-            }
-
-          for (iter = mydesc->pMap.begin(); iter != mydesc->pMap.end(); iter++)
-            {
-              // Unless mydesc->pMap destroyed strings that hostlist points
-              // to should be valid
-              hostlist[hcnt] = iter->first.c_str();
-              hcnt++;
-            }
-
-           /* This is only for testing */
-           portlist = (int *) malloc (COBO_PORT_RANGE * sizeof(int));
-	   if (portlist == NULL)
-	     {
-               LMON_say_msg (LMON_FE_MSG_PREFIX, false,
-                 "malloc returned NULL");
-
-               return LMON_ENOMEM;
-	     }
-
-           for (j=0; j < COBO_PORT_RANGE; ++j)
-             portlist[j] = COBO_BEGIN_PORT+j;
-         }
     }
 
   mydesc->commDesc[fe_be_conn].nDaemons
     = mydesc->proctab_msg->sec_or_stringinfo.exec_and_hn.num_host_name;
   ndmons = mydesc->commDesc[fe_be_conn].nDaemons;
 
-  /*
-   * Now taking advantage of COBO's new scalable bootstrapping
-   * Session id=10 for now.
-   */
-  if ( cobo_server_open (10, (char **) hostlist, hcnt, portlist, COBO_PORT_RANGE)
+  if ( cobo_server_open (mydesc->commDesc[fe_be_conn].sessionListenSockFd,
+                         &sessid)
        != COBO_SUCCESS )
     {
        LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
@@ -1674,68 +1638,26 @@ LMON_assist_ICCL_MW_init (lmon_session_desc_t *mydesc)
     {
       (*iter)->combineHosts(combinedHostList);
     }
-
-  //
-  // COBO BOOTSTRAP of MW daemons
-  //
-  //
-  int COBO_MW_BEGIN_PORT = COBO_BEGIN_PORT + COBO_PORT_RANGE;
-  int *portlist = (int *) malloc (COBO_PORT_RANGE * sizeof(int));
-  if (portlist == NULL)
-    {
-      LMON_say_msg (LMON_FE_MSG_PREFIX, false,
-        "malloc returned NULL");
-
-      return LMON_ENOMEM;
-    }
-
-  int i;
-  for (i=0; i < COBO_PORT_RANGE; ++i)
-    portlist[i] = COBO_MW_BEGIN_PORT+i;
-
-  const char **cobohl = NULL;
-  cobohl = (const char **) malloc(sizeof(const char*)*combinedHostList.size());
-  if (cobohl == NULL)
-    {
-      LMON_say_msg (LMON_FE_MSG_PREFIX, false,
-        "malloc returned NULL");
-
-      return LMON_ENOMEM;
-    }
-
-  int j=0;
-  std::vector<std::string>::const_iterator h_it;
-  for (h_it=combinedHostList.begin(); 
-         h_it != combinedHostList.end(); ++h_it)
-    {
-      cobohl[j] = (*h_it).c_str();
-      j++;
-    }
-
-  //
-  // session ID = 11 for now
-  //
-  if ( cobo_server_open(11, (char **) cobohl, combinedHostList.size(), portlist, COBO_PORT_RANGE)
+  unsigned int sessid;
+  if ( cobo_server_open (mydesc->commDesc[fe_mw_conn].sessionListenSockFd,
+                         &sessid)
        != COBO_SUCCESS )
     {
        LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-         "cobo_server_open failed for launchMwDaemons.");
+         "cobo_server_open failed.");
 
       return LMON_ESYS;
     }
 
-   if ( cobo_server_get_root_socket(&(mydesc->commDesc[fe_mw_conn].sessionAcceptSockFd))
+
+  if ( cobo_server_get_root_socket(&(mydesc->commDesc[fe_mw_conn].sessionAcceptSockFd))
         != COBO_SUCCESS)
-     {
-        LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-          "cobo_server_get_rootsocket failed for launchMwDaemons");
+    {
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+        "cobo_server_get_rootsocket failed for launchMwDaemons");
 
-       return LMON_ESYS;
-     }
-
-  free(portlist);
-  free(cobohl);
-  // combinedHostList will be freed by the dtor
+      return LMON_ESYS;
+    }
 
 # if MEASURE_TRACING_COST
    if ( lmon_read_raw(mydesc->commDesc[fe_mw_conn].sessionAcceptSockFd, (void*)&mw_ts, sizeof(double)) < 0 )
@@ -2476,21 +2398,43 @@ LMON_set_options (
   self_trace_t::machine_module_trace.verbosity_level       = ver;
   self_trace_t::opt_module_trace.verbosity_level           = ver;
 
-  sprintf ( portinfo, 
-	      "%d", 
-	      (unsigned short) 
-	      ntohs (mydesc->commDesc[fe_engine_conn].servAddr.sin_port) );
+  snprintf ( portinfo, 
+	     16,
+	     "%d", 
+	     (unsigned short) 
+	     ntohs (mydesc->commDesc[fe_engine_conn].servAddr.sin_port) );
 
   optcontext->remote = true;
   optcontext->remote_info = mydesc->commDesc[fe_engine_conn].ipInfo;
   optcontext->remote_info += ":";
   optcontext->remote_info += portinfo;
 
-  char tmprandomID[128];
 
-  sprintf (tmprandomID, 
-	     "%d",
-	     mydesc->randomID);
+  snprintf ( portinfo, 
+	    16,
+	    "%d", 
+	    (unsigned short)
+	    ntohs (mydesc->commDesc[fe_be_conn].servAddr.sin_port) );
+
+  optcontext->febeconn_info = mydesc->commDesc[fe_be_conn].ipInfo;
+  optcontext->febeconn_info += ":";
+  optcontext->febeconn_info += portinfo;
+
+  snprintf ( portinfo, 
+	    16,
+	    "%d", 
+	    (unsigned short)
+	    ntohs (mydesc->commDesc[fe_mw_conn].servAddr.sin_port) );
+
+  optcontext->femwconn_info = mydesc->commDesc[fe_be_conn].ipInfo;
+  optcontext->femwconn_info += ":";
+  optcontext->femwconn_info += portinfo;
+
+  char tmprandomID[128];
+  snprintf (tmprandomID, 
+	    128,
+	    "%d",
+	    mydesc->randomID);
 
   optcontext->lmon_sec_info = mydesc->shared_key;
   optcontext->lmon_sec_info += ":";
@@ -3291,7 +3235,12 @@ bld_exec_lmon_launch_str ( bool isLocal,
 	  cmdstring += " ";
 	}
 
-      if ( ( lmonpath = getenv ("LMON_LAUNCHMON_ENGINE_PATH")) != NULL )
+      if ( ( lmonpath = getenv ("LMON_NEWLAUNCHMON_ENGINE_PATH")) != NULL )
+	{
+	  cmdstring += lmonpath;
+	  cmdstring += " ";
+	}
+      else if ( ( lmonpath = getenv ("LMON_LAUNCHMON_ENGINE_PATH")) != NULL )
 	{
 	  cmdstring += lmonpath;
 	  cmdstring += " ";
@@ -3355,24 +3304,21 @@ bld_exec_lmon_launch_str ( bool isLocal,
 	  cmdstring += " ";
 	}
 
-      if ( ( lmonpath = getenv ("LMON_LAUNCHMON_ENGINE_PATH")) != NULL )
+      if ( ( lmonpath = getenv ("LMON_NEWLAUNCHMON_ENGINE_PATH")) != NULL )
 	{
 	  cmdstring += lmonpath;
 	  cmdstring += " ";
-
-	  //
-	  // perform a sanity check here of the given path
-	  //
+	}
+      else if ( ( lmonpath = getenv ("LMON_LAUNCHMON_ENGINE_PATH")) != NULL )
+	{
+	  cmdstring += lmonpath;
+	  cmdstring += " ";
 	}
       else
-	{		    
+	{
 	  cmd = "launchmon";
 	  cmdstring += cmd;
 	  cmdstring += " ";
-	  
-	  //
-	  // perform a sanity check if this is in the user's PATH
-	  //
 	}
 
       if ( getenv("LMON_DEBUG_LAUNCHMON_ENGINE") )
@@ -5013,6 +4959,7 @@ LMON_fe_getRMInfo (int sessionHandle, lmon_rm_info_t *info)
 }
 
 
+
 //! lmon_rc_e LMON_fe_launchAndSpawnDaemons
 /*!
 
@@ -5209,6 +5156,13 @@ LMON_fe_launchAndSpawnDaemons (
 	
       lmonOptArgs += "--remote ";
       lmonOptArgs += opt.get_my_opt()->remote_info;
+
+      lmonOptArgs += " --lmonconnfebe ";
+      lmonOptArgs += opt.get_my_opt()->febeconn_info;
+
+      lmonOptArgs += " --lmonconnfemw ";
+      lmonOptArgs += opt.get_my_opt()->femwconn_info;
+
       lmonOptArgs += " --lmonsec ";
       lmonOptArgs += opt.get_my_opt()->lmon_sec_info;
       lmonOptArgs += " --daemonpath ";
@@ -5441,6 +5395,13 @@ LMON_fe_attachAndSpawnDaemons (
 
       lmonOptArgs += "--remote ";
       lmonOptArgs += opt.get_my_opt()->remote_info;
+
+      lmonOptArgs += " --lmonconnfebe ";
+      lmonOptArgs += opt.get_my_opt()->febeconn_info;
+
+      lmonOptArgs += " --lmonconnfemw ";
+      lmonOptArgs += opt.get_my_opt()->femwconn_info;
+
       lmonOptArgs += " --lmonsec ";
       lmonOptArgs += opt.get_my_opt()->lmon_sec_info;
       lmonOptArgs += " --daemonpath ";

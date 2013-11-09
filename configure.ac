@@ -28,6 +28,7 @@ dnl  Place, Suite 330, Boston, MA 02111-1307 USA
 dnl --------------------------------------------------------------------------------
 dnl
 dnl   Update Log:
+dnl         Oct 30 2013 DHA: Added X_AC_NEWENGINE support
 dnl         Aug 03 2010 DHA: Added X_AC_MW_HOSTLIST support
 dnl         Dec 28 2009 DHA: Deprecated X_AC_PREFIX_CONFIG_H to better support
 dnl                          binary distribution
@@ -41,13 +42,13 @@ dnl         Jun 06 2008 DHA: File created.
 dnl
 
 AC_PREREQ(2.59)
-AC_INIT(LaunchMON, 1.0.beta1, ahn1@llnl.gov)
+AC_INIT(LaunchMON, 2.0.alpha, ahn1@llnl.gov)
 
 dnl
 dnl This implements 2nd LMON interface (increase current when the 
 dnl interface is changed, added, or removed.  
 dnl 
-AC_SUBST(LMON_CURRENT, 2)
+AC_SUBST(LMON_CURRENT, 3)
 
 dnl
 dnl This is the 1st revision (increase revision when the 
@@ -66,6 +67,12 @@ AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE(launchmon, 1.0.beta1)
 AC_CANONICAL_HOST
+
+
+dnl -----------------------------------------------
+dnl Enable/disable new engine 
+dnl -----------------------------------------------
+X_AC_NEWENGINE
 
 
 dnl -----------------------------------------------
@@ -248,7 +255,6 @@ AC_CONFIG_FILES([Makefile
                  tools/ciod/Makefile
                  tools/cobo/Makefile
                  tools/cobo/src/Makefile
-                 tools/cobo/test/Makefile
                  tools/alps/Makefile
                  tools/alps/src/Makefile
                  launchmon/Makefile

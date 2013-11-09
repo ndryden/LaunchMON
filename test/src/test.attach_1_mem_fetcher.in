@@ -76,6 +76,7 @@ elif test "x$RM_TYPE" = "xRC_orte" ; then
   $MPI_JOB_LAUNCHER_PATH -mca debugger mpirx -np $NUMTASKS `pwd`/hang_on_SIGUSR1@EXE@ &
 else
   echo "This RM is not supported yet" 
+  exit
 fi
 
 PID=`echo $!` 

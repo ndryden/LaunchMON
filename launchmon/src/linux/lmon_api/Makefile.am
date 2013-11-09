@@ -83,10 +83,12 @@ libmonfeapi_la_CXXFLAGS      = $(AM_CXXFLAGS)
 libmonfeapi_la_LDFLAGS       = -L$(top_srcdir)/@COMMLOC@ \
                                -L$(top_srcdir)/@GCRYPTLOC@ \
                                -L$(top_srcdir)/@GPGERRLOC@ \
+                               -L@RMAPI_COMMLIB_PATH@ \
+                               -Wl,-rpath=@RMAPI_COMMLIB_PATH@ \
                                $(AM_LDFLAGS) \
                                -version-info @LMON_CURRENT@:@LMON_REVISION@:@LMON_AGE@
 
-libmonfeapi_la_LIBADD        = @LIBPTHREAD@ @LIBCOMM@ @LIBGCRYPT@ @LIBGPGERR@ @LIBRT@
+libmonfeapi_la_LIBADD        = @LIBPTHREAD@ @LIBCOMMFEN@ @LIBGCRYPT@ @LIBGPGERR@ @LIBRT@
 
 libmonbeapi_la_SOURCES       = lmon_be.cxx \
                                lmon_daemon_internal.cxx \
@@ -116,10 +118,12 @@ libmonbeapi_la_CXXFLAGS      = $(AM_CXXFLAGS)
 libmonbeapi_la_LDFLAGS       = -L$(top_srcdir)/@COMMLOC@ \
                                -L$(top_srcdir)/@GCRYPTLOC@ \
                                -L$(top_srcdir)/@GPGERRLOC@ \
+                               -L@RMAPI_COMMLIB_PATH@ \
+                               -Wl,-rpath=@RMAPI_COMMLIB_PATH@ \
                                $(AM_LDFLAGS) \
                                -version-info @LMON_CURRENT@:@LMON_REVISION@:@LMON_AGE@
 
-libmonbeapi_la_LIBADD        = @LIBCOMM@ @LIBGCRYPT@ @LIBGPGERR@
+libmonbeapi_la_LIBADD        = @LIBCOMMDMON@ @LIBGCRYPT@ @LIBGPGERR@
 
 
 #
@@ -149,7 +153,9 @@ libmonmwapi_la_CXXFLAGS      = $(AM_CXXFLAGS)
 libmonmwapi_la_LDFLAGS       = -L$(top_srcdir)/@COMMLOC@ \
                                -L$(top_srcdir)/@GCRYPTLOC@ \
                                -L$(top_srcdir)/@GPGERRLOC@ \
+                               -L@RMAPI_COMMLIB_PATH@ \
+                               -Wl,-rpath=@RMAPI_COMMLIB_PATH@ \
                                $(AM_LDFLAGS) \
                                -version-info @LMON_CURRENT@:@LMON_REVISION@:@LMON_AGE@
 
-libmonmwapi_la_LIBADD        = @LIBCOMM@ @LIBGCRYPT@ @LIBGPGERR@
+libmonmwapi_la_LIBADD        = @LIBCOMMDMON@ @LIBGCRYPT@ @LIBGPGERR@

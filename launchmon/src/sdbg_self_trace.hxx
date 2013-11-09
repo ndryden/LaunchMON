@@ -27,7 +27,8 @@
  *	
  *
  *  Update Log:
- *        Feb  09 2008 DHA: Added LLNS Copyright
+ *        Aug 20 2013 DHA: Aadded new RM engine module
+ *        Feb 09 2008 DHA: Added LLNS Copyright
  *        Jul 03 2006 DHA: added trace method and tracefptr
  *        Mar 30 2006 DHA: File created      
  */ 
@@ -56,12 +57,15 @@ struct self_trace_entry_t {
 };
 
 struct self_trace_t {
+  static self_trace_entry_t rm_launchmon_module_trace;
   static self_trace_entry_t launchmon_module_trace;
   static self_trace_entry_t tracer_module_trace;
   static self_trace_entry_t symtab_module_trace;
   static self_trace_entry_t thread_tracer_module_trace;
+  static self_trace_entry_t rm_event_module_trace;
   static self_trace_entry_t event_module_trace;
   static self_trace_entry_t driver_module_trace;
+  static self_trace_entry_t rm_driver_module_trace;
   static self_trace_entry_t machine_module_trace;
   static self_trace_entry_t opt_module_trace;
   static self_trace_entry_t rm_module_trace;

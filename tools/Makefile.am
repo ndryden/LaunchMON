@@ -32,7 +32,7 @@
 ##        Jun 10 2007 DHA: Copied from the old Makefile.
 ##
 
-if WITH_COBO
+if WITH_COBO 
   OPT_COBO = cobo
 endif
 if WITH_CIOD
@@ -41,9 +41,10 @@ endif
 if WITH_ALPS
   OPT_ALPS = alps
 endif
-  OPT_GPG = libgpg-error
 
-SUBDIRS = $(OPT_COBO) $(OPT_CIOD) $(OPT_ALPS) $(OPT_GPG)
+OPT_GPG  = libgpg-error
+
+SUBDIRS = $(OPT_COBO) $(OPT_CIOD) $(OPT_ALPS) $(OPT_GPG) 
 
 all-local:
 	if test -f libgcrypt/Makefile; then \

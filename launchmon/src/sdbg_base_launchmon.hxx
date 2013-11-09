@@ -131,7 +131,7 @@ enum launchmon_event_e {
 
 //! class launchmon_base_t
 /*!
-    Abstract class that declares launchmon API as well as
+    Abstract class that declares launchmon engine APIs as well as
     defines some architecture independent methods.
 */
 template <SDBG_DEFAULT_TEMPLATE_WIDTH>

@@ -675,6 +675,7 @@ linux_launchmon_t::launch_tool_daemons (
 	    sharedsecret,
 	    randomID,
 	    get_resid(),
+	    get_resid(),
             hnfn
       );
 
@@ -1311,6 +1312,7 @@ linux_launchmon_t::handle_mpir_variables (
                                      sharedsecret,
                                      randomID,
                                      -1,
+                                     -1,
                                      NULL);
 
               std::string expstr;
@@ -1655,7 +1657,7 @@ linux_launchmon_t::~linux_launchmon_t ()
 //! PUBLIC: init
 /*!
     Method that registers platform specific process/thread 
-    tracers into the platform indepdent layer. It also initializes 
+    tracers into the platform indepedent layer. It also initializes 
     the FE-engine connection in API mode.
 */
 launchmon_rc_e 

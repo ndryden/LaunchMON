@@ -45,6 +45,11 @@
 ##        Dec 27 2006 DHA: Created file.
 ##
 
+if WITH_NEWENGINE 
+    NEWENGINE = newlaunchmon
+endif
+
+
 SUBDIRS                 = lmon_api
 
 MYBOOST_SUPPORT         = -I$(top_srcdir)/@MYBOOSTLOC@
@@ -52,7 +57,8 @@ MYBOOST_SUPPORT         = -I$(top_srcdir)/@MYBOOSTLOC@
 INCLUDES                = $(MYBOOST_SUPPORT) -I.. -I@ARCHHEADER@
 #BITS                    = @LIBBITSUFFIX@
 
-bin_PROGRAMS            = launchmon
+bin_PROGRAMS            = launchmon $(NEWENGINE)
+
 launchmon_SOURCES       = main.cxx \
                           sdbg_linux_launchmon.cxx \
                           lmon_api/lmon_lmonp_msg.cxx \
@@ -94,9 +100,41 @@ launchmon_SOURCES       = main.cxx \
                           sdbg_linux_ptracer.hxx \
                           sdbg_linux_symtab.hxx 
 
+newlaunchmon_SOURCES    = sdbg_flux_main.cxx \
+			  sdbg_rm_flux_launchmon.cxx \
+                          lmon_api/lmon_lmonp_msg.cxx \
+                          lmon_api/lmon_say_msg.cxx \
+                          ../sdbg_self_trace.cxx \
+                          ../sdbg_opt.cxx \
+                          ../sdbg_rm_map.cxx \
+			  ../sdbg_base_driver.hxx \
+			  ../sdbg_event_manager.hxx \
+			  ../sdbg_base_rmapi_launchmon.hxx \
+			  ../sdbg_base_rm_procgrp_status.hxx \
+			  ../sdbg_base_driver_impl.hxx \
+			  ../sdbg_event_manager_impl.hxx \
+			  ../sdbg_base_rmapi_launchmon_impl.hxx \
+			  ../sdbg_base_rm_procgrp_status_impl.hxx \
+			  ../sdbg_opt.hxx \
+                          ../sdbg_rm_map.hxx \
+			  sdbg_rm_flux_launchmon.hxx \
+			  sdbg_linux_driver_impl.hxx \
+			  sdbg_rm_flux_lwj_status.hxx \
+			  sdbg_rm_flux_lwj_status_impl.hxx
+
 launchmon_LDADD         = @LIBELF@ @LIBDL@
 launchmon_CFLAGS        = @LNCHR_BIT_FLAGS@ #$(AM_CFLAGS)
 launchmon_CXXFLAGS      = @LNCHR_BIT_FLAGS@ #$(AM_CXXFLAGS)
 launchmon_LDFLAGS       = -rdynamic @LNCHR_BIT_FLAGS@ $(AM_LDFLAGS)
+
+newlaunchmon_LDADD      = @RMAPI_LINK@
+newlaunchmon_CFLAGS     = -I@RMAPI_INC_PATH@ #$(AM_CFLAGS)
+newlaunchmon_CXXFLAGS   = -I@RMAPI_INC_PATH@ #$(AM_CXXFLAGS)
+newlaunchmon_LDFLAGS    = -L@RMAPI_LIB_PATH@ \
+                          -Wl,-rpath=@RMAPI_LIB_PATH@ \
+                          -L@RMAPI_COMMLIB_PATH@ \
+                          -Wl,-rpath=@RMAPI_COMMLIB_PATH@ \
+                          -rdynamic \
+                          $(AM_LDFLAGS)
 
 ## EOF

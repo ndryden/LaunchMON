@@ -37,7 +37,8 @@
 AC_DEFUN([X_AC_ENABLE_VERBOSE], [
   AC_MSG_CHECKING([whether to enable verbose codes])
   AC_ARG_ENABLE([verbose],
-    AS_HELP_STRING(--enable-verbose@<:@=LOGDIR@:>@,enable verbose codes @<:@default=stdout@:>@),
+    AS_HELP_STRING([--enable-verbose@<:@=LOGDIR@:>@],
+        [enable verbose codes @<:@default=stdout@:>@]),
     [verbose_enabled=$enableval],
     [verbose_enabled="check"]
   )

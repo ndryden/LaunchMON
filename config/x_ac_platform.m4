@@ -87,6 +87,9 @@ AC_DEFUN([X_AC_PLATFORM], [
   #                                                              #
   # Special Check is needed for Blue Gene Family and Cray Family #
   #                                                              #
+  # 10/30/2013: doing this testing to conditionally build some   #
+  # subcomponents.                                               #
+  #                                                              # 
   if test "x$ac_target_os" = "xlinux" -a "x$ac_target_isa" = "xpower"; then
     if test ! -z "/bgl/BlueLight/ppcfloor/bglsys/bin/mpirun" \
          -a -f "/bgl/BlueLight/ppcfloor/bglsys/bin/mpirun"; then
