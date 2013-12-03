@@ -29,6 +29,7 @@
  *  ./fe_launch_smoketest.debug /bin/hostname 9 5 pdebug `pwd`/be_kicker.debug
  *
  *  Update Log:
+ *        Oct 01 2013 DHA: Added support for FLUX prototype
  *        Oct 25 2011 DHA: Added BGQ support.
  *        Oct 21 2011 DHA: Added dynamic RM support.
  *        Nov 12 2009 DHA: Change BG mpirun options to cover /P running under IBM LL

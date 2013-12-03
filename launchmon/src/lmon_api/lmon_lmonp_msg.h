@@ -165,6 +165,16 @@ typedef enum _lmonp_fe_to_fe_msg_e {
   lmonp_kill_done,
 
   /*
+   * engine->FE: The shutdownbe done
+   */
+  lmonp_shutdownbe_done,
+
+  /*
+   * engine->FE: The shutdownmw done
+   */
+  lmonp_shutdownmw_done,
+
+  /*
    * engine->FE: engine failed and done its cleanup.
    * Semantics is defined in README.ERROR_HANDLE (A) 
    */
@@ -196,6 +206,11 @@ typedef enum _lmonp_fe_to_fe_msg_e {
    * FE->engine: please shutdownbe command
    */
   lmonp_shutdownbe,
+
+  /*
+   * FE->engine: please shutdownmw command
+   */
+  lmonp_shutdownmw,
 
   /*
    * FE->engine: please continue from the launch-bp command

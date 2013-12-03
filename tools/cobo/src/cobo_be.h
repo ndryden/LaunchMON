@@ -23,6 +23,7 @@
 #include "pmgr_collective_client_common.h"
 #include "pmgr_collective_client.h"
 
+
 #ifndef COBO_SUCCESS
 # define COBO_SUCCESS (0)
 # define COBO_FAILURE (-1)

@@ -100,6 +100,10 @@ job_procgrp_status_pair_t::determine_action()
 		  || (oldstatus == pg_status_attach_requested) ) {
 	    action = pg_action_update;
 	}
+        else if ( oldstatus == pg_status_kill_requested) {
+            action = pg_action_kill;
+        }
+
 	break;
     }
 
@@ -109,17 +113,6 @@ job_procgrp_status_pair_t::determine_action()
 	    action = pg_action_spawn_daemons;
 	}
 	break;
-    }
-
-    case pg_status_kill_requested: {
-
-	if ( (oldstatus == pg_status_running)
-	     || (oldstatus == pg_status_spawned_stopped)
-	     || (oldstatus == pg_status_spawned_running)) {		 
-	    action = pg_action_update;
-	}
-	break;
-
     }
 
     case pg_status_aborted: {
@@ -136,7 +129,10 @@ job_procgrp_status_pair_t::determine_action()
 
     case pg_status_completed: {
 
-	if (oldstatus == pg_status_running) {
+	if ( (oldstatus == pg_status_running) 
+             || (oldstatus == pg_status_spawned_stopped)
+             || (oldstatus == pg_status_spawned_running)
+             || (oldstatus == pg_status_kill_requested)) {
 	    action = pg_action_cleanup;
 	}
 

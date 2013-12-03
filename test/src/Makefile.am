@@ -158,7 +158,6 @@ test_SCRIPTS                      = test.LE_model_checker_mainthread \
 			            test.LE_model_checker_large \
 				    test.LE_model_checker_extreme \
 				    test.launch_1 \
-				    test.newlaunch_1 \
 				    test.launch_1_remote \
 			   	    test.launch_2_half \
 				    test.launch_2_uneven \
@@ -172,7 +171,6 @@ test_SCRIPTS                      = test.LE_model_checker_mainthread \
                                     test.launch_mw_2_coloc \
                                     test.launch_mw_5_mixall \
 				    test.attach_1 \
-				    test.newattach_1 \
                                     test.attach_1_mem_fetcher \
 				    test.attach_1_remote \
 				    test.attach_1_pdebugmax \
@@ -194,7 +192,6 @@ EXTRA_DIST                        = test.LE_model_checker_mainthread.in \
                                     test.LE_model_checker_large.in \
                                     test.LE_model_checker_extreme.in \
                                     test.launch_1.in \
-                                    test.newlaunch_1.in \
                                     test.launch_1_remote.in \
                                     test.launch_2_half.in \
                                     test.launch_2_uneven.in \
@@ -208,7 +205,6 @@ EXTRA_DIST                        = test.LE_model_checker_mainthread.in \
                                     test.launch_mw_2_coloc.in \
                                     test.launch_mw_5_mixall.in \
                                     test.attach_1.in \
-                                    test.newattach_1.in \
                                     test.attach_1_mem_fetcher.in \
                                     test.attach_1_remote.in \
                                     test.attach_1_pdebugmax.in \
@@ -249,9 +245,6 @@ test.LE_model_checker_extreme: test.LE_model_checker_extreme.in Makefile
 test.launch_1: test.launch_1.in Makefile
 	$(do_subst) < test.launch_1.in > test.launch_1
 	chmod +x test.launch_1
-test.newlaunch_1: test.newlaunch_1.in Makefile
-	$(do_subst) < test.newlaunch_1.in > test.newlaunch_1
-	chmod +x test.newlaunch_1
 test.launch_1_remote: test.launch_1_remote.in Makefile
 	$(do_subst) < test.launch_1_remote.in > test.launch_1_remote
 	chmod +x test.launch_1_remote
@@ -291,9 +284,6 @@ test.launch_mw_5_mixall: test.launch_mw_5_mixall.in Makefile
 test.attach_1: test.attach_1.in Makefile
 	$(do_subst) < test.attach_1.in > test.attach_1
 	chmod +x test.attach_1
-test.newattach_1: test.newattach_1.in Makefile
-	$(do_subst) < test.newattach_1.in > test.newattach_1
-	chmod +x test.newattach_1
 test.attach_1_mem_fetcher: test.attach_1_mem_fetcher.in Makefile
 	$(do_subst) < test.attach_1_mem_fetcher.in > test.attach_1_mem_fetcher
 	chmod +x test.attach_1_mem_fetcher

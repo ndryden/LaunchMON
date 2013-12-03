@@ -71,6 +71,7 @@ typedef enum _rm_procgrp_status_event_e {
 typedef enum _rm_procgrp_action_e {
     pg_action_update = 0,      /*!< update the status */
     pg_action_spawn_daemons,   /*!< spawn daemons */
+    pg_action_kill,            /*!< kill the procgrp */
     pg_action_cleanup,         /*!< cleanup */
     pg_action_noop,            /*!< noop */
     pg_action_invalid,         /*!< invalid */

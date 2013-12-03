@@ -262,7 +262,7 @@ LMON_daemon_internal_init ( int* argc, char*** argv, char *myhn, int is_be )
    * propagate to the iccl layer 
    * so we use the global variable trick here
    */
-  __cobo_ts = gettimeofdayD();
+  double __cobo_ts = gettimeofdayD();
 # endif
 
   unsigned int iccl_tmp_session = msess;

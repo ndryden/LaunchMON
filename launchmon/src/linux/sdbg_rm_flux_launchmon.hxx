@@ -135,6 +135,15 @@ public:
                  job_procgrp_status_pair_t *pgp);
 
     //!
+    /*! FLUX implementation of kill request action.
+        This method will kill all processes in pgp.
+    */
+    virtual
+    rmapi_lmon_rc_e
+    handle_kill_req_action (
+                 job_procgrp_status_pair_t *pgp);
+
+    //!
     /*! FLUX implementation of handle_app_cleanup_action
         This method will perform clean-up actions based 
 	on the state reported in pgp: the target application 

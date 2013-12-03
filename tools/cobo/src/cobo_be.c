@@ -25,7 +25,6 @@ static be_personality_t personality = {
  *
  *****************************************************/
 
-
 int 
 cobo_open (int *argc, char ***argv, 
 	   const char *serv_ip, int port, 

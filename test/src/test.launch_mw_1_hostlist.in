@@ -31,6 +31,7 @@
 #  one daemon per node, which unlocks the initial hang of all tasks.
 #
 #  Update Log:
+#        Dec 02 2013 DHA: Added new LaunchMON engine support.
 #        Jun 04 2012 DHA: Adjust the test script to 1.0 testing environment.
 #        Aug 03 2010 DHA: Created file.
 #
@@ -39,6 +40,9 @@ export RM_TYPE=@TEST_RMTP@
 export MPI_JOB_LAUNCHER_PATH=@TJLPATH@
 export LMON_PREFIX=@LMONPREFIX@
 export LMON_LAUNCHMON_ENGINE_PATH=@LMON@
+if test "x$RM_TYPE" = "xRC_flux"; then
+  export LMON_NEWLAUNCHMON_ENGINE_PATH=@NEWLMON@
+fi
 export LMON_MW_HOSTLIST_TEST=1
 export LMON_MW_HOSTLIST=@LMONMWHL@
 

@@ -1250,7 +1250,8 @@ LMON_fe_handleBeFeUsrData (int sessionHandle,
 			          befe_data )) < 0 )
             {
 	      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-		"the unpack function you had registered returned a negative return code");
+		"the unpack function you had registered"
+                " returned a negative return code");
 
               lrc = LMON_ENEGCB;
             }
@@ -1361,7 +1362,8 @@ LMON_fe_handleMwFeUsrData (int sessionHandle,
 			             mwfe_data )) < 0 )
             {
 	      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
-		"the unpack function that you registered returned a negative return code");
+		"the unpack function that you registered"
+                " returned a negative return code");
 
               lrc = LMON_ECLLB;
             }
@@ -3114,6 +3116,9 @@ LMON_fetofe_watchdog_thread ( void *arg )
 	  LMON_say_msg ( LMON_FE_MSG_PREFIX, false,
 	     "the job terminated...");
 #endif
+          // in case sync commands such as kill has been issued
+          // we signal on the condition variable first
+          pthread_cond_signal(&(mydesc->watchdogThr.condVar));
 	  pthread_mutex_unlock(&(mydesc->watchdogThr.eventMutex));
 	  goto watchdog_asynch_termination;
 	  break;
@@ -4262,7 +4267,8 @@ LMON_fe_detach ( int sessionHandle )
        || (mydesc->killed == LMON_TRUE) )
     {
       LMON_say_msg ( LMON_FE_MSG_PREFIX, false,
-        "the given session is invalid, the job/daemons already killed/detached?");
+        "the given session is invalid,"
+        " the job/daemons already killed/detached?");
 
       pthread_mutex_unlock(&(mydesc->watchdogThr.eventMutex));
       return LMON_EBDARG;
@@ -4272,9 +4278,10 @@ LMON_fe_detach ( int sessionHandle )
   msg.msgclass = lmonp_fetofe;
   msg.type.fetofe_type = lmonp_detach;
 
-  numbytes = write_lmonp_long_msg ( mydesc->commDesc[fe_engine_conn].sessionAcceptSockFd,
-				    &msg,
-				    sizeof(msg) );
+  numbytes = write_lmonp_long_msg ( 
+      mydesc->commDesc[fe_engine_conn].sessionAcceptSockFd,
+      &msg,
+      sizeof(msg) );
 
   if ( numbytes != sizeof(msg))
     return LMON_EINVAL;
@@ -4299,7 +4306,8 @@ LMON_fe_detach ( int sessionHandle )
       if ( mydesc->detached != LMON_TRUE)
         {
           LMON_say_msg ( LMON_FE_MSG_PREFIX, false,
-            "the main thread woke up out of LMON_fe_detach, but the required condition is not met" );
+            "the main thread woke up out of LMON_fe_detach,"
+            " but the required condition is not met" );
           LMON_say_msg ( LMON_FE_MSG_PREFIX, false,
             "probably the engine had retired" );
         }
@@ -4320,8 +4328,6 @@ LMON_fe_detach ( int sessionHandle )
    * at this point all locks must have been released
    *
    */
-  //LMON_destroy_sess (mydesc);
-  //LMON_init_sess (mydesc);
   pthread_mutex_unlock(&(mydesc->watchdogThr.eventMutex));
 
   return lrc;

@@ -1297,20 +1297,21 @@ int pmgr_tree_open_cmb (pmgr_tree_t *t, x_comm_fab_cxt *cf_cxt,
             __FILE__, __LINE__
         );
     } 
-
+#if 0
     /* doing an extra commit to work around an atomicity violation */
     if ( kvs_commit ((void *)cmb_cxt) < 0) {
         pmgr_error("kvs_commit failed"
             "@ file %s:%d",__FILE__, __LINE__
         );
     }
+#endif
     if ( snprintf (fencename, FLUX_CMB_MAX_STR, 
                   "topen.%d", cf_cxt->session) < 0 ) {
         pmgr_error("Could not copy fencename into value buffer @ file %s:%d",
             __FILE__, __LINE__
         );
     }
-    if ( kvs_fence ((void *)cmb_cxt, "fencename", ranks) < 0) {
+    if ( kvs_fence ((void *)cmb_cxt, fencename, ranks) < 0) {
         pmgr_error("kvs_fence failed"
             "@ file %s:%d",__FILE__, __LINE__
         );

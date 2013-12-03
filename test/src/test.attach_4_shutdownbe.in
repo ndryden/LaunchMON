@@ -31,6 +31,7 @@
 #  shut down BE daemons .
 #
 #  Update Log:
+#        Dec 02 2013 DHA: Added new LaunchMON engine support.
 #        Jun 05 2012 DHA: Added subtest support
 #        Oct 21 2011 DHA: Added dynamic RM detection support.
 #        Mar 06 2009 DHA: Changed bglrm to bgrm
@@ -61,6 +62,9 @@ SIGNUM=10
 MPI_JOB_LAUNCHER_PATH=@TJLPATH@
 export LMON_PREFIX=@LMONPREFIX@
 export LMON_LAUNCHMON_ENGINE_PATH=@LMON@
+if test "x$RM_TYPE" = "xRC_flux"; then
+  export LMON_NEWLAUNCHMON_ENGINE_PATH=@NEWLMON@
+fi
 export LMON_FE_SHUTDOWNBE_TEST=1
 
 if test "x$RM_TYPE" = "xRC_slurm" ; then
@@ -73,6 +77,9 @@ elif test "x$RM_TYPE" = "xRC_alps" ; then
 elif test "x$RM_TYPE" = "xRC_orte" ; then
   WAITAMOUNT=`expr $WAITAMOUNT`
   $MPI_JOB_LAUNCHER_PATH -gmca orte_enable_debug_cospawn_while_running 1 -np $NUMTASKS `pwd`/hang_on_SIGUSR1@EXE@ &
+elif test "x$RM_TYPE" = "xRC_flux" ; then
+  WAITAMOUNT=`expr $WAITAMOUNT`
+  $MPI_JOB_LAUNCHER_PATH -n $NUMTASKS `pwd`/hang_on_SIGUSR1@EXE@ &
 else
   echo "This RM is not supported yet" 
   exit

@@ -114,6 +114,75 @@ rm_api_launchmon_base_t::operator=(
 }
 
 
+//!
+/*!  rm_api_launchmon_base_t handle_fen_cntl_msg
+
+*/
+rmapi_lmon_rc_e
+rm_api_launchmon_base_t::handle_fen_cntl_msg (
+                 lmonp_fe_to_fe_msg_e t) 
+{
+    rmapi_lmon_rc_e rc = RMAPI_LMON_OK;
+
+    switch (t) {
+    case lmonp_detach: 
+
+        self_trace_t::trace ( LEVELCHK(level1),
+            MODULENAME,
+            0,
+            "front-end requested detach...");
+
+        if ( handle_detach_command () == RMAPI_LMON_OK ) 
+            rc = RMAPI_LMON_STOP;
+        else
+            rc = RMAPI_LMON_FAILED;
+        
+        break;
+
+    case lmonp_kill: 
+        self_trace_t::trace ( LEVELCHK(level1),
+            MODULENAME,
+            0,
+            "front-end requested kill...");
+
+        if ( handle_kill_command () != RMAPI_LMON_OK ) 
+            rc = RMAPI_LMON_FAILED;
+
+        break;
+
+    case lmonp_shutdownbe: 
+        self_trace_t::trace ( LEVELCHK(level1),
+            MODULENAME,
+            0,
+            "front-end requested deamon shutdown...");
+        if ( handle_shutdownbe_command () != RMAPI_LMON_OK ) 
+            rc = RMAPI_LMON_FAILED;
+
+        break;
+
+    case lmonp_cont_launch_bp: 
+        self_trace_t::trace ( LEVELCHK(level1),
+            MODULENAME,
+            0,
+            "front-end requests unlocking"
+            " the launcher from launch-bp...");
+        // FLUX TODO: Need procgrp control 
+        // request_cont_launch_bp ( p );
+        break;
+
+    default: 
+        self_trace_t::trace ( LEVELCHK(level1),
+            MODULENAME, 1,
+            "ill-formed msg");
+
+        rc = RMAPI_LMON_FAILED;
+    }
+
+    return rc;
+}
+
+
+
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -365,10 +434,12 @@ ret_loc:
 rmapi_lmon_rc_e
 rm_api_launchmon_base_t::update_socket_events ()
 {
-    struct pollfd fds[1];
-    int pollret;
+    int pollret = 0;
     int timeout = 0;
-    double timestamp;
+    int numbytes= 0;
+    double timestamp = 0.0f;
+    struct pollfd fds[1] = {0};
+    lmonp_t msg;
 
     if ( !get_API_mode() ) {
         self_trace_t::trace ( LEVELCHK(level3),
@@ -401,38 +472,35 @@ rm_api_launchmon_base_t::update_socket_events ()
         "poll returned an event ");
 #endif
 
-    int numbytes;
-    lmonp_t msg;
-
     init_msg_header (&msg);
-    numbytes = read_lmonp_msgheader ( 
-		 get_FE_sockfd(), &msg);
+    numbytes 
+        = read_lmonp_msgheader (get_FE_sockfd(), &msg);
 
     //
     // First handle socket disconnection and oddly formed message
     //
     if ( numbytes == -1) {
 	//
-	// A.C.1. If the tool FE fails, the engine first detects the socket 
-	// disconnection, at which point it tries to kill  the  RM_daemon  
-	// process and detaches  from  the  RM_job  process.  However, 
-	// if for some reason the engine also gets into trouble, the engine 
-	// would perform  A.1  instead; obviously  in  this  case,  the failing 
-	// launchmon engine will keep the RM_daemon process running, and 
+	// A.C.1. If the tool FE fails, the engine 
+        // first detects the socket disconnection, 
+        // at which point it tries to kill  the  RM_daemon  
+	// process and detaches  from  the  RM_job  process.  
+        // However, if for some reason the engine also 
+        // gets into trouble, the engine would perform  A.1  instead;
+        // obviously  in  this  case,  the failing launchmon 
+        // engine will keep the RM_daemon process running, and 
 	// won't be able to do A.1.3.
 	//
 	// This attempts to stop all of the threads
-	// and mark "detach." If a kill/detach request has been already registered, 
-	// don't bother
+	// and mark "detach." If a kill/detach request has been 
+        // already registered, don't bother
 	self_trace_t::trace ( LEVELCHK(level1),
             MODULENAME,
 	    0,
             "The channel with front-end disconnected."
             " Starting cleanup...");
 
-	// FLUX TODO: new failure handling for 
-	// request_detach(p, FE_disconnected);
-	goto ret_fail;
+	goto error;
     } // if ( numbytes == -1)
     else if ( (numbytes != sizeof (msg))
 	      || ((numbytes == sizeof (msg))
@@ -441,76 +509,15 @@ rm_api_launchmon_base_t::update_socket_events ()
             MODULENAME, 1,
             "read_lmonp_msgheader pulled out an ill-formed message");
 
-	goto ret_fail;
+	goto error;
     }
 
     //
     // OK, FE socket is connected and we received a legit message 
     //
-    //
-    switch (msg.type.fetofe_type) {
-    case lmonp_detach: {
-	// This attempts to stop all of the threads
-	// and mark "kill/detach." If a kill/detach request has been already registered, 
-	// don't bother
-	self_trace_t::trace ( LEVELCHK(level1),
-	    MODULENAME,
-            0,
-            "front-end requested detach...");
-	// FLUX TODO: Need procgrp control 
-	// request_detach ( p, FE_requested_detach );
-	break;
-    }
+    return handle_fen_cntl_msg (msg.type.fetofe_type);
 
-    case lmonp_kill: {
-	// This attempts to stop all of the threads
-	// and mark "kill" If a kill/detach request has been already registered, 
-	// don't bother
-	self_trace_t::trace ( LEVELCHK(level1),
-            MODULENAME,
-            0,
-            "front-end requested kill...");
-	// FLUX TODO: Need procgrp control 
-	//request_kill ( p, FE_requested_kill );
-	break;
-    }
-
-    case lmonp_shutdownbe: {
-	// This attempts to stop all of the threads
-	// and mark "detach" If a kill/detach request has been already registered, 
-	// don't bother
-	self_trace_t::trace ( LEVELCHK(level1),
-            MODULENAME,
-            0,
-            "front-end requested deamon shutdown...");
-	// FLUX TODO: Need procgrp control 
-	// request_detach ( p, FE_requested_shutdown_dmon );
-	break;
-    }
-
-    case lmonp_cont_launch_bp: {
-	self_trace_t::trace ( LEVELCHK(level1),
-            MODULENAME,
-            0,
-            "front-end requests unlocking the launcher from launch-bp...");
-	// FLUX TODO: Need procgrp control 
-	// request_cont_launch_bp ( p );
-	break;
-    }
-
-    default: {
-	self_trace_t::trace ( LEVELCHK(level1),
-	    MODULENAME, 1,
-            "ill-formed msg");
-
-	goto ret_fail;
-    }
-    }
-
-ret_ok:
-    return RMAPI_LMON_OK;
-
-ret_fail:
+error:
     return RMAPI_LMON_FAILED;
 }
 
@@ -536,6 +543,11 @@ rm_api_launchmon_base_t::invoke_handler (
 	}
 	pgp->set_updatereq (false);
 	break;
+
+    case pg_action_kill:
+        rc = handle_kill_req_action (pgp);
+        pgp->set_updatereq (false);
+        break;
 
     case pg_action_cleanup:
 	if (pgp->get_type () == pg_type_application) {
@@ -887,6 +899,125 @@ rm_api_launchmon_base_t::invoke_action_handlers ()
 
 ret_loc:
     return rc;
+}
+
+
+//!
+/*!  rm_api_launchmon_base_t handle_detach_command
+
+*/
+rmapi_lmon_rc_e
+rm_api_launchmon_base_t::handle_detach_command ()
+{
+    //
+    // Under the new engine scheme, detach is NOOP 
+    // This is just to support legacy code
+    //
+    return say_fetofe_msg (lmonp_detach_done);
+}
+
+
+//!
+/*!  rm_api_launchmon_base_t handle_shutdownbe_command
+
+*/
+rmapi_lmon_rc_e
+rm_api_launchmon_base_t::handle_shutdownbe_command ()
+{
+    // 
+    // Iterate through all of the be grocgrps and change
+    // the status to pg_status_kill_requested
+    //
+    job_procgrp_status_pair_t *procgrp = NULL;
+    int size = get_procgrp_size (pg_type_be_daemons);
+    if (size == 0) {
+        // If no mw daemons, nothing to shutdown
+        say_fetofe_msg (lmonp_shutdownbe_done);
+    }  
+    else {
+        int i=0;
+
+        for (i=0; i < size; ++i ) {
+           procgrp = get_procgrp_at (i, pg_type_be_daemons); 
+           procgrp->set_status (pg_status_kill_requested);
+        } 
+    }
+
+    return RMAPI_LMON_OK;
+}
+
+
+//!
+/*!  rm_api_launchmon_base_t handle_shutdownmw_command
+
+*/
+rmapi_lmon_rc_e
+rm_api_launchmon_base_t::handle_shutdownmw_command ()
+{
+    // 
+    // Iterate through all of the be grocgrps and change
+    // the status to pg_status_kill_requested
+    //
+    job_procgrp_status_pair_t *procgrp = NULL;
+    int size = get_procgrp_size (pg_type_mw_daemons);
+
+    if (size == 0) {
+        // If no mw daemons, nothing to shutdown
+        say_fetofe_msg (lmonp_shutdownmw_done);
+    }  
+    else {
+        int i=0;
+        for (i=0; i < size; ++i ) {
+            procgrp = get_procgrp_at (i, pg_type_mw_daemons); 
+            procgrp->set_status (pg_status_kill_requested);
+        } 
+    } 
+
+    return RMAPI_LMON_OK;
+}
+
+
+//!
+/*!  rm_api_launchmon_base_t handle_kill_command
+
+*/
+rmapi_lmon_rc_e
+rm_api_launchmon_base_t::handle_kill_command ()
+{
+    // 
+    // Iterate through all of the be and app grocgrps and change
+    // the status to pg_status_kill_requested
+    //
+    job_procgrp_status_pair_t *procgrp = NULL;
+    int size1 = get_procgrp_size (pg_type_application);
+    int size2 = get_procgrp_size (pg_type_be_daemons);
+    int size3 = get_procgrp_size (pg_type_mw_daemons);
+
+    if ( (size1 == 0) && (size2 == 0) && (size3 == 0) ) {
+        // If nothing to kill 
+        say_fetofe_msg (lmonp_kill_done);
+    }
+    else {
+        int i=0;
+        for (i=0; i < size1; ++i ) {
+            procgrp = get_procgrp_at (i, pg_type_application); 
+            procgrp->set_status (pg_status_kill_requested);
+        } 
+
+        i=0;
+        for (i=0; i < size2; ++i ) {
+            procgrp = get_procgrp_at (i, pg_type_be_daemons);
+            procgrp->set_status (pg_status_kill_requested);
+        }
+
+        i=0;
+        for (i=0; i < size3; ++i ) {
+            procgrp = get_procgrp_at (i, pg_type_mw_daemons);
+            procgrp->set_status (pg_status_kill_requested);
+        }
+    }
+
+    return RMAPI_LMON_OK;
 }
 
 #endif // SDBG_BASE_RMAPI_LAUNCHMON_IMPL_HXX

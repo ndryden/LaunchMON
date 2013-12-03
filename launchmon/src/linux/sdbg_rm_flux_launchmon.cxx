@@ -758,6 +758,51 @@ ret_loc:
 }
 
 
+rmapi_lmon_rc_e
+rm_flux_api_launchmon_t:: handle_kill_req_action (
+                 job_procgrp_status_pair_t *pgp)
+{
+    rmapi_lmon_rc_e rc = RMAPI_LMON_OK;
+    flux_rc_e frc = FLUX_OK;
+    flux_lwj_id_t *mylwj = NULL;
+    
+    mylwj = (flux_lwj_id_t *) 
+		(pgp->get_procgrp_id ());
+
+    if ( (frc = FLUX_control_killLWJ (mylwj)) != FLUX_OK) {
+        self_trace_t::trace ( true,
+ 	     MODULENAME,1,
+	     "FLUX_control_killLWJ returned an error.");
+        if  ( (rc = say_fetofe_msg (
+                        lmonp_stop_tracing)) != RMAPI_LMON_OK) {       
+	    self_trace_t::trace ( true,
+ 	        MODULENAME,1,
+	        "Sending lmonp_kill_done to FE returned an error.");
+        } 
+        rc = RMAPI_LMON_FAILED;
+    }
+    else {
+        //
+        // FLUX TODO: This is a race condition because killing 
+        // app will prematurely send lmonp_kill_done 
+        // message to the FEN. LMONP protocol needs to 
+        // be changed so that this engine can send
+        // separate message when killing app, be daemons and
+        // middleware daemons.
+        //
+        if  ( (rc = say_fetofe_msg (
+                        lmonp_kill_done)) != RMAPI_LMON_OK) {       
+	    self_trace_t::trace ( true,
+ 	        MODULENAME,1,
+	        "Sending lmonp_kill_done to FE returned an error.");
+            rc = RMAPI_LMON_FAILED;
+        } 
+    }
+
+    return rc;
+}
+
+
 rmapi_lmon_rc_e 
 rm_flux_api_launchmon_t::handle_spawn_daemons_action (
                  job_procgrp_status_pair_t *pgp)

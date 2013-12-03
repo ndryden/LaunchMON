@@ -30,10 +30,16 @@
 #  Attach the tool to a running program and unlock the hang. 
 #
 #  Update Log:
+#        Dec 02 2013 DHA: Added new LaunchMON engine support.
 #        Jun 17 2008 DHA: Created file.
 #
  
+RM_TYPE=@TEST_RMTP@
+
 export LMON_LAUNCHMON_ENGINE_PATH=@LMON@
+if test "x$RM_TYPE" = "xRC_flux"; then
+  export LMON_NEWLAUNCHMON_ENGINE_PATH=@NEWLMON@
+fi
 export FEN_RM_DISTRIBUTED=1
 export LMON_INVALIDPID_TEST=1
 

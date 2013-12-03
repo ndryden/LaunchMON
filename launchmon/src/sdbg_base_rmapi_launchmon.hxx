@@ -227,6 +227,17 @@ public:
 	                            = 0;
 
     //!
+    /*! handle_kill_req_action must be implemented 
+        by a derived class. This method will kill 
+	all processes that belong to pgp 
+    */
+    virtual 
+    rmapi_lmon_rc_e 
+    handle_kill_req_action (
+                 job_procgrp_status_pair_t *pgp)  
+	                            = 0;
+
+    //!
     /*! handle_app_cleanup_action must be implemented
         by a derived class. This method will perform
 	clean-up actions based on the state reported in
@@ -251,7 +262,35 @@ public:
     handle_daemon_cleanup_action (
                  job_procgrp_status_pair_t *pgp)   
                                     = 0;
+    ////////////////////////////////////////////////////////////
+    //
+    // Public interfaces that implements generic handlers
+    //
+    ////////////////////////////////////////////////////////////
 
+    //!
+    /*! Detach command handler 
+    */
+    rmapi_lmon_rc_e
+    handle_detach_command ();
+
+    //!
+    /*! Kill command handler 
+    */
+    rmapi_lmon_rc_e
+    handle_kill_command ();
+
+    //!
+    /*! Shutdownbe command handler 
+    */
+    rmapi_lmon_rc_e
+    handle_shutdownbe_command ();
+
+    //!
+    /*! Shutdownbe command handler 
+    */
+    rmapi_lmon_rc_e
+    handle_shutdownmw_command ();
 
 private:
 
@@ -272,6 +311,15 @@ private:
                  const rm_api_launchmon_base_t &o);
     rm_api_launchmon_base_t (
                  const rm_api_launchmon_base_t &o); 
+
+
+    ////////////////////////////////////////////////////////////
+    //
+    // Prive methods 
+    //
+    ////////////////////////////////////////////////////////////
+    rmapi_lmon_rc_e handle_fen_cntl_msg (
+                 lmonp_fe_to_fe_msg_e t);
 
 
     ////////////////////////////////////////////////////////////

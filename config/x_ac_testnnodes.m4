@@ -37,7 +37,10 @@ AC_DEFUN([X_AC_TESTNNODES], [
   AC_MSG_CHECKING([the number of compute nodes that standard test cases should use])
   AC_ARG_WITH([test-nnodes],
     AS_HELP_STRING([--with-test-nnodes@<:@=NNodes@:>@],
-    [specify the number of compute nodes test cases should use @<:@Blue Gene Note: use the number of IO nodes instead@:>@ @<:@default=2@:>@]),
+    [specify the number of compute nodes test cases should use \
+     @<:@Blue Gene Note: use the number of IO nodes instead@:>@ \
+     @<:@FLUX Note: use 1 as its prototype launcher does not yet have node count support@:>@ \
+     @<:@default=2@:>@]),
     [with_tnn=$withval],
     [with_tnn="check"])
 

@@ -26,6 +26,7 @@
  *--------------------------------------------------------------------------------
  *
  *  Update Log: 
+ *        Oct 01 2013 DHA: Added support for FLUX prototype
  *        Mar 04 2008 DHA: Added generic BlueGene support
  *        Jun 17 2008 DHA: Added BlueGene support 
  *        Jun 12 2008 DHA: Added GNU build system support
