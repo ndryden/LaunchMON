@@ -304,7 +304,7 @@ rm_flux_api_launchmon_t::init_flux_api (opts_args_t *opt)
 	//
         //////////////////////////////////////////////////////
         
-        if ( FLUX_update_createLWJCxt (&fid) 
+        if ( FLUX_update_createLWJCxt (1, &fid) 
 	     != FLUX_OK ) {
 
 	    self_trace_t::trace ( true,
@@ -346,16 +346,26 @@ rm_flux_api_launchmon_t::init_flux_api (opts_args_t *opt)
         char **t = &(opt->get_my_opt()->remaining[1]);
         int procs_per_node = 1;
         int nodes = 1;
-        
         while (t != NULL) {
             if (t[0][0] == '-') {
                 if (t[0][1] == 'n') {
-                    procs_per_node 
-                        = atoi ((const char *) &(t[0][2]));
+                    if (t[0][2] != '\0') {
+                        procs_per_node 
+                            = atoi ((const char *) &(t[0][2]));
+                    }
+                    else {
+                        t++;
+                        procs_per_node
+                            = atoi ((const char *) (*t));
+                    }
+
                 }
-                else if (t[0][1] == 'N') {
-                    nodes 
-                        = atoi ((const char *) &(t[0][2]));
+                else if (t[0][1] == '-') {
+                    if (strncmp (&(t[0][2]),  
+                            "procs-per-node=", 15) == 0) {
+                        procs_per_node
+                           = atoi (&(t[0][17]));
+                    }
                 }    
             }
             else {
@@ -544,7 +554,7 @@ rm_flux_api_launchmon_t::co_locate_flux_daemons (
     //
     // Create a new LWJ context
     //
-    if ( FLUX_update_createLWJCxt (&fid) 
+    if ( FLUX_update_createLWJCxt (0, &fid) 
 	 != FLUX_OK ) {
 
 	self_trace_t::trace ( true,
