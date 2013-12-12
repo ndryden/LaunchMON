@@ -38,12 +38,7 @@ bin_PROGRAMS = launchmon$(EXEEXT) $(am__EXEEXT_1)
 subdir = launchmon/src/linux
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/config/libtool.m4 \
-	$(top_srcdir)/config/ltoptions.m4 \
-	$(top_srcdir)/config/ltsugar.m4 \
-	$(top_srcdir)/config/ltversion.m4 \
-	$(top_srcdir)/config/lt~obsolete.m4 \
-	$(top_srcdir)/config/x_ac_bootfabric.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/x_ac_bootfabric.m4 \
 	$(top_srcdir)/config/x_ac_enable_debug.m4 \
 	$(top_srcdir)/config/x_ac_enable_newengine.m4 \
 	$(top_srcdir)/config/x_ac_enable_verbose.m4 \
@@ -73,7 +68,10 @@ am_launchmon_OBJECTS = launchmon-main.$(OBJEXT) \
 	launchmon-sdbg_opt.$(OBJEXT) launchmon-sdbg_rm_map.$(OBJEXT)
 launchmon_OBJECTS = $(am_launchmon_OBJECTS)
 launchmon_DEPENDENCIES =
-launchmon_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
+launchmon_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(launchmon_CXXFLAGS) \
 	$(CXXFLAGS) $(launchmon_LDFLAGS) $(LDFLAGS) -o $@
 am_newlaunchmon_OBJECTS = newlaunchmon-sdbg_flux_main.$(OBJEXT) \
@@ -85,7 +83,7 @@ am_newlaunchmon_OBJECTS = newlaunchmon-sdbg_flux_main.$(OBJEXT) \
 	newlaunchmon-sdbg_rm_map.$(OBJEXT)
 newlaunchmon_OBJECTS = $(am_newlaunchmon_OBJECTS)
 newlaunchmon_DEPENDENCIES =
-newlaunchmon_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+newlaunchmon_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(newlaunchmon_CXXFLAGS) \
 	$(CXXFLAGS) $(newlaunchmon_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -94,22 +92,42 @@ am__depfiles_maybe = depfiles
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-LTCXXCOMPILE = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+AM_V_CXX = $(am__v_CXX_$(V))
+am__v_CXX_ = $(am__v_CXX_$(AM_DEFAULT_VERBOSITY))
+am__v_CXX_0 = @echo "  CXX   " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CXXLD = $(am__v_CXXLD_$(V))
+am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CXXLD_0 = @echo "  CXXLD " $@;
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(launchmon_SOURCES) $(newlaunchmon_SOURCES)
 DIST_SOURCES = $(launchmon_SOURCES) $(newlaunchmon_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
@@ -155,6 +173,7 @@ am__relativize = \
   reldir="$$dir2"
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
 ARCHHEADER = @ARCHHEADER@
 ARCHLIB = @ARCHLIB@
@@ -470,10 +489,10 @@ clean-binPROGRAMS:
 	rm -f $$list
 launchmon$(EXEEXT): $(launchmon_OBJECTS) $(launchmon_DEPENDENCIES) 
 	@rm -f launchmon$(EXEEXT)
-	$(launchmon_LINK) $(launchmon_OBJECTS) $(launchmon_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(launchmon_LINK) $(launchmon_OBJECTS) $(launchmon_LDADD) $(LIBS)
 newlaunchmon$(EXEEXT): $(newlaunchmon_OBJECTS) $(newlaunchmon_DEPENDENCIES) 
 	@rm -f newlaunchmon$(EXEEXT)
-	$(newlaunchmon_LINK) $(newlaunchmon_OBJECTS) $(newlaunchmon_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(newlaunchmon_LINK) $(newlaunchmon_OBJECTS) $(newlaunchmon_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -499,246 +518,281 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newlaunchmon-sdbg_self_trace.Po@am__quote@
 
 .cxx.o:
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ $<
 
 .cxx.obj:
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 .cxx.lo:
-@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
 launchmon-main.o: main.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-main.o -MD -MP -MF $(DEPDIR)/launchmon-main.Tpo -c -o launchmon-main.o `test -f 'main.cxx' || echo '$(srcdir)/'`main.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-main.Tpo $(DEPDIR)/launchmon-main.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-main.o -MD -MP -MF $(DEPDIR)/launchmon-main.Tpo -c -o launchmon-main.o `test -f 'main.cxx' || echo '$(srcdir)/'`main.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-main.Tpo $(DEPDIR)/launchmon-main.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='main.cxx' object='launchmon-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-main.o `test -f 'main.cxx' || echo '$(srcdir)/'`main.cxx
 
 launchmon-main.obj: main.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-main.obj -MD -MP -MF $(DEPDIR)/launchmon-main.Tpo -c -o launchmon-main.obj `if test -f 'main.cxx'; then $(CYGPATH_W) 'main.cxx'; else $(CYGPATH_W) '$(srcdir)/main.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-main.Tpo $(DEPDIR)/launchmon-main.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-main.obj -MD -MP -MF $(DEPDIR)/launchmon-main.Tpo -c -o launchmon-main.obj `if test -f 'main.cxx'; then $(CYGPATH_W) 'main.cxx'; else $(CYGPATH_W) '$(srcdir)/main.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-main.Tpo $(DEPDIR)/launchmon-main.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='main.cxx' object='launchmon-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-main.obj `if test -f 'main.cxx'; then $(CYGPATH_W) 'main.cxx'; else $(CYGPATH_W) '$(srcdir)/main.cxx'; fi`
 
 launchmon-sdbg_linux_launchmon.o: sdbg_linux_launchmon.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_linux_launchmon.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_linux_launchmon.Tpo -c -o launchmon-sdbg_linux_launchmon.o `test -f 'sdbg_linux_launchmon.cxx' || echo '$(srcdir)/'`sdbg_linux_launchmon.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_linux_launchmon.Tpo $(DEPDIR)/launchmon-sdbg_linux_launchmon.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_linux_launchmon.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_linux_launchmon.Tpo -c -o launchmon-sdbg_linux_launchmon.o `test -f 'sdbg_linux_launchmon.cxx' || echo '$(srcdir)/'`sdbg_linux_launchmon.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_linux_launchmon.Tpo $(DEPDIR)/launchmon-sdbg_linux_launchmon.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_linux_launchmon.cxx' object='launchmon-sdbg_linux_launchmon.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_linux_launchmon.o `test -f 'sdbg_linux_launchmon.cxx' || echo '$(srcdir)/'`sdbg_linux_launchmon.cxx
 
 launchmon-sdbg_linux_launchmon.obj: sdbg_linux_launchmon.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_linux_launchmon.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_linux_launchmon.Tpo -c -o launchmon-sdbg_linux_launchmon.obj `if test -f 'sdbg_linux_launchmon.cxx'; then $(CYGPATH_W) 'sdbg_linux_launchmon.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_linux_launchmon.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_linux_launchmon.Tpo $(DEPDIR)/launchmon-sdbg_linux_launchmon.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_linux_launchmon.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_linux_launchmon.Tpo -c -o launchmon-sdbg_linux_launchmon.obj `if test -f 'sdbg_linux_launchmon.cxx'; then $(CYGPATH_W) 'sdbg_linux_launchmon.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_linux_launchmon.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_linux_launchmon.Tpo $(DEPDIR)/launchmon-sdbg_linux_launchmon.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_linux_launchmon.cxx' object='launchmon-sdbg_linux_launchmon.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_linux_launchmon.obj `if test -f 'sdbg_linux_launchmon.cxx'; then $(CYGPATH_W) 'sdbg_linux_launchmon.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_linux_launchmon.cxx'; fi`
 
 launchmon-lmon_lmonp_msg.o: lmon_api/lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-lmon_lmonp_msg.o -MD -MP -MF $(DEPDIR)/launchmon-lmon_lmonp_msg.Tpo -c -o launchmon-lmon_lmonp_msg.o `test -f 'lmon_api/lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-lmon_lmonp_msg.Tpo $(DEPDIR)/launchmon-lmon_lmonp_msg.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-lmon_lmonp_msg.o -MD -MP -MF $(DEPDIR)/launchmon-lmon_lmonp_msg.Tpo -c -o launchmon-lmon_lmonp_msg.o `test -f 'lmon_api/lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_lmonp_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-lmon_lmonp_msg.Tpo $(DEPDIR)/launchmon-lmon_lmonp_msg.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_api/lmon_lmonp_msg.cxx' object='launchmon-lmon_lmonp_msg.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-lmon_lmonp_msg.o `test -f 'lmon_api/lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_lmonp_msg.cxx
 
 launchmon-lmon_lmonp_msg.obj: lmon_api/lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-lmon_lmonp_msg.obj -MD -MP -MF $(DEPDIR)/launchmon-lmon_lmonp_msg.Tpo -c -o launchmon-lmon_lmonp_msg.obj `if test -f 'lmon_api/lmon_lmonp_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_lmonp_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_lmonp_msg.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-lmon_lmonp_msg.Tpo $(DEPDIR)/launchmon-lmon_lmonp_msg.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-lmon_lmonp_msg.obj -MD -MP -MF $(DEPDIR)/launchmon-lmon_lmonp_msg.Tpo -c -o launchmon-lmon_lmonp_msg.obj `if test -f 'lmon_api/lmon_lmonp_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_lmonp_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_lmonp_msg.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-lmon_lmonp_msg.Tpo $(DEPDIR)/launchmon-lmon_lmonp_msg.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_api/lmon_lmonp_msg.cxx' object='launchmon-lmon_lmonp_msg.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-lmon_lmonp_msg.obj `if test -f 'lmon_api/lmon_lmonp_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_lmonp_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_lmonp_msg.cxx'; fi`
 
 launchmon-sdbg_linux_mach.o: sdbg_linux_mach.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_linux_mach.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_linux_mach.Tpo -c -o launchmon-sdbg_linux_mach.o `test -f 'sdbg_linux_mach.cxx' || echo '$(srcdir)/'`sdbg_linux_mach.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_linux_mach.Tpo $(DEPDIR)/launchmon-sdbg_linux_mach.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_linux_mach.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_linux_mach.Tpo -c -o launchmon-sdbg_linux_mach.o `test -f 'sdbg_linux_mach.cxx' || echo '$(srcdir)/'`sdbg_linux_mach.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_linux_mach.Tpo $(DEPDIR)/launchmon-sdbg_linux_mach.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_linux_mach.cxx' object='launchmon-sdbg_linux_mach.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_linux_mach.o `test -f 'sdbg_linux_mach.cxx' || echo '$(srcdir)/'`sdbg_linux_mach.cxx
 
 launchmon-sdbg_linux_mach.obj: sdbg_linux_mach.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_linux_mach.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_linux_mach.Tpo -c -o launchmon-sdbg_linux_mach.obj `if test -f 'sdbg_linux_mach.cxx'; then $(CYGPATH_W) 'sdbg_linux_mach.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_linux_mach.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_linux_mach.Tpo $(DEPDIR)/launchmon-sdbg_linux_mach.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_linux_mach.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_linux_mach.Tpo -c -o launchmon-sdbg_linux_mach.obj `if test -f 'sdbg_linux_mach.cxx'; then $(CYGPATH_W) 'sdbg_linux_mach.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_linux_mach.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_linux_mach.Tpo $(DEPDIR)/launchmon-sdbg_linux_mach.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_linux_mach.cxx' object='launchmon-sdbg_linux_mach.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_linux_mach.obj `if test -f 'sdbg_linux_mach.cxx'; then $(CYGPATH_W) 'sdbg_linux_mach.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_linux_mach.cxx'; fi`
 
 launchmon-lmon_say_msg.o: lmon_api/lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-lmon_say_msg.o -MD -MP -MF $(DEPDIR)/launchmon-lmon_say_msg.Tpo -c -o launchmon-lmon_say_msg.o `test -f 'lmon_api/lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-lmon_say_msg.Tpo $(DEPDIR)/launchmon-lmon_say_msg.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-lmon_say_msg.o -MD -MP -MF $(DEPDIR)/launchmon-lmon_say_msg.Tpo -c -o launchmon-lmon_say_msg.o `test -f 'lmon_api/lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_say_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-lmon_say_msg.Tpo $(DEPDIR)/launchmon-lmon_say_msg.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_api/lmon_say_msg.cxx' object='launchmon-lmon_say_msg.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-lmon_say_msg.o `test -f 'lmon_api/lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_say_msg.cxx
 
 launchmon-lmon_say_msg.obj: lmon_api/lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-lmon_say_msg.obj -MD -MP -MF $(DEPDIR)/launchmon-lmon_say_msg.Tpo -c -o launchmon-lmon_say_msg.obj `if test -f 'lmon_api/lmon_say_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_say_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_say_msg.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-lmon_say_msg.Tpo $(DEPDIR)/launchmon-lmon_say_msg.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-lmon_say_msg.obj -MD -MP -MF $(DEPDIR)/launchmon-lmon_say_msg.Tpo -c -o launchmon-lmon_say_msg.obj `if test -f 'lmon_api/lmon_say_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_say_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_say_msg.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-lmon_say_msg.Tpo $(DEPDIR)/launchmon-lmon_say_msg.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_api/lmon_say_msg.cxx' object='launchmon-lmon_say_msg.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-lmon_say_msg.obj `if test -f 'lmon_api/lmon_say_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_say_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_say_msg.cxx'; fi`
 
 launchmon-sdbg_proc_service.o: sdbg_proc_service.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_proc_service.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_proc_service.Tpo -c -o launchmon-sdbg_proc_service.o `test -f 'sdbg_proc_service.cxx' || echo '$(srcdir)/'`sdbg_proc_service.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_proc_service.Tpo $(DEPDIR)/launchmon-sdbg_proc_service.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_proc_service.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_proc_service.Tpo -c -o launchmon-sdbg_proc_service.o `test -f 'sdbg_proc_service.cxx' || echo '$(srcdir)/'`sdbg_proc_service.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_proc_service.Tpo $(DEPDIR)/launchmon-sdbg_proc_service.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_proc_service.cxx' object='launchmon-sdbg_proc_service.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_proc_service.o `test -f 'sdbg_proc_service.cxx' || echo '$(srcdir)/'`sdbg_proc_service.cxx
 
 launchmon-sdbg_proc_service.obj: sdbg_proc_service.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_proc_service.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_proc_service.Tpo -c -o launchmon-sdbg_proc_service.obj `if test -f 'sdbg_proc_service.cxx'; then $(CYGPATH_W) 'sdbg_proc_service.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_proc_service.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_proc_service.Tpo $(DEPDIR)/launchmon-sdbg_proc_service.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_proc_service.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_proc_service.Tpo -c -o launchmon-sdbg_proc_service.obj `if test -f 'sdbg_proc_service.cxx'; then $(CYGPATH_W) 'sdbg_proc_service.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_proc_service.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_proc_service.Tpo $(DEPDIR)/launchmon-sdbg_proc_service.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_proc_service.cxx' object='launchmon-sdbg_proc_service.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_proc_service.obj `if test -f 'sdbg_proc_service.cxx'; then $(CYGPATH_W) 'sdbg_proc_service.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_proc_service.cxx'; fi`
 
 launchmon-sdbg_self_trace.o: ../sdbg_self_trace.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_self_trace.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_self_trace.Tpo -c -o launchmon-sdbg_self_trace.o `test -f '../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../sdbg_self_trace.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_self_trace.Tpo $(DEPDIR)/launchmon-sdbg_self_trace.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_self_trace.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_self_trace.Tpo -c -o launchmon-sdbg_self_trace.o `test -f '../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../sdbg_self_trace.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_self_trace.Tpo $(DEPDIR)/launchmon-sdbg_self_trace.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_self_trace.cxx' object='launchmon-sdbg_self_trace.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_self_trace.o `test -f '../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../sdbg_self_trace.cxx
 
 launchmon-sdbg_self_trace.obj: ../sdbg_self_trace.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_self_trace.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_self_trace.Tpo -c -o launchmon-sdbg_self_trace.obj `if test -f '../sdbg_self_trace.cxx'; then $(CYGPATH_W) '../sdbg_self_trace.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_self_trace.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_self_trace.Tpo $(DEPDIR)/launchmon-sdbg_self_trace.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_self_trace.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_self_trace.Tpo -c -o launchmon-sdbg_self_trace.obj `if test -f '../sdbg_self_trace.cxx'; then $(CYGPATH_W) '../sdbg_self_trace.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_self_trace.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_self_trace.Tpo $(DEPDIR)/launchmon-sdbg_self_trace.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_self_trace.cxx' object='launchmon-sdbg_self_trace.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_self_trace.obj `if test -f '../sdbg_self_trace.cxx'; then $(CYGPATH_W) '../sdbg_self_trace.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_self_trace.cxx'; fi`
 
 launchmon-sdbg_opt.o: ../sdbg_opt.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_opt.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_opt.Tpo -c -o launchmon-sdbg_opt.o `test -f '../sdbg_opt.cxx' || echo '$(srcdir)/'`../sdbg_opt.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_opt.Tpo $(DEPDIR)/launchmon-sdbg_opt.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_opt.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_opt.Tpo -c -o launchmon-sdbg_opt.o `test -f '../sdbg_opt.cxx' || echo '$(srcdir)/'`../sdbg_opt.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_opt.Tpo $(DEPDIR)/launchmon-sdbg_opt.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_opt.cxx' object='launchmon-sdbg_opt.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_opt.o `test -f '../sdbg_opt.cxx' || echo '$(srcdir)/'`../sdbg_opt.cxx
 
 launchmon-sdbg_opt.obj: ../sdbg_opt.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_opt.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_opt.Tpo -c -o launchmon-sdbg_opt.obj `if test -f '../sdbg_opt.cxx'; then $(CYGPATH_W) '../sdbg_opt.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_opt.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_opt.Tpo $(DEPDIR)/launchmon-sdbg_opt.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_opt.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_opt.Tpo -c -o launchmon-sdbg_opt.obj `if test -f '../sdbg_opt.cxx'; then $(CYGPATH_W) '../sdbg_opt.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_opt.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_opt.Tpo $(DEPDIR)/launchmon-sdbg_opt.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_opt.cxx' object='launchmon-sdbg_opt.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_opt.obj `if test -f '../sdbg_opt.cxx'; then $(CYGPATH_W) '../sdbg_opt.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_opt.cxx'; fi`
 
 launchmon-sdbg_rm_map.o: ../sdbg_rm_map.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_rm_map.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_rm_map.Tpo -c -o launchmon-sdbg_rm_map.o `test -f '../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../sdbg_rm_map.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_rm_map.Tpo $(DEPDIR)/launchmon-sdbg_rm_map.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_rm_map.o -MD -MP -MF $(DEPDIR)/launchmon-sdbg_rm_map.Tpo -c -o launchmon-sdbg_rm_map.o `test -f '../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../sdbg_rm_map.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_rm_map.Tpo $(DEPDIR)/launchmon-sdbg_rm_map.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rm_map.cxx' object='launchmon-sdbg_rm_map.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_rm_map.o `test -f '../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../sdbg_rm_map.cxx
 
 launchmon-sdbg_rm_map.obj: ../sdbg_rm_map.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_rm_map.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_rm_map.Tpo -c -o launchmon-sdbg_rm_map.obj `if test -f '../sdbg_rm_map.cxx'; then $(CYGPATH_W) '../sdbg_rm_map.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_rm_map.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/launchmon-sdbg_rm_map.Tpo $(DEPDIR)/launchmon-sdbg_rm_map.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -MT launchmon-sdbg_rm_map.obj -MD -MP -MF $(DEPDIR)/launchmon-sdbg_rm_map.Tpo -c -o launchmon-sdbg_rm_map.obj `if test -f '../sdbg_rm_map.cxx'; then $(CYGPATH_W) '../sdbg_rm_map.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_rm_map.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/launchmon-sdbg_rm_map.Tpo $(DEPDIR)/launchmon-sdbg_rm_map.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rm_map.cxx' object='launchmon-sdbg_rm_map.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(launchmon_CXXFLAGS) $(CXXFLAGS) -c -o launchmon-sdbg_rm_map.obj `if test -f '../sdbg_rm_map.cxx'; then $(CYGPATH_W) '../sdbg_rm_map.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_rm_map.cxx'; fi`
 
 newlaunchmon-sdbg_flux_main.o: sdbg_flux_main.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_flux_main.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_flux_main.Tpo -c -o newlaunchmon-sdbg_flux_main.o `test -f 'sdbg_flux_main.cxx' || echo '$(srcdir)/'`sdbg_flux_main.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_flux_main.Tpo $(DEPDIR)/newlaunchmon-sdbg_flux_main.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_flux_main.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_flux_main.Tpo -c -o newlaunchmon-sdbg_flux_main.o `test -f 'sdbg_flux_main.cxx' || echo '$(srcdir)/'`sdbg_flux_main.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_flux_main.Tpo $(DEPDIR)/newlaunchmon-sdbg_flux_main.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_flux_main.cxx' object='newlaunchmon-sdbg_flux_main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_flux_main.o `test -f 'sdbg_flux_main.cxx' || echo '$(srcdir)/'`sdbg_flux_main.cxx
 
 newlaunchmon-sdbg_flux_main.obj: sdbg_flux_main.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_flux_main.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_flux_main.Tpo -c -o newlaunchmon-sdbg_flux_main.obj `if test -f 'sdbg_flux_main.cxx'; then $(CYGPATH_W) 'sdbg_flux_main.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_flux_main.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_flux_main.Tpo $(DEPDIR)/newlaunchmon-sdbg_flux_main.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_flux_main.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_flux_main.Tpo -c -o newlaunchmon-sdbg_flux_main.obj `if test -f 'sdbg_flux_main.cxx'; then $(CYGPATH_W) 'sdbg_flux_main.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_flux_main.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_flux_main.Tpo $(DEPDIR)/newlaunchmon-sdbg_flux_main.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_flux_main.cxx' object='newlaunchmon-sdbg_flux_main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_flux_main.obj `if test -f 'sdbg_flux_main.cxx'; then $(CYGPATH_W) 'sdbg_flux_main.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_flux_main.cxx'; fi`
 
 newlaunchmon-sdbg_rm_flux_launchmon.o: sdbg_rm_flux_launchmon.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_rm_flux_launchmon.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Tpo -c -o newlaunchmon-sdbg_rm_flux_launchmon.o `test -f 'sdbg_rm_flux_launchmon.cxx' || echo '$(srcdir)/'`sdbg_rm_flux_launchmon.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Tpo $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_rm_flux_launchmon.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Tpo -c -o newlaunchmon-sdbg_rm_flux_launchmon.o `test -f 'sdbg_rm_flux_launchmon.cxx' || echo '$(srcdir)/'`sdbg_rm_flux_launchmon.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Tpo $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_rm_flux_launchmon.cxx' object='newlaunchmon-sdbg_rm_flux_launchmon.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_rm_flux_launchmon.o `test -f 'sdbg_rm_flux_launchmon.cxx' || echo '$(srcdir)/'`sdbg_rm_flux_launchmon.cxx
 
 newlaunchmon-sdbg_rm_flux_launchmon.obj: sdbg_rm_flux_launchmon.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_rm_flux_launchmon.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Tpo -c -o newlaunchmon-sdbg_rm_flux_launchmon.obj `if test -f 'sdbg_rm_flux_launchmon.cxx'; then $(CYGPATH_W) 'sdbg_rm_flux_launchmon.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_rm_flux_launchmon.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Tpo $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_rm_flux_launchmon.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Tpo -c -o newlaunchmon-sdbg_rm_flux_launchmon.obj `if test -f 'sdbg_rm_flux_launchmon.cxx'; then $(CYGPATH_W) 'sdbg_rm_flux_launchmon.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_rm_flux_launchmon.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Tpo $(DEPDIR)/newlaunchmon-sdbg_rm_flux_launchmon.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sdbg_rm_flux_launchmon.cxx' object='newlaunchmon-sdbg_rm_flux_launchmon.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_rm_flux_launchmon.obj `if test -f 'sdbg_rm_flux_launchmon.cxx'; then $(CYGPATH_W) 'sdbg_rm_flux_launchmon.cxx'; else $(CYGPATH_W) '$(srcdir)/sdbg_rm_flux_launchmon.cxx'; fi`
 
 newlaunchmon-lmon_lmonp_msg.o: lmon_api/lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-lmon_lmonp_msg.o -MD -MP -MF $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Tpo -c -o newlaunchmon-lmon_lmonp_msg.o `test -f 'lmon_api/lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Tpo $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-lmon_lmonp_msg.o -MD -MP -MF $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Tpo -c -o newlaunchmon-lmon_lmonp_msg.o `test -f 'lmon_api/lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_lmonp_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Tpo $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_api/lmon_lmonp_msg.cxx' object='newlaunchmon-lmon_lmonp_msg.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-lmon_lmonp_msg.o `test -f 'lmon_api/lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_lmonp_msg.cxx
 
 newlaunchmon-lmon_lmonp_msg.obj: lmon_api/lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-lmon_lmonp_msg.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Tpo -c -o newlaunchmon-lmon_lmonp_msg.obj `if test -f 'lmon_api/lmon_lmonp_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_lmonp_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_lmonp_msg.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Tpo $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-lmon_lmonp_msg.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Tpo -c -o newlaunchmon-lmon_lmonp_msg.obj `if test -f 'lmon_api/lmon_lmonp_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_lmonp_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_lmonp_msg.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Tpo $(DEPDIR)/newlaunchmon-lmon_lmonp_msg.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_api/lmon_lmonp_msg.cxx' object='newlaunchmon-lmon_lmonp_msg.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-lmon_lmonp_msg.obj `if test -f 'lmon_api/lmon_lmonp_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_lmonp_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_lmonp_msg.cxx'; fi`
 
 newlaunchmon-lmon_say_msg.o: lmon_api/lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-lmon_say_msg.o -MD -MP -MF $(DEPDIR)/newlaunchmon-lmon_say_msg.Tpo -c -o newlaunchmon-lmon_say_msg.o `test -f 'lmon_api/lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-lmon_say_msg.Tpo $(DEPDIR)/newlaunchmon-lmon_say_msg.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-lmon_say_msg.o -MD -MP -MF $(DEPDIR)/newlaunchmon-lmon_say_msg.Tpo -c -o newlaunchmon-lmon_say_msg.o `test -f 'lmon_api/lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_say_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-lmon_say_msg.Tpo $(DEPDIR)/newlaunchmon-lmon_say_msg.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_api/lmon_say_msg.cxx' object='newlaunchmon-lmon_say_msg.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-lmon_say_msg.o `test -f 'lmon_api/lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_api/lmon_say_msg.cxx
 
 newlaunchmon-lmon_say_msg.obj: lmon_api/lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-lmon_say_msg.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-lmon_say_msg.Tpo -c -o newlaunchmon-lmon_say_msg.obj `if test -f 'lmon_api/lmon_say_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_say_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_say_msg.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-lmon_say_msg.Tpo $(DEPDIR)/newlaunchmon-lmon_say_msg.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-lmon_say_msg.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-lmon_say_msg.Tpo -c -o newlaunchmon-lmon_say_msg.obj `if test -f 'lmon_api/lmon_say_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_say_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_say_msg.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-lmon_say_msg.Tpo $(DEPDIR)/newlaunchmon-lmon_say_msg.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_api/lmon_say_msg.cxx' object='newlaunchmon-lmon_say_msg.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-lmon_say_msg.obj `if test -f 'lmon_api/lmon_say_msg.cxx'; then $(CYGPATH_W) 'lmon_api/lmon_say_msg.cxx'; else $(CYGPATH_W) '$(srcdir)/lmon_api/lmon_say_msg.cxx'; fi`
 
 newlaunchmon-sdbg_self_trace.o: ../sdbg_self_trace.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_self_trace.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_self_trace.Tpo -c -o newlaunchmon-sdbg_self_trace.o `test -f '../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../sdbg_self_trace.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_self_trace.Tpo $(DEPDIR)/newlaunchmon-sdbg_self_trace.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_self_trace.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_self_trace.Tpo -c -o newlaunchmon-sdbg_self_trace.o `test -f '../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../sdbg_self_trace.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_self_trace.Tpo $(DEPDIR)/newlaunchmon-sdbg_self_trace.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_self_trace.cxx' object='newlaunchmon-sdbg_self_trace.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_self_trace.o `test -f '../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../sdbg_self_trace.cxx
 
 newlaunchmon-sdbg_self_trace.obj: ../sdbg_self_trace.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_self_trace.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_self_trace.Tpo -c -o newlaunchmon-sdbg_self_trace.obj `if test -f '../sdbg_self_trace.cxx'; then $(CYGPATH_W) '../sdbg_self_trace.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_self_trace.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_self_trace.Tpo $(DEPDIR)/newlaunchmon-sdbg_self_trace.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_self_trace.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_self_trace.Tpo -c -o newlaunchmon-sdbg_self_trace.obj `if test -f '../sdbg_self_trace.cxx'; then $(CYGPATH_W) '../sdbg_self_trace.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_self_trace.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_self_trace.Tpo $(DEPDIR)/newlaunchmon-sdbg_self_trace.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_self_trace.cxx' object='newlaunchmon-sdbg_self_trace.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_self_trace.obj `if test -f '../sdbg_self_trace.cxx'; then $(CYGPATH_W) '../sdbg_self_trace.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_self_trace.cxx'; fi`
 
 newlaunchmon-sdbg_opt.o: ../sdbg_opt.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_opt.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_opt.Tpo -c -o newlaunchmon-sdbg_opt.o `test -f '../sdbg_opt.cxx' || echo '$(srcdir)/'`../sdbg_opt.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_opt.Tpo $(DEPDIR)/newlaunchmon-sdbg_opt.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_opt.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_opt.Tpo -c -o newlaunchmon-sdbg_opt.o `test -f '../sdbg_opt.cxx' || echo '$(srcdir)/'`../sdbg_opt.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_opt.Tpo $(DEPDIR)/newlaunchmon-sdbg_opt.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_opt.cxx' object='newlaunchmon-sdbg_opt.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_opt.o `test -f '../sdbg_opt.cxx' || echo '$(srcdir)/'`../sdbg_opt.cxx
 
 newlaunchmon-sdbg_opt.obj: ../sdbg_opt.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_opt.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_opt.Tpo -c -o newlaunchmon-sdbg_opt.obj `if test -f '../sdbg_opt.cxx'; then $(CYGPATH_W) '../sdbg_opt.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_opt.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_opt.Tpo $(DEPDIR)/newlaunchmon-sdbg_opt.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_opt.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_opt.Tpo -c -o newlaunchmon-sdbg_opt.obj `if test -f '../sdbg_opt.cxx'; then $(CYGPATH_W) '../sdbg_opt.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_opt.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_opt.Tpo $(DEPDIR)/newlaunchmon-sdbg_opt.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_opt.cxx' object='newlaunchmon-sdbg_opt.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_opt.obj `if test -f '../sdbg_opt.cxx'; then $(CYGPATH_W) '../sdbg_opt.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_opt.cxx'; fi`
 
 newlaunchmon-sdbg_rm_map.o: ../sdbg_rm_map.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_rm_map.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_rm_map.Tpo -c -o newlaunchmon-sdbg_rm_map.o `test -f '../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../sdbg_rm_map.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_rm_map.Tpo $(DEPDIR)/newlaunchmon-sdbg_rm_map.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_rm_map.o -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_rm_map.Tpo -c -o newlaunchmon-sdbg_rm_map.o `test -f '../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../sdbg_rm_map.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_rm_map.Tpo $(DEPDIR)/newlaunchmon-sdbg_rm_map.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rm_map.cxx' object='newlaunchmon-sdbg_rm_map.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_rm_map.o `test -f '../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../sdbg_rm_map.cxx
 
 newlaunchmon-sdbg_rm_map.obj: ../sdbg_rm_map.cxx
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_rm_map.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_rm_map.Tpo -c -o newlaunchmon-sdbg_rm_map.obj `if test -f '../sdbg_rm_map.cxx'; then $(CYGPATH_W) '../sdbg_rm_map.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_rm_map.cxx'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_rm_map.Tpo $(DEPDIR)/newlaunchmon-sdbg_rm_map.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -MT newlaunchmon-sdbg_rm_map.obj -MD -MP -MF $(DEPDIR)/newlaunchmon-sdbg_rm_map.Tpo -c -o newlaunchmon-sdbg_rm_map.obj `if test -f '../sdbg_rm_map.cxx'; then $(CYGPATH_W) '../sdbg_rm_map.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_rm_map.cxx'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/newlaunchmon-sdbg_rm_map.Tpo $(DEPDIR)/newlaunchmon-sdbg_rm_map.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rm_map.cxx' object='newlaunchmon-sdbg_rm_map.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newlaunchmon_CXXFLAGS) $(CXXFLAGS) -c -o newlaunchmon-sdbg_rm_map.obj `if test -f '../sdbg_rm_map.cxx'; then $(CYGPATH_W) '../sdbg_rm_map.cxx'; else $(CYGPATH_W) '$(srcdir)/../sdbg_rm_map.cxx'; fi`

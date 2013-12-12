@@ -39,12 +39,7 @@ subdir = tools/cobo/src
 DIST_COMMON = $(include_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/config/libtool.m4 \
-	$(top_srcdir)/config/ltoptions.m4 \
-	$(top_srcdir)/config/ltsugar.m4 \
-	$(top_srcdir)/config/ltversion.m4 \
-	$(top_srcdir)/config/lt~obsolete.m4 \
-	$(top_srcdir)/config/x_ac_bootfabric.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/x_ac_bootfabric.m4 \
 	$(top_srcdir)/config/x_ac_enable_debug.m4 \
 	$(top_srcdir)/config/x_ac_enable_newengine.m4 \
 	$(top_srcdir)/config/x_ac_enable_verbose.m4 \
@@ -95,7 +90,10 @@ am_libcobo_be_la_OBJECTS = libcobo_be_la-pmgr_collective_common.lo \
 	libcobo_be_la-pmgr_collective_mpirun.lo \
 	libcobo_be_la-cobo_be.lo
 libcobo_be_la_OBJECTS = $(am_libcobo_be_la_OBJECTS)
-libcobo_be_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
+libcobo_be_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libcobo_be_la_CFLAGS) \
 	$(CFLAGS) $(libcobo_be_la_LDFLAGS) $(LDFLAGS) -o $@
 libcobo_fen_la_DEPENDENCIES =
@@ -106,22 +104,36 @@ am_libcobo_fen_la_OBJECTS = pmgr_collective_common.lo \
 	pmgr_collective_client.lo pmgr_collective_mpirun.lo \
 	cobo_fen.lo
 libcobo_fen_la_OBJECTS = $(am_libcobo_fen_la_OBJECTS)
-libcobo_fen_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libcobo_fen_la_LDFLAGS) $(LDFLAGS) -o $@
+libcobo_fen_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(AM_CFLAGS) $(CFLAGS) $(libcobo_fen_la_LDFLAGS) $(LDFLAGS) -o \
+	$@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libcobo_be_la_SOURCES) $(libcobo_fen_la_SOURCES)
 DIST_SOURCES = $(libcobo_be_la_SOURCES) $(libcobo_fen_la_SOURCES)
 HEADERS = $(include_HEADERS)
@@ -130,6 +142,7 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
 ARCHHEADER = @ARCHHEADER@
 ARCHLIB = @ARCHLIB@
@@ -388,9 +401,9 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libcobo_be.la: $(libcobo_be_la_OBJECTS) $(libcobo_be_la_DEPENDENCIES) 
-	$(libcobo_be_la_LINK) -rpath $(libdir) $(libcobo_be_la_OBJECTS) $(libcobo_be_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libcobo_be_la_LINK) -rpath $(libdir) $(libcobo_be_la_OBJECTS) $(libcobo_be_la_LIBADD) $(LIBS)
 libcobo_fen.la: $(libcobo_fen_la_OBJECTS) $(libcobo_fen_la_DEPENDENCIES) 
-	$(libcobo_fen_la_LINK) -rpath $(libdir) $(libcobo_fen_la_OBJECTS) $(libcobo_fen_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libcobo_fen_la_LINK) -rpath $(libdir) $(libcobo_fen_la_OBJECTS) $(libcobo_fen_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -418,88 +431,100 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pmgr_collective_ranges.Plo@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 .c.lo:
-@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
 libcobo_be_la-pmgr_collective_common.lo: pmgr_collective_common.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_common.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_common.Tpo -c -o libcobo_be_la-pmgr_collective_common.lo `test -f 'pmgr_collective_common.c' || echo '$(srcdir)/'`pmgr_collective_common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_common.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_common.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_common.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_common.Tpo -c -o libcobo_be_la-pmgr_collective_common.lo `test -f 'pmgr_collective_common.c' || echo '$(srcdir)/'`pmgr_collective_common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_common.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_common.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pmgr_collective_common.c' object='libcobo_be_la-pmgr_collective_common.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_common.lo `test -f 'pmgr_collective_common.c' || echo '$(srcdir)/'`pmgr_collective_common.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_common.lo `test -f 'pmgr_collective_common.c' || echo '$(srcdir)/'`pmgr_collective_common.c
 
 libcobo_be_la-pmgr_collective_ranges.lo: pmgr_collective_ranges.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_ranges.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_ranges.Tpo -c -o libcobo_be_la-pmgr_collective_ranges.lo `test -f 'pmgr_collective_ranges.c' || echo '$(srcdir)/'`pmgr_collective_ranges.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_ranges.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_ranges.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_ranges.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_ranges.Tpo -c -o libcobo_be_la-pmgr_collective_ranges.lo `test -f 'pmgr_collective_ranges.c' || echo '$(srcdir)/'`pmgr_collective_ranges.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_ranges.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_ranges.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pmgr_collective_ranges.c' object='libcobo_be_la-pmgr_collective_ranges.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_ranges.lo `test -f 'pmgr_collective_ranges.c' || echo '$(srcdir)/'`pmgr_collective_ranges.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_ranges.lo `test -f 'pmgr_collective_ranges.c' || echo '$(srcdir)/'`pmgr_collective_ranges.c
 
 libcobo_be_la-pmgr_collective_client_common.lo: pmgr_collective_client_common.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client_common.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client_common.Tpo -c -o libcobo_be_la-pmgr_collective_client_common.lo `test -f 'pmgr_collective_client_common.c' || echo '$(srcdir)/'`pmgr_collective_client_common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client_common.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client_common.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client_common.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client_common.Tpo -c -o libcobo_be_la-pmgr_collective_client_common.lo `test -f 'pmgr_collective_client_common.c' || echo '$(srcdir)/'`pmgr_collective_client_common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client_common.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client_common.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pmgr_collective_client_common.c' object='libcobo_be_la-pmgr_collective_client_common.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client_common.lo `test -f 'pmgr_collective_client_common.c' || echo '$(srcdir)/'`pmgr_collective_client_common.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client_common.lo `test -f 'pmgr_collective_client_common.c' || echo '$(srcdir)/'`pmgr_collective_client_common.c
 
 libcobo_be_la-pmgr_collective_client_mpirun.lo: pmgr_collective_client_mpirun.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client_mpirun.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client_mpirun.Tpo -c -o libcobo_be_la-pmgr_collective_client_mpirun.lo `test -f 'pmgr_collective_client_mpirun.c' || echo '$(srcdir)/'`pmgr_collective_client_mpirun.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client_mpirun.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client_mpirun.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client_mpirun.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client_mpirun.Tpo -c -o libcobo_be_la-pmgr_collective_client_mpirun.lo `test -f 'pmgr_collective_client_mpirun.c' || echo '$(srcdir)/'`pmgr_collective_client_mpirun.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client_mpirun.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client_mpirun.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pmgr_collective_client_mpirun.c' object='libcobo_be_la-pmgr_collective_client_mpirun.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client_mpirun.lo `test -f 'pmgr_collective_client_mpirun.c' || echo '$(srcdir)/'`pmgr_collective_client_mpirun.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client_mpirun.lo `test -f 'pmgr_collective_client_mpirun.c' || echo '$(srcdir)/'`pmgr_collective_client_mpirun.c
 
 libcobo_be_la-pmgr_collective_client_tree.lo: pmgr_collective_client_tree.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client_tree.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client_tree.Tpo -c -o libcobo_be_la-pmgr_collective_client_tree.lo `test -f 'pmgr_collective_client_tree.c' || echo '$(srcdir)/'`pmgr_collective_client_tree.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client_tree.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client_tree.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client_tree.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client_tree.Tpo -c -o libcobo_be_la-pmgr_collective_client_tree.lo `test -f 'pmgr_collective_client_tree.c' || echo '$(srcdir)/'`pmgr_collective_client_tree.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client_tree.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client_tree.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pmgr_collective_client_tree.c' object='libcobo_be_la-pmgr_collective_client_tree.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client_tree.lo `test -f 'pmgr_collective_client_tree.c' || echo '$(srcdir)/'`pmgr_collective_client_tree.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client_tree.lo `test -f 'pmgr_collective_client_tree.c' || echo '$(srcdir)/'`pmgr_collective_client_tree.c
 
 libcobo_be_la-pmgr_collective_client_slurm.lo: pmgr_collective_client_slurm.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client_slurm.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client_slurm.Tpo -c -o libcobo_be_la-pmgr_collective_client_slurm.lo `test -f 'pmgr_collective_client_slurm.c' || echo '$(srcdir)/'`pmgr_collective_client_slurm.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client_slurm.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client_slurm.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client_slurm.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client_slurm.Tpo -c -o libcobo_be_la-pmgr_collective_client_slurm.lo `test -f 'pmgr_collective_client_slurm.c' || echo '$(srcdir)/'`pmgr_collective_client_slurm.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client_slurm.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client_slurm.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pmgr_collective_client_slurm.c' object='libcobo_be_la-pmgr_collective_client_slurm.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client_slurm.lo `test -f 'pmgr_collective_client_slurm.c' || echo '$(srcdir)/'`pmgr_collective_client_slurm.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client_slurm.lo `test -f 'pmgr_collective_client_slurm.c' || echo '$(srcdir)/'`pmgr_collective_client_slurm.c
 
 libcobo_be_la-pmgr_collective_client.lo: pmgr_collective_client.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client.Tpo -c -o libcobo_be_la-pmgr_collective_client.lo `test -f 'pmgr_collective_client.c' || echo '$(srcdir)/'`pmgr_collective_client.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_client.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_client.Tpo -c -o libcobo_be_la-pmgr_collective_client.lo `test -f 'pmgr_collective_client.c' || echo '$(srcdir)/'`pmgr_collective_client.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_client.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_client.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pmgr_collective_client.c' object='libcobo_be_la-pmgr_collective_client.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client.lo `test -f 'pmgr_collective_client.c' || echo '$(srcdir)/'`pmgr_collective_client.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_client.lo `test -f 'pmgr_collective_client.c' || echo '$(srcdir)/'`pmgr_collective_client.c
 
 libcobo_be_la-pmgr_collective_mpirun.lo: pmgr_collective_mpirun.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_mpirun.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_mpirun.Tpo -c -o libcobo_be_la-pmgr_collective_mpirun.lo `test -f 'pmgr_collective_mpirun.c' || echo '$(srcdir)/'`pmgr_collective_mpirun.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_mpirun.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_mpirun.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-pmgr_collective_mpirun.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-pmgr_collective_mpirun.Tpo -c -o libcobo_be_la-pmgr_collective_mpirun.lo `test -f 'pmgr_collective_mpirun.c' || echo '$(srcdir)/'`pmgr_collective_mpirun.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-pmgr_collective_mpirun.Tpo $(DEPDIR)/libcobo_be_la-pmgr_collective_mpirun.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pmgr_collective_mpirun.c' object='libcobo_be_la-pmgr_collective_mpirun.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_mpirun.lo `test -f 'pmgr_collective_mpirun.c' || echo '$(srcdir)/'`pmgr_collective_mpirun.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-pmgr_collective_mpirun.lo `test -f 'pmgr_collective_mpirun.c' || echo '$(srcdir)/'`pmgr_collective_mpirun.c
 
 libcobo_be_la-cobo_be.lo: cobo_be.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-cobo_be.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-cobo_be.Tpo -c -o libcobo_be_la-cobo_be.lo `test -f 'cobo_be.c' || echo '$(srcdir)/'`cobo_be.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libcobo_be_la-cobo_be.Tpo $(DEPDIR)/libcobo_be_la-cobo_be.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -MT libcobo_be_la-cobo_be.lo -MD -MP -MF $(DEPDIR)/libcobo_be_la-cobo_be.Tpo -c -o libcobo_be_la-cobo_be.lo `test -f 'cobo_be.c' || echo '$(srcdir)/'`cobo_be.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcobo_be_la-cobo_be.Tpo $(DEPDIR)/libcobo_be_la-cobo_be.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cobo_be.c' object='libcobo_be_la-cobo_be.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-cobo_be.lo `test -f 'cobo_be.c' || echo '$(srcdir)/'`cobo_be.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcobo_be_la_CFLAGS) $(CFLAGS) -c -o libcobo_be_la-cobo_be.lo `test -f 'cobo_be.c' || echo '$(srcdir)/'`cobo_be.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

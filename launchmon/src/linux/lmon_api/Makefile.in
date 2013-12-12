@@ -37,12 +37,7 @@ host_triplet = @host@
 subdir = launchmon/src/linux/lmon_api
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/config/libtool.m4 \
-	$(top_srcdir)/config/ltoptions.m4 \
-	$(top_srcdir)/config/ltsugar.m4 \
-	$(top_srcdir)/config/ltversion.m4 \
-	$(top_srcdir)/config/lt~obsolete.m4 \
-	$(top_srcdir)/config/x_ac_bootfabric.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/x_ac_bootfabric.m4 \
 	$(top_srcdir)/config/x_ac_enable_debug.m4 \
 	$(top_srcdir)/config/x_ac_enable_newengine.m4 \
 	$(top_srcdir)/config/x_ac_enable_verbose.m4 \
@@ -93,8 +88,11 @@ am_libmonbeapi_la_OBJECTS = libmonbeapi_la-lmon_be.lo \
 	libmonbeapi_la-lmon_be_sync_mpi_bg.lo \
 	libmonbeapi_la-lmon_be_sync_mpi_bgq.lo
 libmonbeapi_la_OBJECTS = $(am_libmonbeapi_la_OBJECTS)
-libmonbeapi_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
+libmonbeapi_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) \
 	$(libmonbeapi_la_LDFLAGS) $(LDFLAGS) -o $@
 libmonfeapi_la_DEPENDENCIES =
@@ -105,8 +103,8 @@ am_libmonfeapi_la_OBJECTS = libmonfeapi_la-lmon_fe.lo \
 	libmonfeapi_la-sdbg_self_trace.lo libmonfeapi_la-sdbg_opt.lo \
 	libmonfeapi_la-sdbg_rsh_spawner.lo
 libmonfeapi_la_OBJECTS = $(am_libmonfeapi_la_OBJECTS)
-libmonfeapi_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+libmonfeapi_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) \
 	$(libmonfeapi_la_LDFLAGS) $(LDFLAGS) -o $@
 libmonmwapi_la_DEPENDENCIES =
@@ -117,8 +115,8 @@ am_libmonmwapi_la_OBJECTS = libmonmwapi_la-lmon_mw.lo \
 	libmonmwapi_la-lmon_coloc_spawner.lo \
 	libmonmwapi_la-sdbg_rsh_spawner.lo
 libmonmwapi_la_OBJECTS = $(am_libmonmwapi_la_OBJECTS)
-libmonmwapi_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+libmonmwapi_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) \
 	$(libmonmwapi_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -127,22 +125,42 @@ am__depfiles_maybe = depfiles
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-LTCXXCOMPILE = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+AM_V_CXX = $(am__v_CXX_$(V))
+am__v_CXX_ = $(am__v_CXX_$(AM_DEFAULT_VERBOSITY))
+am__v_CXX_0 = @echo "  CXX   " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CXXLD = $(am__v_CXXLD_$(V))
+am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CXXLD_0 = @echo "  CXXLD " $@;
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libmonbeapi_la_SOURCES) $(libmonfeapi_la_SOURCES) \
 	$(libmonmwapi_la_SOURCES)
 DIST_SOURCES = $(libmonbeapi_la_SOURCES) $(libmonfeapi_la_SOURCES) \
@@ -152,6 +170,7 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
 ARCHHEADER = @ARCHHEADER@
 ARCHLIB = @ARCHLIB@
@@ -481,11 +500,11 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libmonbeapi.la: $(libmonbeapi_la_OBJECTS) $(libmonbeapi_la_DEPENDENCIES) 
-	$(libmonbeapi_la_LINK) -rpath $(libdir) $(libmonbeapi_la_OBJECTS) $(libmonbeapi_la_LIBADD) $(LIBS)
+	$(AM_V_CXXLD)$(libmonbeapi_la_LINK) -rpath $(libdir) $(libmonbeapi_la_OBJECTS) $(libmonbeapi_la_LIBADD) $(LIBS)
 libmonfeapi.la: $(libmonfeapi_la_OBJECTS) $(libmonfeapi_la_DEPENDENCIES) 
-	$(libmonfeapi_la_LINK) -rpath $(libdir) $(libmonfeapi_la_OBJECTS) $(libmonfeapi_la_LIBADD) $(LIBS)
+	$(AM_V_CXXLD)$(libmonfeapi_la_LINK) -rpath $(libdir) $(libmonfeapi_la_OBJECTS) $(libmonfeapi_la_LIBADD) $(LIBS)
 libmonmwapi.la: $(libmonmwapi_la_OBJECTS) $(libmonmwapi_la_DEPENDENCIES) 
-	$(libmonmwapi_la_LINK) -rpath $(libdir) $(libmonmwapi_la_OBJECTS) $(libmonmwapi_la_LIBADD) $(LIBS)
+	$(AM_V_CXXLD)$(libmonmwapi_la_LINK) -rpath $(libdir) $(libmonmwapi_la_OBJECTS) $(libmonmwapi_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -518,186 +537,212 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmonmwapi_la-sdbg_rsh_spawner.Plo@am__quote@
 
 .cxx.o:
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ $<
 
 .cxx.obj:
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 .cxx.lo:
-@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
 libmonbeapi_la-lmon_be.lo: lmon_be.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be.Tpo -c -o libmonbeapi_la-lmon_be.lo `test -f 'lmon_be.cxx' || echo '$(srcdir)/'`lmon_be.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be.Tpo -c -o libmonbeapi_la-lmon_be.lo `test -f 'lmon_be.cxx' || echo '$(srcdir)/'`lmon_be.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_be.cxx' object='libmonbeapi_la-lmon_be.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be.lo `test -f 'lmon_be.cxx' || echo '$(srcdir)/'`lmon_be.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be.lo `test -f 'lmon_be.cxx' || echo '$(srcdir)/'`lmon_be.cxx
 
 libmonbeapi_la-lmon_daemon_internal.lo: lmon_daemon_internal.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_daemon_internal.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_daemon_internal.Tpo -c -o libmonbeapi_la-lmon_daemon_internal.lo `test -f 'lmon_daemon_internal.cxx' || echo '$(srcdir)/'`lmon_daemon_internal.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_daemon_internal.Tpo $(DEPDIR)/libmonbeapi_la-lmon_daemon_internal.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_daemon_internal.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_daemon_internal.Tpo -c -o libmonbeapi_la-lmon_daemon_internal.lo `test -f 'lmon_daemon_internal.cxx' || echo '$(srcdir)/'`lmon_daemon_internal.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_daemon_internal.Tpo $(DEPDIR)/libmonbeapi_la-lmon_daemon_internal.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_daemon_internal.cxx' object='libmonbeapi_la-lmon_daemon_internal.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_daemon_internal.lo `test -f 'lmon_daemon_internal.cxx' || echo '$(srcdir)/'`lmon_daemon_internal.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_daemon_internal.lo `test -f 'lmon_daemon_internal.cxx' || echo '$(srcdir)/'`lmon_daemon_internal.cxx
 
 libmonbeapi_la-lmon_coloc_spawner.lo: lmon_coloc_spawner.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_coloc_spawner.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_coloc_spawner.Tpo -c -o libmonbeapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_coloc_spawner.Tpo $(DEPDIR)/libmonbeapi_la-lmon_coloc_spawner.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_coloc_spawner.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_coloc_spawner.Tpo -c -o libmonbeapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_coloc_spawner.Tpo $(DEPDIR)/libmonbeapi_la-lmon_coloc_spawner.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_coloc_spawner.cxx' object='libmonbeapi_la-lmon_coloc_spawner.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
 
 libmonbeapi_la-lmon_lmonp_msg.lo: lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_lmonp_msg.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_lmonp_msg.Tpo -c -o libmonbeapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_lmonp_msg.Tpo $(DEPDIR)/libmonbeapi_la-lmon_lmonp_msg.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_lmonp_msg.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_lmonp_msg.Tpo -c -o libmonbeapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_lmonp_msg.Tpo $(DEPDIR)/libmonbeapi_la-lmon_lmonp_msg.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_lmonp_msg.cxx' object='libmonbeapi_la-lmon_lmonp_msg.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
 
 libmonbeapi_la-lmon_say_msg.lo: lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_say_msg.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_say_msg.Tpo -c -o libmonbeapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_say_msg.Tpo $(DEPDIR)/libmonbeapi_la-lmon_say_msg.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_say_msg.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_say_msg.Tpo -c -o libmonbeapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_say_msg.Tpo $(DEPDIR)/libmonbeapi_la-lmon_say_msg.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_say_msg.cxx' object='libmonbeapi_la-lmon_say_msg.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
 
 libmonbeapi_la-lmon_be_sync_mpi.lo: lmon_be_sync_mpi.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be_sync_mpi.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi.Tpo -c -o libmonbeapi_la-lmon_be_sync_mpi.lo `test -f 'lmon_be_sync_mpi.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be_sync_mpi.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi.Tpo -c -o libmonbeapi_la-lmon_be_sync_mpi.lo `test -f 'lmon_be_sync_mpi.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_be_sync_mpi.cxx' object='libmonbeapi_la-lmon_be_sync_mpi.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be_sync_mpi.lo `test -f 'lmon_be_sync_mpi.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be_sync_mpi.lo `test -f 'lmon_be_sync_mpi.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi.cxx
 
 libmonbeapi_la-lmon_be_sync_mpi_generic.lo: lmon_be_sync_mpi_generic.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be_sync_mpi_generic.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_generic.Tpo -c -o libmonbeapi_la-lmon_be_sync_mpi_generic.lo `test -f 'lmon_be_sync_mpi_generic.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_generic.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_generic.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_generic.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be_sync_mpi_generic.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_generic.Tpo -c -o libmonbeapi_la-lmon_be_sync_mpi_generic.lo `test -f 'lmon_be_sync_mpi_generic.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_generic.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_generic.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_generic.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_be_sync_mpi_generic.cxx' object='libmonbeapi_la-lmon_be_sync_mpi_generic.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be_sync_mpi_generic.lo `test -f 'lmon_be_sync_mpi_generic.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_generic.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be_sync_mpi_generic.lo `test -f 'lmon_be_sync_mpi_generic.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_generic.cxx
 
 libmonbeapi_la-lmon_be_sync_mpi_bg.lo: lmon_be_sync_mpi_bg.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be_sync_mpi_bg.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bg.Tpo -c -o libmonbeapi_la-lmon_be_sync_mpi_bg.lo `test -f 'lmon_be_sync_mpi_bg.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_bg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bg.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bg.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be_sync_mpi_bg.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bg.Tpo -c -o libmonbeapi_la-lmon_be_sync_mpi_bg.lo `test -f 'lmon_be_sync_mpi_bg.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_bg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bg.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bg.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_be_sync_mpi_bg.cxx' object='libmonbeapi_la-lmon_be_sync_mpi_bg.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be_sync_mpi_bg.lo `test -f 'lmon_be_sync_mpi_bg.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_bg.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be_sync_mpi_bg.lo `test -f 'lmon_be_sync_mpi_bg.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_bg.cxx
 
 libmonbeapi_la-lmon_be_sync_mpi_bgq.lo: lmon_be_sync_mpi_bgq.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be_sync_mpi_bgq.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bgq.Tpo -c -o libmonbeapi_la-lmon_be_sync_mpi_bgq.lo `test -f 'lmon_be_sync_mpi_bgq.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_bgq.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bgq.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bgq.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonbeapi_la-lmon_be_sync_mpi_bgq.lo -MD -MP -MF $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bgq.Tpo -c -o libmonbeapi_la-lmon_be_sync_mpi_bgq.lo `test -f 'lmon_be_sync_mpi_bgq.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_bgq.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bgq.Tpo $(DEPDIR)/libmonbeapi_la-lmon_be_sync_mpi_bgq.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_be_sync_mpi_bgq.cxx' object='libmonbeapi_la-lmon_be_sync_mpi_bgq.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be_sync_mpi_bgq.lo `test -f 'lmon_be_sync_mpi_bgq.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_bgq.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonbeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonbeapi_la-lmon_be_sync_mpi_bgq.lo `test -f 'lmon_be_sync_mpi_bgq.cxx' || echo '$(srcdir)/'`lmon_be_sync_mpi_bgq.cxx
 
 libmonfeapi_la-lmon_fe.lo: lmon_fe.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_fe.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-lmon_fe.Tpo -c -o libmonfeapi_la-lmon_fe.lo `test -f 'lmon_fe.cxx' || echo '$(srcdir)/'`lmon_fe.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonfeapi_la-lmon_fe.Tpo $(DEPDIR)/libmonfeapi_la-lmon_fe.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_fe.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-lmon_fe.Tpo -c -o libmonfeapi_la-lmon_fe.lo `test -f 'lmon_fe.cxx' || echo '$(srcdir)/'`lmon_fe.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonfeapi_la-lmon_fe.Tpo $(DEPDIR)/libmonfeapi_la-lmon_fe.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_fe.cxx' object='libmonfeapi_la-lmon_fe.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-lmon_fe.lo `test -f 'lmon_fe.cxx' || echo '$(srcdir)/'`lmon_fe.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-lmon_fe.lo `test -f 'lmon_fe.cxx' || echo '$(srcdir)/'`lmon_fe.cxx
 
 libmonfeapi_la-lmon_lmonp_msg.lo: lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_lmonp_msg.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-lmon_lmonp_msg.Tpo -c -o libmonfeapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonfeapi_la-lmon_lmonp_msg.Tpo $(DEPDIR)/libmonfeapi_la-lmon_lmonp_msg.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_lmonp_msg.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-lmon_lmonp_msg.Tpo -c -o libmonfeapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonfeapi_la-lmon_lmonp_msg.Tpo $(DEPDIR)/libmonfeapi_la-lmon_lmonp_msg.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_lmonp_msg.cxx' object='libmonfeapi_la-lmon_lmonp_msg.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
 
 libmonfeapi_la-lmon_coloc_spawner.lo: lmon_coloc_spawner.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_coloc_spawner.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-lmon_coloc_spawner.Tpo -c -o libmonfeapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonfeapi_la-lmon_coloc_spawner.Tpo $(DEPDIR)/libmonfeapi_la-lmon_coloc_spawner.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_coloc_spawner.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-lmon_coloc_spawner.Tpo -c -o libmonfeapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonfeapi_la-lmon_coloc_spawner.Tpo $(DEPDIR)/libmonfeapi_la-lmon_coloc_spawner.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_coloc_spawner.cxx' object='libmonfeapi_la-lmon_coloc_spawner.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
 
 libmonfeapi_la-lmon_say_msg.lo: lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_say_msg.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-lmon_say_msg.Tpo -c -o libmonfeapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonfeapi_la-lmon_say_msg.Tpo $(DEPDIR)/libmonfeapi_la-lmon_say_msg.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-lmon_say_msg.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-lmon_say_msg.Tpo -c -o libmonfeapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonfeapi_la-lmon_say_msg.Tpo $(DEPDIR)/libmonfeapi_la-lmon_say_msg.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_say_msg.cxx' object='libmonfeapi_la-lmon_say_msg.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
 
 libmonfeapi_la-sdbg_rm_map.lo: ../../sdbg_rm_map.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_rm_map.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-sdbg_rm_map.Tpo -c -o libmonfeapi_la-sdbg_rm_map.lo `test -f '../../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../../sdbg_rm_map.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonfeapi_la-sdbg_rm_map.Tpo $(DEPDIR)/libmonfeapi_la-sdbg_rm_map.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_rm_map.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-sdbg_rm_map.Tpo -c -o libmonfeapi_la-sdbg_rm_map.lo `test -f '../../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../../sdbg_rm_map.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonfeapi_la-sdbg_rm_map.Tpo $(DEPDIR)/libmonfeapi_la-sdbg_rm_map.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../sdbg_rm_map.cxx' object='libmonfeapi_la-sdbg_rm_map.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_rm_map.lo `test -f '../../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../../sdbg_rm_map.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_rm_map.lo `test -f '../../sdbg_rm_map.cxx' || echo '$(srcdir)/'`../../sdbg_rm_map.cxx
 
 libmonfeapi_la-sdbg_self_trace.lo: ../../sdbg_self_trace.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_self_trace.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-sdbg_self_trace.Tpo -c -o libmonfeapi_la-sdbg_self_trace.lo `test -f '../../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../../sdbg_self_trace.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonfeapi_la-sdbg_self_trace.Tpo $(DEPDIR)/libmonfeapi_la-sdbg_self_trace.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_self_trace.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-sdbg_self_trace.Tpo -c -o libmonfeapi_la-sdbg_self_trace.lo `test -f '../../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../../sdbg_self_trace.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonfeapi_la-sdbg_self_trace.Tpo $(DEPDIR)/libmonfeapi_la-sdbg_self_trace.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../sdbg_self_trace.cxx' object='libmonfeapi_la-sdbg_self_trace.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_self_trace.lo `test -f '../../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../../sdbg_self_trace.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_self_trace.lo `test -f '../../sdbg_self_trace.cxx' || echo '$(srcdir)/'`../../sdbg_self_trace.cxx
 
 libmonfeapi_la-sdbg_opt.lo: ../../sdbg_opt.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_opt.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-sdbg_opt.Tpo -c -o libmonfeapi_la-sdbg_opt.lo `test -f '../../sdbg_opt.cxx' || echo '$(srcdir)/'`../../sdbg_opt.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonfeapi_la-sdbg_opt.Tpo $(DEPDIR)/libmonfeapi_la-sdbg_opt.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_opt.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-sdbg_opt.Tpo -c -o libmonfeapi_la-sdbg_opt.lo `test -f '../../sdbg_opt.cxx' || echo '$(srcdir)/'`../../sdbg_opt.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonfeapi_la-sdbg_opt.Tpo $(DEPDIR)/libmonfeapi_la-sdbg_opt.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../sdbg_opt.cxx' object='libmonfeapi_la-sdbg_opt.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_opt.lo `test -f '../../sdbg_opt.cxx' || echo '$(srcdir)/'`../../sdbg_opt.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_opt.lo `test -f '../../sdbg_opt.cxx' || echo '$(srcdir)/'`../../sdbg_opt.cxx
 
 libmonfeapi_la-sdbg_rsh_spawner.lo: ../sdbg_rsh_spawner.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_rsh_spawner.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-sdbg_rsh_spawner.Tpo -c -o libmonfeapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonfeapi_la-sdbg_rsh_spawner.Tpo $(DEPDIR)/libmonfeapi_la-sdbg_rsh_spawner.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonfeapi_la-sdbg_rsh_spawner.lo -MD -MP -MF $(DEPDIR)/libmonfeapi_la-sdbg_rsh_spawner.Tpo -c -o libmonfeapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonfeapi_la-sdbg_rsh_spawner.Tpo $(DEPDIR)/libmonfeapi_la-sdbg_rsh_spawner.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rsh_spawner.cxx' object='libmonfeapi_la-sdbg_rsh_spawner.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonfeapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonfeapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
 
 libmonmwapi_la-lmon_mw.lo: lmon_mw.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_mw.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_mw.Tpo -c -o libmonmwapi_la-lmon_mw.lo `test -f 'lmon_mw.cxx' || echo '$(srcdir)/'`lmon_mw.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_mw.Tpo $(DEPDIR)/libmonmwapi_la-lmon_mw.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_mw.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_mw.Tpo -c -o libmonmwapi_la-lmon_mw.lo `test -f 'lmon_mw.cxx' || echo '$(srcdir)/'`lmon_mw.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_mw.Tpo $(DEPDIR)/libmonmwapi_la-lmon_mw.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_mw.cxx' object='libmonmwapi_la-lmon_mw.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_mw.lo `test -f 'lmon_mw.cxx' || echo '$(srcdir)/'`lmon_mw.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_mw.lo `test -f 'lmon_mw.cxx' || echo '$(srcdir)/'`lmon_mw.cxx
 
 libmonmwapi_la-lmon_daemon_internal.lo: lmon_daemon_internal.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_daemon_internal.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_daemon_internal.Tpo -c -o libmonmwapi_la-lmon_daemon_internal.lo `test -f 'lmon_daemon_internal.cxx' || echo '$(srcdir)/'`lmon_daemon_internal.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_daemon_internal.Tpo $(DEPDIR)/libmonmwapi_la-lmon_daemon_internal.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_daemon_internal.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_daemon_internal.Tpo -c -o libmonmwapi_la-lmon_daemon_internal.lo `test -f 'lmon_daemon_internal.cxx' || echo '$(srcdir)/'`lmon_daemon_internal.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_daemon_internal.Tpo $(DEPDIR)/libmonmwapi_la-lmon_daemon_internal.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_daemon_internal.cxx' object='libmonmwapi_la-lmon_daemon_internal.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_daemon_internal.lo `test -f 'lmon_daemon_internal.cxx' || echo '$(srcdir)/'`lmon_daemon_internal.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_daemon_internal.lo `test -f 'lmon_daemon_internal.cxx' || echo '$(srcdir)/'`lmon_daemon_internal.cxx
 
 libmonmwapi_la-lmon_lmonp_msg.lo: lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_lmonp_msg.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_lmonp_msg.Tpo -c -o libmonmwapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_lmonp_msg.Tpo $(DEPDIR)/libmonmwapi_la-lmon_lmonp_msg.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_lmonp_msg.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_lmonp_msg.Tpo -c -o libmonmwapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_lmonp_msg.Tpo $(DEPDIR)/libmonmwapi_la-lmon_lmonp_msg.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_lmonp_msg.cxx' object='libmonmwapi_la-lmon_lmonp_msg.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_lmonp_msg.lo `test -f 'lmon_lmonp_msg.cxx' || echo '$(srcdir)/'`lmon_lmonp_msg.cxx
 
 libmonmwapi_la-lmon_say_msg.lo: lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_say_msg.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_say_msg.Tpo -c -o libmonmwapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_say_msg.Tpo $(DEPDIR)/libmonmwapi_la-lmon_say_msg.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_say_msg.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_say_msg.Tpo -c -o libmonmwapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_say_msg.Tpo $(DEPDIR)/libmonmwapi_la-lmon_say_msg.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_say_msg.cxx' object='libmonmwapi_la-lmon_say_msg.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_say_msg.lo `test -f 'lmon_say_msg.cxx' || echo '$(srcdir)/'`lmon_say_msg.cxx
 
 libmonmwapi_la-lmon_coloc_spawner.lo: lmon_coloc_spawner.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_coloc_spawner.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_coloc_spawner.Tpo -c -o libmonmwapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_coloc_spawner.Tpo $(DEPDIR)/libmonmwapi_la-lmon_coloc_spawner.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-lmon_coloc_spawner.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-lmon_coloc_spawner.Tpo -c -o libmonmwapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonmwapi_la-lmon_coloc_spawner.Tpo $(DEPDIR)/libmonmwapi_la-lmon_coloc_spawner.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lmon_coloc_spawner.cxx' object='libmonmwapi_la-lmon_coloc_spawner.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-lmon_coloc_spawner.lo `test -f 'lmon_coloc_spawner.cxx' || echo '$(srcdir)/'`lmon_coloc_spawner.cxx
 
 libmonmwapi_la-sdbg_rsh_spawner.lo: ../sdbg_rsh_spawner.cxx
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-sdbg_rsh_spawner.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-sdbg_rsh_spawner.Tpo -c -o libmonmwapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmonmwapi_la-sdbg_rsh_spawner.Tpo $(DEPDIR)/libmonmwapi_la-sdbg_rsh_spawner.Plo
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -MT libmonmwapi_la-sdbg_rsh_spawner.lo -MD -MP -MF $(DEPDIR)/libmonmwapi_la-sdbg_rsh_spawner.Tpo -c -o libmonmwapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmonmwapi_la-sdbg_rsh_spawner.Tpo $(DEPDIR)/libmonmwapi_la-sdbg_rsh_spawner.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../sdbg_rsh_spawner.cxx' object='libmonmwapi_la-sdbg_rsh_spawner.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmonmwapi_la_CXXFLAGS) $(CXXFLAGS) -c -o libmonmwapi_la-sdbg_rsh_spawner.lo `test -f '../sdbg_rsh_spawner.cxx' || echo '$(srcdir)/'`../sdbg_rsh_spawner.cxx
 
 mostlyclean-libtool:
 	-rm -f *.lo

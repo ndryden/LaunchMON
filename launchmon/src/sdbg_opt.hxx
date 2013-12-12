@@ -109,6 +109,8 @@ struct opt_struct_t {
   std::string copyright;        // copy right for this project
   std::string launchstring;     // launch string to be expanded
   std::string tool_daemon_opts; // options to the lightweight debug engine
+  std::string bootpath;         // options to specify an app bootstrapper path 
+  std::string bootargs;         // options to specify args to bootstrapper 
   std::string remote_info;      // ip:port
   std::string febeconn_info;    // ip:port for fe<-be listening socket
   std::string femwconn_info;    // ip:port for fe<-mw listening socket

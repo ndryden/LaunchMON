@@ -28,7 +28,7 @@
  *
  *
  *  Update Log:
- *        Sep  27 2013 DHA: Added LMON_fe_launchAndSpawnDaemons2.
+ *        Dec  09 2013 DHA: Added LMON_fe_regAppBootstrapper support.
  *        May  31 2012 DHA: Merged with the middleware support from
  *                          the 0.8-middleware-support branch.
  *        Jul  02 2010 DHA: Augmented LMON_fe_launchMwDaemons
@@ -134,6 +134,11 @@ lmon_rc_e LMON_fe_getStatus ( int sessionHandle, int *status );
 lmon_rc_e LMON_fe_regStatusCB (int sessionHandle, int (*func) (int *status));
 
 lmon_rc_e LMON_fe_regErrorCB ( int (*errorCB) (const char *format, va_list ap) );
+
+lmon_rc_e LMON_fe_regAppBootstrapper (
+                int sessionHandle,
+                const char *b_path, 
+                const char * const b_argv[] );
 
 lmon_rc_e LMON_fe_getRMInfo (int sessionHandle, lmon_rm_info_t *info);
 

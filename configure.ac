@@ -28,6 +28,7 @@ dnl  Place, Suite 330, Boston, MA 02111-1307 USA
 dnl --------------------------------------------------------------------------------
 dnl
 dnl   Update Log:
+dnl         Dec 09 2013 DHA: Added silent rule support
 dnl         Oct 30 2013 DHA: Added X_AC_NEWENGINE support
 dnl         Aug 03 2010 DHA: Added X_AC_MW_HOSTLIST support
 dnl         Dec 28 2009 DHA: Deprecated X_AC_PREFIX_CONFIG_H to better support
@@ -66,6 +67,7 @@ AC_CONFIG_MACRO_DIR([config])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE(launchmon, 1.0.beta1)
+AM_SILENT_RULES([yes])
 AC_CANONICAL_HOST
 
 

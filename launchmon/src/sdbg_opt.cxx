@@ -27,6 +27,8 @@
  *	
  *
  *  Update Log:
+ *        Dec 09 2013 DHA: bootpath/bootargs support
+ *        Oct 09 2013 DHA: bootpath/bootargs support
  *        Jan 09 2010 DHA: Remove verbose reference to the deprecated thread
  *                         tracer module.
  *        Oct 07 2010 DHA: Dynamic resource manager detection support
@@ -74,7 +76,7 @@ const std::string software_name
 const std::string version
    = PACKAGE_VERSION;
 const std::string copyright 
-   = "Copyright (C) 2008-2012, "
+   = "Copyright (C) 2008-2014, "
      "Lawrence Livermore National Security, LLC.";
 const std::string produced 
    = "Produced at Lawrence Livermore National Laboratory.";
@@ -106,7 +108,11 @@ opts_args_t::opts_args_t ()
   my_opt->remaining = NULL;
   my_opt->tool_daemon = "";
   my_opt->tool_daemon_opts = "";
+  my_opt->bootpath = "";
+  my_opt->bootargs = "";
   my_opt->remote_info = "";
+  my_opt->febeconn_info = "";
+  my_opt->femwconn_info = "";
   my_opt->lmon_sec_info = "";
   my_opt->debugtarget = "";
   my_opt->launchstring = "";
@@ -135,7 +141,7 @@ opts_args_t::~opts_args_t()
   if (my_rmconfig) {
     delete my_rmconfig;
   }
- my_rmconfig = NULL;
+  my_rmconfig = NULL;
 }
 
 
@@ -185,6 +191,10 @@ opts_args_t::process_args ( int *argc, char ***argv )
 		c = 'x';
 	      else if ( string(&nargv[i][2]) == string("daemonopts"))
 		c = 't';
+	      else if ( string(&nargv[i][2]) == string("bootpath"))
+		c = 'B';
+	      else if ( string(&nargv[i][2]) == string("bootargs"))
+		c = 'A';
 	      else if ( string(&nargv[i][2]) == string("pid"))
 		c = 'p';
 	      else if ( string(&nargv[i][2]) == string("traceout"))
@@ -305,6 +315,16 @@ opts_args_t::process_args ( int *argc, char ***argv )
 	      my_opt->lmon_sec_info = nargv[i+1];
 	      i++;
 	      break;	
+
+            case 'B':
+              my_opt->bootpath = nargv[i+1];
+              i++;
+              break;
+
+            case 'A':
+              my_opt->bootargs = nargv[i+1];
+              i++;
+              break;
 
 	    case 'x':
 	      //
@@ -593,6 +613,8 @@ opts_args_t::opts_args_t ( const opts_args_t& o )
     my_opt->tool_daemon = o.my_opt->tool_daemon;
     my_opt->tool_daemon_opts = o.my_opt->tool_daemon_opts;
     my_opt->remote_info = o.my_opt->remote_info;
+    my_opt->febeconn_info = o.my_opt->febeconn_info;
+    my_opt->femwconn_info = o.my_opt->femwconn_info;
     my_opt->lmon_sec_info = o.my_opt->lmon_sec_info;
     my_opt->debugtarget = o.my_opt->debugtarget;
     my_opt->launchstring = o.my_opt->launchstring;

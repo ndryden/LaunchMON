@@ -27,6 +27,7 @@
  *                      
  *
  *  Update Log:
+ *        Dec 09 2013 DHA: Added boostrapper support
  *        Sep 04 2013 DHA: Code clean-up
  *        Aug 01 2013 DHA: Created file.
  */
@@ -56,6 +57,8 @@
 #else
 # error arpa/inet.h is required
 #endif
+
+# include <boost/algorithm/string.hpp>
 
 
 #include "sdbg_rm_flux_launchmon.hxx"
@@ -340,8 +343,9 @@ rm_flux_api_launchmon_t::init_flux_api (opts_args_t *opt)
 	}
 
         // 
-	// TODO: ultimately decide how to parse arg/opt of wreckrun
-        //       only have to deal with -N and -n.
+	// FLUX TODO: ultimately decide how to parse arg/opt 
+        //            of wreckrun only have to deal with 
+        //            -N and -n.
 	//
         char **t = &(opt->get_my_opt()->remaining[1]);
         int procs_per_node = 1;
@@ -375,12 +379,37 @@ rm_flux_api_launchmon_t::init_flux_api (opts_args_t *opt)
         }
         const char *lwjpath = *t;
         char **newargv = t;
+
+        //
+        // FLUX TODO: put this into a function
+        // And also use boost::tokenizer<boost::escaped_list_separator<char> 
+        //
+        const char *bst = NULL;
+        char **bst_argv = NULL;
+        std::vector<std::string> strs; 
+
+        if (opt->get_my_opt()->bootpath != "") {
+            bst = opt->get_my_opt()->bootpath.c_str();
+            boost::split (strs, 
+                opt->get_my_opt()->bootargs,
+                boost::is_any_of(" "));
+            bst_argv = (char **) malloc ((strs.size()+1) * sizeof (char *));
+            std::vector<std::string>::const_iterator iter;
+            int ix = 0;
+            for (ix=0; ix < strs.size(); ++ix) {
+                bst_argv[ix] = strdup (strs[ix].c_str());
+            }
+            bst_argv[ix] = NULL; 
+        }
+
         if ( FLUX_launch_spawn (
 	         (const flux_lwj_id_t *) newpair->get_procgrp_id(), 
 	         sync, 
 	         NULL,
 	         lwjpath,
 	         (char * const *) newargv,
+                 (const char *) bst,
+                 (char * const *) bst_argv,
 	         0,
                  nodes, 
                  procs_per_node) != FLUX_OK) {
@@ -563,7 +592,6 @@ rm_flux_api_launchmon_t::co_locate_flux_daemons (
 
         goto ret_loc;  
     }
-
     if (FLUX_query_LWJId2JobInfo (&fid, &jinfo)
         != FLUX_OK ) {
 	self_trace_t::trace ( true,
@@ -656,6 +684,8 @@ rm_flux_api_launchmon_t::co_locate_flux_daemons (
            (const flux_lwj_id_t *) tfid, 
 	   o->tool_daemon.c_str(),
 	   (char * const *) newargv,
+           NULL,
+           NULL,
 	   1, /* coloc flag */
 	   rm_obj->get_coloc_paramset().nnodes, 
 	   rm_obj->get_coloc_paramset().ndaemons) != FLUX_OK) {
