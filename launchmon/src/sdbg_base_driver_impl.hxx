@@ -27,6 +27,7 @@
  *
  *
  *  Update Log:
+ *        Dec 12 2013 DHA: Added signal handler support for new launchmon
  *        Dec 07 2012 DHA: Made the false condition of init_rm_instance fatal
  *        Jun 30 2010 DHA: Added faster parse error detection support
  *        Feb 09 2008 DHA: Added LLNS Copyright
@@ -52,6 +53,8 @@
 #include "sdbg_base_driver.hxx"
 #include "sdbg_signal_hlr.hxx"
 #include "sdbg_signal_hlr_impl.hxx"
+#include "sdbg_rmapi_signal_hlr.hxx"
+#include "sdbg_rmapi_signal_hlr_impl.hxx"
 
 
 ////////////////////////////////////////////////////////////////////
@@ -563,9 +566,11 @@ rm_driver_base_t::drive_engine ( opts_args_t *opt )
   if (rm_lmon->init( opt ) != RMAPI_LMON_OK)
         return SDBG_DRIVER_FAILED;
    
-  //
-  // FLUX TODO: we need a new signal handler
-  //
+  rmapi_signal_handler_t sh;
+  sh.set_evman ( rm_evman );
+  sh.set_lmon ( rm_lmon );
+  sh.set_mask ( );
+  sh.install_hdlr_for_all_sigs ( );
   
   //
   // rm_event manager begin monitoring RM events and FE

@@ -38,7 +38,12 @@ bin_PROGRAMS = launchmon$(EXEEXT) $(am__EXEEXT_1)
 subdir = launchmon/src/linux
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/config/x_ac_bootfabric.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/libtool.m4 \
+	$(top_srcdir)/config/ltoptions.m4 \
+	$(top_srcdir)/config/ltsugar.m4 \
+	$(top_srcdir)/config/ltversion.m4 \
+	$(top_srcdir)/config/lt~obsolete.m4 \
+	$(top_srcdir)/config/x_ac_bootfabric.m4 \
 	$(top_srcdir)/config/x_ac_enable_debug.m4 \
 	$(top_srcdir)/config/x_ac_enable_newengine.m4 \
 	$(top_srcdir)/config/x_ac_enable_verbose.m4 \
@@ -349,10 +354,12 @@ launchmon_SOURCES = main.cxx \
                           ../sdbg_base_driver.hxx \
                           ../sdbg_base_mach.hxx \
                           ../sdbg_signal_hlr.hxx \
+                          ../sdbg_rmapi_signal_hlr.hxx \
                           ../sdbg_base_driver_impl.hxx  \
                           ../sdbg_base_mach_impl.hxx  \
                           ../sdbg_event_manager.hxx \
                           ../sdbg_signal_hlr_impl.hxx \
+                          ../sdbg_rmapi_signal_hlr_impl.hxx \
                           ../sdbg_base_exception.hxx \
                           ../sdbg_base_symtab.hxx \
                           ../sdbg_event_manager_impl.hxx  \
@@ -383,10 +390,14 @@ newlaunchmon_SOURCES = sdbg_flux_main.cxx \
                           ../sdbg_rm_map.cxx \
 			  ../sdbg_base_driver.hxx \
 			  ../sdbg_event_manager.hxx \
+                          ../sdbg_signal_hlr.hxx \
+                          ../sdbg_rmapi_signal_hlr.hxx \
 			  ../sdbg_base_rmapi_launchmon.hxx \
 			  ../sdbg_base_rm_procgrp_status.hxx \
 			  ../sdbg_base_driver_impl.hxx \
 			  ../sdbg_event_manager_impl.hxx \
+                          ../sdbg_signal_hlr_impl.hxx \
+                          ../sdbg_rmapi_signal_hlr_impl.hxx \
 			  ../sdbg_base_rmapi_launchmon_impl.hxx \
 			  ../sdbg_base_rm_procgrp_status_impl.hxx \
 			  ../sdbg_opt.hxx \

@@ -29,6 +29,7 @@
 ##--------------------------------------------------------------------------------
 ##
 ##  Update Log:
+##        Dec 12 2013 DHA: Added sdbg_rmapi_signal_hlr support
 ##        Mar 09 2009 DHA: Added -rdynamic to export process control 
 ##                         primities to the dynamic symbol table for
 ##                         dlopen to pick up.
@@ -75,10 +76,12 @@ launchmon_SOURCES       = main.cxx \
                           ../sdbg_base_driver.hxx \
                           ../sdbg_base_mach.hxx \
                           ../sdbg_signal_hlr.hxx \
+                          ../sdbg_rmapi_signal_hlr.hxx \
                           ../sdbg_base_driver_impl.hxx  \
                           ../sdbg_base_mach_impl.hxx  \
                           ../sdbg_event_manager.hxx \
                           ../sdbg_signal_hlr_impl.hxx \
+                          ../sdbg_rmapi_signal_hlr_impl.hxx \
                           ../sdbg_base_exception.hxx \
                           ../sdbg_base_symtab.hxx \
                           ../sdbg_event_manager_impl.hxx  \
@@ -109,10 +112,14 @@ newlaunchmon_SOURCES    = sdbg_flux_main.cxx \
                           ../sdbg_rm_map.cxx \
 			  ../sdbg_base_driver.hxx \
 			  ../sdbg_event_manager.hxx \
+                          ../sdbg_signal_hlr.hxx \
+                          ../sdbg_rmapi_signal_hlr.hxx \
 			  ../sdbg_base_rmapi_launchmon.hxx \
 			  ../sdbg_base_rm_procgrp_status.hxx \
 			  ../sdbg_base_driver_impl.hxx \
 			  ../sdbg_event_manager_impl.hxx \
+                          ../sdbg_signal_hlr_impl.hxx \
+                          ../sdbg_rmapi_signal_hlr_impl.hxx \
 			  ../sdbg_base_rmapi_launchmon_impl.hxx \
 			  ../sdbg_base_rm_procgrp_status_impl.hxx \
 			  ../sdbg_opt.hxx \

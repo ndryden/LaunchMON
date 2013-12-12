@@ -422,7 +422,10 @@ rm_api_launchmon_base_t::say_fetofe_msg (
     if ( (write_lmonp_long_msg ( get_FE_sockfd(), 
 		 &msgheader, 
 		 sizeof ( msgheader ) )) < 0 ) {
-	rc = RMAPI_LMON_FAILED;
+        self_trace_t::trace ( LEVELCHK(level3),
+             MODULENAME, 0,
+             "error sending a message to FEN, disconnected?");
+
 	goto ret_loc;
     }
 
@@ -500,7 +503,10 @@ rm_api_launchmon_base_t::update_socket_events ()
             "The channel with front-end disconnected."
             " Starting cleanup...");
 
-	goto error;
+        //
+        // FLUX TODO this must be lmonp_detach but doing kill for now
+        //
+	return handle_fen_cntl_msg (lmonp_kill);
     } // if ( numbytes == -1)
     else if ( (numbytes != sizeof (msg))
 	      || ((numbytes == sizeof (msg))

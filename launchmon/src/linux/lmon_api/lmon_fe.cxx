@@ -26,6 +26,7 @@
  *--------------------------------------------------------------------------------
  *
  *  Update Log:
+ *        Dec 09 2013 DHA: Added LMON_fe_regAppBootstrapper support.
  *        Aug 30 2013 DHA: Added newlaunchmon engine support
  *        Jan 09 2013 DHA: Remove verbosity ref to the deprecated
  *                         thread tracer module.
@@ -462,6 +463,13 @@ typedef struct _lmon_session_desc_t {
   int32_t randomID;
 
 
+  /*
+   * Application bootstrapper path and arguments
+   */
+  const char *bootstrapper;
+  char **bootstrapper_argv;
+
+
   /* 
    * user pack function for a message from BE
    */
@@ -761,6 +769,8 @@ LMON_init_sess ( lmon_session_desc_t* s )
   s->killed = LMON_FALSE;
   s->le_pid = LMON_FALSE;
   s->rm_launcher_pid = LMON_FALSE;
+  s->bootstrapper = NULL;
+  s->bootstrapper_argv = NULL;
 
   std::vector<resource_manager_t> tmpinfo;
   tmpinfo = resmanager.get_supported_rms();
@@ -856,6 +866,14 @@ LMON_destroy_sess ( lmon_session_desc_t* s )
   s->killed = LMON_FALSE;
   s->le_pid = LMON_FALSE;
   s->rm_launcher_pid = LMON_FALSE;
+  // these might leak memory 
+  // free memory allocated through strdup dangerous
+  s->bootstrapper = NULL;
+  if (s->bootstrapper_argv) 
+    {
+      free (s->bootstrapper_argv);
+      s->bootstrapper_argv  = NULL;
+    }
 
   if (s->rm_info.rm_supported_types)
     {
@@ -2477,6 +2495,24 @@ LMON_set_options (
 	  else
 	    break;
 	}
+    }
+
+  optcontext->bootpath = "";
+  optcontext->bootargs = "";
+  if (mydesc->bootstrapper) 
+    {
+      optcontext->bootpath = mydesc->bootstrapper;
+    }
+  if (mydesc->bootstrapper_argv)
+    {
+      optcontext->bootargs 
+        += string(mydesc->bootstrapper_argv[0]);
+
+      for (i=1; mydesc->bootstrapper_argv[i]; ++i) 
+        {
+          optcontext->bootargs 
+            += " " + string(mydesc->bootstrapper_argv[i]);
+        } 
     }
 
   lmon_daemon_env_t *trav = mydesc->daemonEnvList[0];
@@ -4801,6 +4837,57 @@ LMON_fe_regStatusCB (int sessionHandle, int (*func) (int *status))
 }
 
 
+extern "C"
+lmon_rc_e 
+LMON_fe_regAppBootstrapper (
+                int sessionHandle,
+                const char *b_path,
+                const char * const b_argv[])
+{
+  lmon_session_desc_t *mydesc;
+
+  if ( (sessionHandle < 0)
+       || (sessionHandle > MAX_LMON_SESSION))
+    {
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, true,
+         "an argument is invalid" );
+
+      return LMON_EBDARG;
+    }
+
+  if (!b_path)
+    {
+      LMON_say_msg ( LMON_FE_MSG_PREFIX, false,
+        "bootstrapper path is NULL");
+      return LMON_EBDARG;
+    }
+
+  mydesc = &(sess.sessionDescArray[(sessionHandle)]);
+
+  pthread_mutex_lock(&(mydesc->watchdogThr.eventMutex));
+  int len=0;
+  int i=0;
+  mydesc->bootstrapper = strdup (b_path);
+  for (len=0; b_argv[len] != NULL; ++len)
+    {
+    }
+  if (len) 
+    { 
+      mydesc->bootstrapper_argv = (char **) 
+          malloc(len+1 * sizeof(char **)); 
+      for (i=0; i < len; ++i)
+        {
+          mydesc->bootstrapper_argv[i] 
+            = (char *) strdup (b_argv[i]);
+        }
+      mydesc->bootstrapper_argv[i] = NULL;
+    }
+  pthread_mutex_unlock(&(mydesc->watchdogThr.eventMutex));
+
+  return LMON_OK;
+}
+
+
 //! lmon_rc_e LMON_fe_getStatus
 /*!
   returns the status of the session through the status 
@@ -5182,6 +5269,20 @@ LMON_fe_launchAndSpawnDaemons (
 	  lmonOptArgs += strdup (opt.get_my_opt()->tool_daemon_opts.c_str());
 	  lmonOptArgs += "\" "; 
 	}
+
+      if (opt.get_my_opt()->bootpath != string(""))
+        {
+          lmonOptArgs += " --bootpath ";
+          lmonOptArgs += opt.get_my_opt()->bootpath;
+
+          if ( opt.get_my_opt()->tool_daemon_opts != string(""))
+            {
+	      lmonOptArgs += " --bootargs";
+	      lmonOptArgs += " \"";
+	      lmonOptArgs += opt.get_my_opt()->bootargs;
+	      lmonOptArgs += "\" "; 
+	    }
+        }
 
       lmonOptArgs += opt.get_my_opt()->debugtarget;
       lmonOptArgs += " ";
