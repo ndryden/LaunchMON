@@ -506,7 +506,7 @@ rm_api_launchmon_base_t::update_socket_events ()
         //
         // FLUX TODO this must be lmonp_detach but doing kill for now
         //
-	return handle_fen_cntl_msg (lmonp_kill);
+	return handle_fen_cntl_msg (lmonp_detach);
     } // if ( numbytes == -1)
     else if ( (numbytes != sizeof (msg))
 	      || ((numbytes == sizeof (msg))
