@@ -4868,13 +4868,13 @@ LMON_fe_regAppBootstrapper (
   int len=0;
   int i=0;
   mydesc->bootstrapper = strdup (b_path);
-  for (len=0; b_argv[i] != NULL; ++len)
+  for (len=0; b_argv[len] != NULL; ++len)
     {
     }
   if (len) 
     { 
       mydesc->bootstrapper_argv = (char **) 
-          malloc(len+1 * sizeof(char **)); 
+          malloc((len+1) * sizeof(char *)); 
       for (i=0; i < len; ++i)
         {
           mydesc->bootstrapper_argv[i] 
