@@ -117,6 +117,8 @@ typedef enum _rm_catalogue_e
   RC_alps,
   RC_orte,
   RC_gupc,
+  RC_mpich,
+  RC_mpirun_rsh,
   RC_none
   /*
     new RMs should be added here as LaunchMON is ported 

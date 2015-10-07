@@ -127,6 +127,8 @@ LMON_be_procctl_init ( rm_catalogue_e rmtype,
     case RC_orte:
     case RC_alps:
     case RC_gupc:
+    case RC_mpich:
+    case RC_mpirun_rsh:
       //
       // Call generic Linux init
       //
@@ -183,6 +185,8 @@ LMON_be_procctl_stop ( rm_catalogue_e rmtype,
     case RC_orte:
     case RC_alps:
     case RC_gupc:
+    case RC_mpich:
+    case RC_mpirun_rsh:
       //
       // Call generic Linux stop
       //
@@ -251,6 +255,8 @@ LMON_be_procctl_run ( rm_catalogue_e rmtype,
     case RC_orte:
     case RC_alps:
     case RC_gupc:
+    case RC_mpich:
+    case RC_mpirun_rsh:
       //
       // Call generic Linux run
       //
@@ -316,6 +322,8 @@ LMON_be_procctl_initdone( rm_catalogue_e rmtype,
     case RC_orte:
     case RC_alps:
     case RC_gupc:
+    case RC_mpich:
+    case RC_mpirun_rsh:
       //
       // Call generic Linux initdone
       //
@@ -372,6 +380,8 @@ LMON_be_procctl_done(rm_catalogue_e rmtype,
     case RC_orte:
     case RC_alps:
     case RC_gupc:
+    case RC_mpich:
+    case RC_mpirun_rsh:
       //
       // You need to do nothing for these resource managers
       //
@@ -432,6 +442,8 @@ LMON_be_procctl_perf ( rm_catalogue_e rmtype,
     case RC_orte:
     case RC_alps:
     case RC_gupc:
+    case RC_mpich:
+    case RC_mpirun_rsh:
       //
       // You need to do nothing for these resource managers
       //

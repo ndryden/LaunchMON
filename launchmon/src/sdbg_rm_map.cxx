@@ -245,6 +245,14 @@ resource_manager_t::fill_rm_type(const std::string &v)
     {
       rm = RC_gupc;
     }
+  else if (v == std::string("mpich"))
+    {
+      rm = RC_mpich;
+    }
+  else if (v == std::string("mpirun_rsh"))
+    {
+      rm = RC_mpirun_rsh;
+    }
   else
     {
       rm = RC_none;
